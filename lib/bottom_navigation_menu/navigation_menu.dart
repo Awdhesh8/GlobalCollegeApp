@@ -127,7 +127,7 @@ class NavigationMenu extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: Obx(
             () => CurvedNavigationBar(
-          height: 50,
+          height: 60,
           index: controller.selectedIndex.value,
           onTap: (index) => controller.selectedIndex.value = index,
           backgroundColor: Colors.transparent,
