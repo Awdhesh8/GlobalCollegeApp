@@ -42,7 +42,7 @@ class EColors {
   static const Color buttonDisabled = Color(0xFFC4C4C4);
 
   // Bottom Navigation Bar
-  static const Color bottomNavigationBar = Color.fromRGBO(254, 21, 53, 1);
+  static const Color bottomNavigationBar =Color(0xFFFFE2E2);
 
   // Broder Colors
   static const Color borderPrimary = Color(0xFFD9D9D9);

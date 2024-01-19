@@ -51,7 +51,7 @@ class _ProfileBoxState extends State<ProfileBox> {
                     children: [
                       Flexible(
                         child: Text(
-                          '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',
+                          'Surya Pratap Singh',
                           style: TextStyle(
                             color: EColors.textPrimaryHeading,
                             fontSize: 18,
