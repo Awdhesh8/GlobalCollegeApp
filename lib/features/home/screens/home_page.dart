@@ -27,7 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: EColors.primary,
         centerTitle: true,
       ),
-      body:  SingleChildScrollView(
+      body:  const SingleChildScrollView(
         child: Column(
           children: [
             CircularMenuWithCircle(),

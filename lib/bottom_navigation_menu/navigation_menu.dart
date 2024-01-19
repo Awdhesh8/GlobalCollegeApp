@@ -16,6 +16,7 @@ import '../utils/constants/colors.dart';
 import '../utils/helpers/helper_functions.dart';
 import 'package:rive/rive.dart'; // Import Rive package
 import '../utils/rive/rive_utils.dart';
+
 /*
 class NavigationMenu extends StatelessWidget {
   const NavigationMenu({Key? key}) : super(key: key);
@@ -117,29 +118,41 @@ class BtmNavItem extends StatelessWidget {
 }
 
  */
+
+
 class NavigationMenu extends StatelessWidget {
-  const NavigationMenu({Key? key});
+  const NavigationMenu({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(NavigationController());
 
+    Color getIconColor(int index) {
+      return controller.selectedIndex.value == index
+          ? const Color(0xFFFE0037) // Selected icon color
+          : Colors.white; // Unselected icon color
+    }
+
     return Scaffold(
       bottomNavigationBar: Obx(
-            () => CurvedNavigationBar(
+        () => CurvedNavigationBar(
           height: 60,
           index: controller.selectedIndex.value,
           onTap: (index) => controller.selectedIndex.value = index,
           backgroundColor: Colors.transparent,
-          color: const Color(0xFFFE0037), // Selected color
-          buttonBackgroundColor: Colors.white, // Unselected color
-          animationCurve: Curves.easeInOut, // You can customize the animation curve
-          animationDuration: Duration(milliseconds: 500),
+          color:
+              const Color(0xFFFE0037), // Background color for the selected icon
+          buttonBackgroundColor:
+              Colors.transparent, // Background color for the selected icon
+          animationCurve: Curves.easeInOut, // Customize the animation curve
+          animationDuration: const Duration(milliseconds: 500),
           items: [
-            Icon(Iconsax.home),
-            Icon(Iconsax.calendar_add),
-            Icon(Iconsax.notification_favorite4),
-            Icon(Iconsax.user_edit),
+            Icon(Iconsax.home, color: getIconColor(0)),
+            Icon(Iconsax.calendar_add, color: getIconColor(1)),
+            Icon(Iconsax.notification_favorite4, color: getIconColor(2)),
+            Icon(Iconsax.user_edit, color: getIconColor(3)),
           ],
         ),
       ),
@@ -242,7 +255,6 @@ class NavigationController extends GetxController {
   ];
 }
 */
-
 
 //
 // class NavigationMenu extends StatelessWidget {
