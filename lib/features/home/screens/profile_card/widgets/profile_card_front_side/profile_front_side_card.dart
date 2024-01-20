@@ -92,7 +92,7 @@ class UserProfileWidget extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 7),
                       Text(
                         enroll,
                         maxLines: 2,
