@@ -136,8 +136,8 @@ class _RightSideCircularScrollingBoxesState
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: isSelected[index]
-                                      ? Colors.white
-                                      : EColors.white,
+                                      ? EColors.white
+                                      : EColors.textColorPrimary1,
                                       // : const Color.fromRGBO(16, 34, 130, 1),
                                   fontSize: fontSize,
                                   fontWeight: FontWeight.bold,

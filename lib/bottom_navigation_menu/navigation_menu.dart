@@ -143,7 +143,7 @@ class NavigationMenu extends StatelessWidget {
           onTap: (index) => controller.selectedIndex.value = index,
           backgroundColor: Colors.transparent,
           color:
-              EColors.primarySecond, // Background color for the selected icon
+              EColors.primary, // Background color for the selected icon
               // const Color(0xFFFE0037), // Background color for the selected icon
           buttonBackgroundColor:
               Colors.transparent, // Background color for the selected icon

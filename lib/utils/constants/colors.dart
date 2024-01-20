@@ -9,6 +9,14 @@ class EColors {
   static const Color secondary = Color(0xFFFFE24B);
   static const Color accent = Color(0xFFb0c7ff);
   static const Color backgroundColor = Color.fromRGBO(255, 244, 244, 1);
+  static const Color circleAvatar = Color.fromRGBO(255, 235, 235, 1);
+  static const Color circleCardColor = Color.fromRGBO(255, 226, 226, 1);
+  static const Color textColorPrimary = Color.fromRGBO(0,0,120, 1);
+  // static const Color textColorPrimary1 = Color.fromRGBO(0,0,0, 1); // Black
+  // static const Color textColorPrimary1 = Color.fromRGBO(54,69,79, 1); // charcoal
+  //  static const Color textColorPrimary1 = Color.fromRGBO(25,25,122, 1);  // midnight blue
+   static const Color textColorPrimary1 = Color.fromRGBO(255,255,250, 1); // White
+  //  static const Color textColorPrimary1 = Color.fromRGBO(255,255,255, 1); // Ivory
 
   // Gradient Colors
   static const Gradient linerGradient = LinearGradient(

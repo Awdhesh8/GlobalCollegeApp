@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
+import 'package:globalcollegeapp/features/home/screens/profile_card/profile_box.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import '../../../Circular Menus/circular_menus_with_circle.dart';
-import '../../../extra code/extra_codes/profile_box.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({
@@ -27,7 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: EColors.primary,
         centerTitle: true,
       ),
-      body:  const SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Column(
           children: [
             CircularMenuWithCircle(),
