@@ -62,6 +62,9 @@ dependencies:
   flutter_svg: ^2.0.9
   curved_navigation_bar: ^1.0.3
   flip_card: ^0.7.0
+  particles_fly: ^0.0.8
+
+  tab_container: ^2.0.0
 
 
 

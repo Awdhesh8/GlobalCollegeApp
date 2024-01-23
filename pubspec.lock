@@ -320,6 +320,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  particles_fly:
+    dependency: "direct main"
+    description:
+      name: particles_fly
+      sha256: "77a0eb6e8423724438505f66e1534e3ba3e055cf9be784f22dce6fd142afc428"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.8"
   path:
     dependency: transitive
     description:
@@ -485,6 +493,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  tab_container:
+    dependency: "direct main"
+    description:
+      name: tab_container
+      sha256: "05782d9364332a55a5615825f83fa2595d21c2876dee2374bd32ff8b1031ee1d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   term_glyph:
     dependency: transitive
     description:

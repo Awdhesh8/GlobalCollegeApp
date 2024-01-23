@@ -170,6 +170,7 @@ class NavigationController extends GetxController {
     const TimeTable(),
     const Notice(),
     const SettingsScreen(),
+    // const SettingsScreen(),
   ];
 }
 
