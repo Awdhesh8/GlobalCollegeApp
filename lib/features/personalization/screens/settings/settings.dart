@@ -145,5 +145,40 @@ class SettingsScreen extends StatelessWidget {
   }
 }
 
+/*
+this is student's personal details
+Gn No - G/2023/Engg/CS56,
+Enrollment Number - 121CS12024,
+Father’s Name - Jon Wick Jones,
+Mother’s Name - Jon Wick Jones,
+Date of Birth - Jan 01 2024,
+Contact No - 9898987777,
+Cource - Engg,
+Branch - CS,
+Address - Jabalpur, M.P. 482001,
+Parent Contact - 7979797777,
+Email - google@gmail.com,
+Category - General,
+Blood Group - A+,
+Aadhaar No - 1245 6789 1234 5678,
+Samarga Id - 121JBP456,
 
+these Below details user can edit and upload by tap on save button
+Hobbies - Space Exploration,
+Strength - Good in Physics,
+Weakness - Can't control emotions out,
+Laptop - YES,
+
+and these are educational details
+in this details it showing the all the details of the Education like 10th, school name, board name, passing year, Subjects, percentages, and then for 12th then for College sem, branch,
+
+so use the Map for fetch the data dynamically
+and can u make this UI amazing attractive because this is for college student and this is for college app engeneering college
+i give u some color shades
+250,170,147,1
+250,190,192,1
+charcol black,
+white
+
+ */
 
