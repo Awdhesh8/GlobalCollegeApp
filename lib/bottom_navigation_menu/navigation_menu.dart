@@ -1,8 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:globalcollegeapp/bottom_navigation_menu/selected_bottom_nav.dart';
 import 'package:globalcollegeapp/features/time_table/time_table.dart';
 import 'package:iconsax/iconsax.dart';
 import '../features/authentication/screens/entryPoint/components/animated_bar.dart';
@@ -176,7 +174,7 @@ class NavigationController extends GetxController {
 
 /* /// Thi is working fine
 class NavigationMenu extends StatelessWidget {
-  const NavigationMenu({Key? key});
+  const NavigationMenu({super.key,});
 
   @override
   Widget build(BuildContext context) {
