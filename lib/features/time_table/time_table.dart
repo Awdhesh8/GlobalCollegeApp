@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/features/time_table/time_table_data.dart';
 import 'package:globalcollegeapp/utils/constants/sizes.dart';
 import '../../common/widgets/appbar/appbar.dart';
 import '../../utils/constants/colors.dart';
-import '../personalization/screens/settings/settings.dart';
 
 class TimeTable extends StatefulWidget {
   const TimeTable({
