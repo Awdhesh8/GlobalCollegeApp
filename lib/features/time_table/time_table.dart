@@ -121,6 +121,8 @@ class _TimeTableState extends State<TimeTable> {
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         child: Column(
           children: [
+
+            /*
             /// Heading
             const Padding(
               padding: EdgeInsets.only(left: 10),
@@ -132,6 +134,7 @@ class _TimeTableState extends State<TimeTable> {
             const SizedBox(
               height: ESizes.spaceBtwItems,
             ),
+            */
 
             /*
             /// Time Table Container
