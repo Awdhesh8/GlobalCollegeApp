@@ -41,6 +41,7 @@ class EColors {
 
   // Background Container Colors
   static const Color lightContainer = Color(0xFFF6F6F6);
+  static const Color lightContainer1 = Color(0x23FABEC0);
   static Color darkContainer = EColors.textWhite.withOpacity(0.1);
 
   // Button Colors
