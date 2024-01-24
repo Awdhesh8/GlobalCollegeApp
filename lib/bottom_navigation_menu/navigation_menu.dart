@@ -166,8 +166,8 @@ class NavigationController extends GetxController {
   final screens = [
     const MyHomePage(),
     const TimeTable(),
-    const Notice(),
-    const SettingsScreen(),
+    Notice(),
+    SettingsScreen(),
     // const SettingsScreen(),
   ];
 }

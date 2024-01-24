@@ -3,6 +3,7 @@ import '../../common/widgets/appbar/appbar.dart';
 import '../../common/widgets/texts/top_first_heading.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
+import '../personalization/screens/settings/settings.dart';
 
 class Notice extends StatefulWidget {
   const Notice({Key? key}) : super(key: key);
@@ -110,6 +111,7 @@ class _NoticeState extends State<Notice> {
                   ),
                 ),
               ),
+
             ],
           ),
         ),
@@ -117,5 +119,6 @@ class _NoticeState extends State<Notice> {
     );
   }
 }
+
 
 
