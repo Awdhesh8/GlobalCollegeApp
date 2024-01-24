@@ -14,6 +14,7 @@ class ProfileController extends GetxController {
 
   void toggleLaptop(bool value) {
     hasLaptop.value = value;
+
     // Reset laptop details when the user toggles the laptop
     if (!value) {
       laptopBrand.value = '';
