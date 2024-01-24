@@ -9,10 +9,10 @@ import '../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../utils/constants/colors.dart';
 import 'edit_profile/edit_Profile.dart';
 
-
 class SettingsController extends GetxController {
   RxBool showPersonalDetails = true.obs;
-  RxList<bool> isExpandedList = List.generate(educationalDetails.length, (index) => false).obs;
+  RxList<bool> isExpandedList =
+      List.generate(educationalDetails.length, (index) => false).obs;
 
   @override
   void onInit() {
@@ -56,60 +56,75 @@ class SettingsScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          /// User Name
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-            child: Row(
-              children: [
-                TopHeading(
-                  text: 'Hello,',
-                  fontSize: 20,
-                ),
-                Text(' Surya Pratap Singh', style: TextStyle(fontSize: 16)),
-              ],
-            ),
-          ),
 
           /// --- Circular Avatar User Profile Image & Edit Button ---
           Padding(
-            padding: const EdgeInsets.only(left: 20, top: 10,right: 20, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
+            padding: const EdgeInsets.only(
+              left: 20,
+              top: 10,
+              right: 20,
+            ),
+            child: Column(
               children: [
 
-                /// User Profile Image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.asset(
-                    'assets/images/user_icon.png',
-                    fit: BoxFit.cover,
-                    width: 80,
-                    height: 80,
-                  ),
-                ),
-
-                /// Edit Information Button.
+                /// User Image | User Name | Edit Profile button.
                 Column(
                   children: [
-                    TextButton(onPressed: () {Get.to(() => EditProfile(),
-                      transition: Transition.rightToLeftWithFade, // You can choose the desired transition here
-                      duration: const Duration(milliseconds: 300), // Optional: Set the duration of the transition
-                    ); },
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text('Edit Profile'),
-                          SizedBox(width: 4,),
-                          Icon(Iconsax.edit)
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+
+                            /// User Profile Image
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.asset(
+                                'assets/images/user_icon.png',
+                                fit: BoxFit.cover,
+                                width: 120,
+                                height: 120,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const Text(' Surya Pratap Singh',
+                                style: TextStyle(fontSize: 16)),
+
+                            /// Edit Information Button.
+                            TextButton(
+                              onPressed: () {
+                                Get.to(
+                                  () => EditProfile(),
+                                  transition: Transition.rightToLeftWithFade, // You can choose the desired transition here
+                                  duration: const Duration(milliseconds: 300), // Optional: Set the duration of the transition
+                                );
+                              },
+                              child: const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text('Edit Profile'),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  Icon(Iconsax.edit)
+                                ],
+                              ),
+                            ),
+
+
+                          ],
+                        ),
+                      ],
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -121,15 +136,15 @@ class SettingsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Obx(() => RoundedButton(
-                  label: 'Personal Info',
-                  isSelected: controller.showPersonalDetails.value,
-                  onPressed: () => controller.showPersonalInfo(),
-                )),
+                      label: 'Personal Info',
+                      isSelected: controller.showPersonalDetails.value,
+                      onPressed: () => controller.showPersonalInfo(),
+                    )),
                 Obx(() => RoundedButton(
-                  label: 'Educational Info',
-                  isSelected: !controller.showPersonalDetails.value,
-                  onPressed: () => controller.showEducationalInfo(),
-                )),
+                      label: 'Educational Info',
+                      isSelected: !controller.showPersonalDetails.value,
+                      onPressed: () => controller.showEducationalInfo(),
+                    )),
               ],
             ),
           ),
@@ -139,54 +154,52 @@ class SettingsScreen extends StatelessWidget {
             child: Obx(() => controller.showPersonalDetails.value
                 ? UserDetails(data: personalDetails)
                 : EducationDetailsPanel(
-              educationalDetails: educationalDetails,
-              isExpandedList: controller.isExpandedList,
-              onExpansionChanged: (index, isExpanded) =>
-                  controller.toggleExpansion(index, isExpanded),
-            )),
+                    educationalDetails: educationalDetails,
+                    isExpandedList: controller.isExpandedList,
+                    onExpansionChanged: (index, isExpanded) =>
+                        controller.toggleExpansion(index, isExpanded),
+                  )),
           ),
-
-          /// Logout Button
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Handle logout logic here
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(EColors.primary), // Adjust color as needed
-                    shape: MaterialStateProperty.all<OutlinedBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 36),
-                    child: Text(
-                      'Logout',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: EColors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-
         ],
       ),
+
+      /// Logout Button
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: Container(
+        margin: const EdgeInsets.all(8.0),
+        child: Material(
+          borderRadius: BorderRadius.circular(20.0),
+          color: EColors.primary,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20.0),
+            onTap: () {
+              // Handle logout logic here
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.logout,
+                    color: EColors.white,
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Logout',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: EColors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+
+
     );
   }
 }
-
-
-
-
-

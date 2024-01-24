@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
           fillColor: Colors.white,
           errorStyle: TextStyle(height: 0),
           border: defaultInputBorder,
-
           enabledBorder: defaultInputBorder,
           focusedBorder: defaultInputBorder,
           errorBorder: defaultInputBorder,

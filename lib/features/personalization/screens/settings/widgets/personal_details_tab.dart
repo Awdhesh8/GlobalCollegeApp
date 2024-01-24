@@ -3,6 +3,7 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../../../../common/widgets/list_tile/settings_menu_tile.dart';
 import '../../../../../utils/constants/colors.dart';
+
 Map<String, String> personalDetails = {
   'Gn No': 'G/2023/Engg/CS56',
   'Enrollment Number': '121CS12024',
@@ -22,7 +23,6 @@ Map<String, String> personalDetails = {
   'Laptop': 'YES',
 };
 
-
 class UserDetails extends StatelessWidget {
   final Map<String, String> data;
 
@@ -33,12 +33,11 @@ class UserDetails extends StatelessWidget {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Container(
-        height: 340,
+        height: 388,
         decoration: ShapeDecoration(
           color: EColors.lightContainer1,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20)
-          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         ),
         margin: const EdgeInsets.all(8),
         child: Scrollbar(
