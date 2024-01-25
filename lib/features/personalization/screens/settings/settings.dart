@@ -11,17 +11,10 @@ import 'edit_profile/edit_Profile.dart';
 
 class SettingsController extends GetxController {
   RxBool showPersonalDetails = true.obs;
-  RxList<bool> isExpandedList =
-      List.generate(educationalDetails.length, (index) => false).obs;
 
   @override
   void onInit() {
     super.onInit();
-  }
-
-  void toggleExpansion(int panelIndex, bool isExpanded) {
-    isExpandedList[panelIndex] = !isExpanded;
-    update(); // Trigger UI update
   }
 
   void showPersonalInfo() {
@@ -57,8 +50,6 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-
-
           /// --- Circular Avatar User Profile Image & Edit Button ---
           Padding(
             padding: const EdgeInsets.only(
@@ -68,7 +59,6 @@ class SettingsScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-
                 /// User Image | User Name | Edit Profile button.
                 Column(
                   children: [
@@ -77,7 +67,6 @@ class SettingsScreen extends StatelessWidget {
                       children: [
                         Column(
                           children: [
-
                             /// User Profile Image
                             ClipRRect(
                               borderRadius: BorderRadius.circular(100),
@@ -101,8 +90,11 @@ class SettingsScreen extends StatelessWidget {
                               onPressed: () {
                                 Get.to(
                                   () => EditProfile(),
-                                  transition: Transition.rightToLeftWithFade, // You can choose the desired transition here
-                                  duration: const Duration(milliseconds: 300), // Optional: Set the duration of the transition
+                                  transition: Transition
+                                      .rightToLeftWithFade, // You can choose the desired transition here
+                                  duration: const Duration(
+                                      milliseconds:
+                                          300), // Optional: Set the duration of the transition
                                 );
                               },
                               child: const Row(
@@ -117,8 +109,6 @@ class SettingsScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-
-
                           ],
                         ),
                       ],
@@ -155,9 +145,6 @@ class SettingsScreen extends StatelessWidget {
                 ? UserDetails(data: personalDetails)
                 : EducationDetailsPanel(
                     educationalDetails: educationalDetails,
-                    isExpandedList: controller.isExpandedList,
-                    onExpansionChanged: (index, isExpanded) =>
-                        controller.toggleExpansion(index, isExpanded),
                   )),
           ),
         ],
@@ -177,15 +164,15 @@ class SettingsScreen extends StatelessWidget {
             },
             child: Container(
               padding: const EdgeInsets.all(10),
-              child: Row(
+              child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.logout,
                     color: EColors.white,
                   ),
-                  const SizedBox(width: 8),
-                  const Text(
+                  SizedBox(width: 8),
+                  Text(
                     'Logout',
                     style: TextStyle(
                       fontSize: 16,
@@ -198,8 +185,6 @@ class SettingsScreen extends StatelessWidget {
           ),
         ),
       ),
-
-
     );
   }
 }

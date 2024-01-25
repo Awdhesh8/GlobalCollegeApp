@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-
+import 'package:iconsax/iconsax.dart';
 import '../../../../../utils/constants/colors.dart';
 
 List<Map<String, dynamic>> educationalDetails = [
@@ -12,12 +10,12 @@ List<Map<String, dynamic>> educationalDetails = [
       'Board': 'State Board',
       'Passing Year': '2020',
       'Stream': 'All',
-      'Maths' : '98',
-      'English' : '98',
-      'Physics' : '98',
-      'Biology' : '98',
-      'Sanskrit' : '98',
-      'Chemistry' : '98',
+      'Maths': '98',
+      'English': '98',
+      'Physics': '98',
+      'Biology': '98',
+      'Sanskrit': '98',
+      'Chemistry': '98',
       'Percentage': '85%',
     },
   },
@@ -28,11 +26,11 @@ List<Map<String, dynamic>> educationalDetails = [
       'Board': 'State Board',
       'Passing Year': '2022',
       'Stream': 'PCM',
-      'Maths' : '98',
-      'English' : '98',
-      'Physics' : '98',
-      'Chemistry' : '98',
-      'Hindi' : '98',
+      'Maths': '98',
+      'English': '98',
+      'Physics': '98',
+      'Chemistry': '98',
+      'Hindi': '98',
       'Percentage': '85%',
     },
   },
@@ -58,7 +56,8 @@ List<Map<String, dynamic>> educationalDetails = [
     'details': {
       'Title': 'Smart Home Automation',
       'Duration': '6 months',
-      'Description': 'Developed a system for automating home appliances using IoT',
+      'Description':
+          'Developed a system for automating home appliances using IoT',
     },
   },
   {
@@ -72,63 +71,115 @@ List<Map<String, dynamic>> educationalDetails = [
 
 class EducationDetailsPanel extends StatelessWidget {
   final List<Map<String, dynamic>> educationalDetails;
-  final RxList<bool> isExpandedList;
-  final void Function(int, bool) onExpansionChanged;
 
   const EducationDetailsPanel({
     Key? key,
     required this.educationalDetails,
-    required this.isExpandedList,
-    required this.onExpansionChanged,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      child: Obx(() => Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(10),
-            decoration: ShapeDecoration(
-              color: EColors.lightContainer1,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)
+      child: Container(
+        decoration: ShapeDecoration(
+          color: EColors.lightContainer1,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        ),
+        child: Column(
+          children: educationalDetails.map((entry) {
+            return ListTile(
+              trailing: const Icon(
+                Iconsax.folder_open4,
+                color: EColors.primary,
               ),
-            ),
-            child: ExpansionPanelList(
+              title: Text(entry['type']),
+              onTap: () {
+                // Show educational details in AlertDialog
+                _showEducationalDetailsDialog(context, entry);
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  void _showEducationalDetailsDialog(
+      BuildContext context, Map<String, dynamic> details) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
               elevation: 0,
-              expandedHeaderPadding: EdgeInsets.zero,
-              expansionCallback: (panelIndex, isExpanded) =>
-                  onExpansionChanged(panelIndex, !isExpanded),
-              children: educationalDetails.asMap().entries.map(
-                    (entry) => ExpansionPanel(
-                  headerBuilder: (context, isExpanded) {
-                    return ListTile(
-                      title: Text(entry.value['type']),
-                    );
-                  },
-                  body: ListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (var key in entry.value['details'].keys)
-                          ListTile(
-                            title: Text(
-                                '$key: ${entry.value['details'][key]}'),
-                          ),
-                      ],
-                    ),
-                  ),
-                  isExpanded: isExpandedList[entry.key],
-                  canTapOnHeader: true,
-                  backgroundColor: Colors.transparent,
+              backgroundColor: Colors.transparent,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
                 ),
-              ).toList(),
-            ),
-          ),
-        ],
-      )),
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        details['type'],
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: EColors.primary, // Customize the color
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      for (var key in details['details'].keys)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                key,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: EColors.textColorPrimary1,
+                                ),
+                              ),
+                              Text(
+                                details['details'][key],
+                                style: const TextStyle(
+                                  color: EColors.primarySecond,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      const SizedBox(height: 16),
+                      Align(
+                        alignment: Alignment.center,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Close'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
