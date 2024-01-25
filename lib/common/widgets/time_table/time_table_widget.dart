@@ -26,7 +26,7 @@ class ClassSchedule extends StatelessWidget {
       // ),
 
       child: Padding(
-        padding: const EdgeInsets.only(top: 5),
+        padding: const EdgeInsets.only(top: 5, bottom: 5),
         child: Column(
           children: [
             Flex(
@@ -40,10 +40,11 @@ class ClassSchedule extends StatelessWidget {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Row(
                       children: [
                         Expanded(
+                          flex: 3,
                           child: Container(
                             // height: 64,
                             decoration: ShapeDecoration(
@@ -68,16 +69,17 @@ class ClassSchedule extends StatelessWidget {
                                   ),
                                   Expanded(
                                     child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       // crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         SizedBox(
                                           width: 150,
                                           child: Text(
-                                            textAlign: TextAlign.center,
+                                            textAlign: TextAlign.start,
                                             subject,
                                             style: const TextStyle(
                                               color: Color(0xFF353535),
-                                              fontSize: 14,
+                                              fontSize: 13,
                                               fontFamily: 'Inter',
                                               fontWeight: FontWeight.w600,
                                               // height: 1.2,
@@ -86,17 +88,21 @@ class ClassSchedule extends StatelessWidget {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        Text(
-                                          professor,
-                                          style: const TextStyle(
-                                            color: Color(0xFFE31E24),
-                                            fontSize: 12,
-                                            fontFamily: 'Inter',
-                                            fontWeight: FontWeight.w600,
-                                            // height: 1.2,
+                                        SizedBox(
+                                          width: 150,
+                                          child: Text(
+                                            professor,
+                                            textAlign: TextAlign.start,
+                                            style: const TextStyle(
+                                              color: Color(0xFFE31E24),
+                                              fontSize: 12,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w600,
+                                              // height: 1.2,
+                                            ),
+                                            // maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                          // maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ],
                                     ),
@@ -110,6 +116,7 @@ class ClassSchedule extends StatelessWidget {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
+
                                 ],
                               ),
                             ),

@@ -19,18 +19,9 @@ class TimetableScreen extends StatelessWidget {
       {'period': '2', 'subject': 'Spacecraft Design & Systems Engineering', 'professor': 'Prof. Marcus Rodriguez', 'time': '9:45 AM'},
       {'period': '3', 'subject': 'Aerodynamics', 'professor': 'Prof. Elena Chang', 'time': '10:30 AM'},
       // Add more entries for Monday as needed
-      {'period': '1', 'subject': 'Orbital Mechanics', 'professor': 'Prof. Amelia Bennett', 'time': '9:00 AM'},
-      {'period': '2', 'subject': 'Spacecraft Design & Systems Engineering', 'professor': 'Prof. Marcus Rodriguez', 'time': '9:45 AM'},
-      {'period': '3', 'subject': 'Aerodynamics', 'professor': 'Prof. Elena Chang', 'time': '10:30 AM'},
-      // Add more entries for Monday as needed
-      {'period': '1', 'subject': 'Orbital Mechanics', 'professor': 'Prof. Amelia Bennett', 'time': '9:00 AM'},
-      {'period': '2', 'subject': 'Spacecraft Design & Systems Engineering', 'professor': 'Prof. Marcus Rodriguez', 'time': '9:45 AM'},
-      {'period': '3', 'subject': 'Aerodynamics', 'professor': 'Prof. Elena Chang', 'time': '10:30 AM'},
-      // Add more entries for Monday as needed
-      {'period': '1', 'subject': 'Orbital Mechanics', 'professor': 'Prof. Amelia Bennett', 'time': '9:00 AM'},
-      {'period': '2', 'subject': 'Spacecraft Design & Systems Engineering', 'professor': 'Prof. Marcus Rodriguez', 'time': '9:45 AM'},
-      {'period': '3', 'subject': 'Aerodynamics', 'professor': 'Prof. Elena Chang', 'time': '10:30 AM'},
-      // Add more entries for Monday as needed
+      {'period': '4', 'subject': 'Orbital Mechanics', 'professor': 'Prof. Amelia Bennett', 'time': '9:00 AM'},
+      {'period': '5', 'subject': 'Spacecraft Design & Systems Engineering', 'professor': 'Prof. Marcus Rodriguez', 'time': '9:45 AM'},
+      {'period': '6', 'subject': 'Aerodynamics', 'professor': 'Prof. Elena Chang', 'time': '10:30 AM'},
     ],
     'Tuesday': [
       {'period': '1', 'subject': 'Orbital Mechanics', 'professor': 'Prof. Amelia Bennett', 'time': '9:00 AM'},
@@ -135,18 +126,20 @@ class TimetableScreen extends StatelessWidget {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
+
                                     Text(
-                                      'Subject &\nProfessor',
+                                      'Subject & Professor',
                                       style: TextStyle(
                                         color: Color(0xFF353535),
                                         fontSize: 14,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w500,
-                                        height: 0,
+                                        // height: 0,
                                       ),
                                     ),
+                                     SizedBox(width: 40,),
                                     Text(
-                                      'Class begins',
+                                      'Timing',
                                       style: TextStyle(
                                         color: Color(0xFF353535),
                                         fontSize: 14,
