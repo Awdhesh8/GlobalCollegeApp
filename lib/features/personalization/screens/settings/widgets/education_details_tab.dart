@@ -106,8 +106,7 @@ class EducationDetailsPanel extends StatelessWidget {
     );
   }
 
-  void _showEducationalDetailsDialog(
-      BuildContext context, Map<String, dynamic> details) {
+  void _showEducationalDetailsDialog(BuildContext context, Map<String, dynamic> details) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -146,17 +145,26 @@ class EducationDetailsPanel extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                key,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: EColors.textColorPrimary1,
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  key,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: EColors.textColorPrimary1,
+                                  ),
                                 ),
                               ),
-                              Text(
-                                details['details'][key],
-                                style: const TextStyle(
-                                  color: EColors.primarySecond,
+                              const SizedBox(width: 8),
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  details['details'][key],
+                                  style: const TextStyle(
+                                    color: EColors.primarySecond,
+                                  ),
+                                  maxLines: 2, // Adjust the number of lines
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
@@ -182,4 +190,5 @@ class EducationDetailsPanel extends StatelessWidget {
       },
     );
   }
+
 }

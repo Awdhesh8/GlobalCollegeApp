@@ -159,6 +159,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import '../controllers/profile_controller.dart';
 
@@ -170,8 +172,14 @@ class EditProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: EColors.backgroundColor,
       appBar: const GAppBar(
-        title: Text('Edit Profile'),
+        backgroundColor: Colors.transparent,
+        title: Text('Edit Profile',
+        style: TextStyle(
+          color: EColors.primary
+        ),
+        ),
         showBackArrow: true,
       ),
       body: SingleChildScrollView(
@@ -184,6 +192,11 @@ class EditProfile extends StatelessWidget {
               child: Obx(() => CircularAvatar(
                 imagePath: profileController.imagePath.value,
                 onTap: () => _pickImage(context),
+                // Add an IconButton with an "Upload" icon
+                uploadIcon: IconButton(
+                  icon: const Icon(Icons.upload , color: Colors.white,),  // You can customize the icon here
+                  onPressed: () => _pickImage(context),
+                ),
               )),
             ),
             const SizedBox(height: 16),
@@ -203,12 +216,6 @@ class EditProfile extends StatelessWidget {
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     _saveProfile();
-      //   },
-      //   child: const Icon(Icons.save),
-      // ),
     );
   }
 
@@ -218,6 +225,9 @@ class EditProfile extends StatelessWidget {
       child: TextField(
         decoration: InputDecoration(
           labelText: label,
+          labelStyle: const TextStyle(
+            color: EColors.textColorPrimary1
+          )
         ),
         controller: TextEditingController(text: controller.value),
         onChanged: (value) => controller.value = value,
@@ -235,6 +245,7 @@ class EditProfile extends StatelessWidget {
             const SizedBox(width: 16),
             Obx(
                   () => Switch(
+                    activeColor: EColors.primarySecond,
                 value: profileController.hasLaptop.value,
                 onChanged: (value) => profileController.toggleLaptop(value),
               ),
@@ -344,19 +355,27 @@ class EditProfile extends StatelessWidget {
 
 class CircularAvatar extends StatelessWidget {
   final String imagePath;
-  final VoidCallback onTap;
+  final Function onTap;
+  final Widget uploadIcon; // Add this property
 
-  const CircularAvatar({Key? key, required this.imagePath, required this.onTap});
+  const CircularAvatar({super.key, required this.imagePath, required this.onTap, required this.uploadIcon});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: CircleAvatar(
-        radius: 40,
-        backgroundImage: imagePath.isNotEmpty ? FileImage(File(imagePath)) : null,
-        child: imagePath.isEmpty ? const Icon(Icons.camera_alt) : null,
-      ),
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        GestureDetector(
+          onTap: () => onTap(),
+          child: CircleAvatar(
+            radius: 50,
+            backgroundImage: imagePath.isNotEmpty ? FileImage(File(imagePath)) : null,
+            child: imagePath.isEmpty ? const Icon(Icons.person, size: 50, color: Colors.white) : null,
+          ),
+        ),
+        // Add the uploadIcon
+        uploadIcon,
+      ],
     );
   }
 }
