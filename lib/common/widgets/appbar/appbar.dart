@@ -37,7 +37,7 @@ class GAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       leading: showBackArrow
           ? IconButton(onPressed: () => Get.back(), icon: const Icon(Iconsax.arrow_left), color: dark ?
-      EColors.white : EColors.dark,) : leadingIcon != null
+      EColors.primary : EColors.primary,) : leadingIcon != null
               ? IconButton(onPressed: leadingOnPressed, icon: Icon(leadingIcon)) : null,
       title: title,
       backgroundColor: backgroundColor,

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import '../extra code/extra_codes/circle.dart';
-import '../features/home/widgets/left_circle_menus.dart';
-import 'Second Circle (Right Side)/right_side_circular_boxes_menu.dart';
+import '../features/home/screens/left_circle_menu_and_screens/left_circle_menus.dart';
+import '../features/home/screens/right_circle_menu_and_screens/right_circular_menus.dart';
 
 // class CircularMenuWithCircle extends StatelessWidget {
 //   const CircularMenuWithCircle({
@@ -69,7 +69,7 @@ class CircularMenuWithCircle extends StatelessWidget {
       children: [
         Stack(
           children: [
-            TextRightSideCircularScrollingBoxes(),
+            LeftSideCircularScrollingBoxes(),
             Positioned(
               top: 110.4,
               right: 95,
