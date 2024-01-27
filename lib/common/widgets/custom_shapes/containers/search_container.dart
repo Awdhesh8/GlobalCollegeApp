@@ -37,11 +37,11 @@ class ESearchContainer extends StatelessWidget {
           decoration: BoxDecoration(
               color: showBackground ? dark ? EColors.dark : EColors.light : Colors.transparent,
               borderRadius: BorderRadius.circular(ESizes.cardRadiusLg),
-              border: showBorder ? Border.all(color: EColors.grey) : null
+              border: showBorder ? Border.all(color: EColors.searchContainerBorder) : null
           ),
           child: Row(
             children: [
-              const Icon(Iconsax.search_normal, color: EColors.darkGrey,),
+              const Icon(Iconsax.search_normal, color: EColors.primary,),
               const SizedBox(width: ESizes.spaceBtwSections,),
               Text(text, style: Theme.of(context).textTheme.bodySmall,),
             ],
