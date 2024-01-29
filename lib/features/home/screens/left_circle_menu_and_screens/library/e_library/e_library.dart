@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:iconsax/iconsax.dart';
-
 import '../../../../../../common/widgets/book_contanier/book_contanier.dart';
 import '../../../../../../common/widgets/custom_shapes/containers/search_container.dart';
 import '../../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../../utils/constants/sizes.dart';
+import '../book_data/book_data_class.dart';
 import 'book_widget/e_book_widget.dart';
 
 class ELibraryScreen extends StatelessWidget {
@@ -23,6 +23,10 @@ class ELibraryScreen extends StatelessWidget {
             'This is an amazing book, This book winner of the Nobel Prize for Physics',
         'author': 'Author Name here',
         'availableQty': 10,
+         'issueDate' : 'Jan 20 2024',
+         'issueTime' : '10:30 AM',
+        'returnDate' : 'Jan 20 2024',
+         'returnTime' : '10:30 AM',
         'downloadLink':
             'https://web.pdx.edu/~pmoeck/books/Tipler_Llewellyn.pdf',
       },
@@ -33,6 +37,10 @@ class ELibraryScreen extends StatelessWidget {
             'Explore the wonders of chemistry with this insightful book',
         'author': 'Chemist Extraordinaire',
         'availableQty': 5,
+        'issueDate' : 'Jan 20 2024',
+        'issueTime' : '10:30 AM',
+        'returnDate' : 'Jan 20 2024',
+        'returnTime' : '10:30 AM',
         'downloadLink':
             'https://web.pdx.edu/~pmoeck/books/Tipler_Llewellyn.pdf',
       },
@@ -43,6 +51,10 @@ class ELibraryScreen extends StatelessWidget {
             'Explore the wonders of chemistry with this insightful book',
         'author': 'Chemist Extraordinaire',
         'availableQty': 5,
+        'issueDate' : 'Jan 20 2024',
+        'issueTime' : '10:30 AM',
+        'returnDate' : 'Jan 20 2024',
+        'returnTime' : '10:30 AM',
         'downloadLink':
             'https://web.pdx.edu/~pmoeck/books/Tipler_Llewellyn.pdf',
       },
@@ -53,6 +65,10 @@ class ELibraryScreen extends StatelessWidget {
             'Explore the wonders of chemistry with this insightful book',
         'author': 'Chemist Extraordinaire',
         'availableQty': 5,
+        'issueDate' : 'Jan 20 2024',
+        'issueTime' : '10:30 AM',
+        'returnDate' : 'Jan 20 2024',
+        'returnTime' : '10:30 AM',
         'downloadLink':
             'https://web.pdx.edu/~pmoeck/books/Tipler_Llewellyn.pdf',
       },
@@ -98,13 +114,13 @@ class ELibraryScreen extends StatelessWidget {
               height: ESizes.spaceBtwItems,
             ),
 
-            // Container with Book Data
-            /// Container with Book Data
+            // Container with e-Book Data
+            /// Container with e-Book Data
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(
-                children: books.map((bookData) {
-                  return BookDetailsWidget(bookData: bookData);
+                children: BookData.books.map((bookData) {
+                  return EBookDetailsContainer(bookData: bookData);
                 }).toList(),
               ),
             ),

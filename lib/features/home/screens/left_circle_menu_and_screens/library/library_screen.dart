@@ -9,6 +9,8 @@ import '../../../../../common/widgets/custom_container_button/custom_container_b
 import '../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../utils/constants/colors.dart';
 import 'e_library/e_library.dart';
+import 'history/book_history.dart';
+import 'issued_books/issued_books.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -36,6 +38,11 @@ class LibraryScreen extends StatelessWidget {
           const ESearchContainer(
             text: 'Search Books',
           ),
+          // CustomSearchContainer(
+          //             showBackground: true,
+          //             dark: false,
+          //             showBorder: true,
+          //           ),
 
           const SizedBox(
             height: ESizes.spaceBtwItems,
@@ -50,14 +57,20 @@ class LibraryScreen extends StatelessWidget {
                 CustomContainerButton(
                   buttonText: 'eLibrary',
                   onTap: () {
-                    Get.to(() => const ELibraryScreen());
+                    Get.to(() => const ELibraryScreen(),curve: Curves.easeInOut, transition: Transition.cupertino);
                   },
                 ),
-                const CustomContainerButton(
+                CustomContainerButton(
                   buttonText: 'Issued Books',
+                  onTap: () {
+                    Get.to(() => const IssuedBooksScreen(),curve: Curves.easeInOut, transition: Transition.cupertino);
+                  },
                 ),
-                const CustomContainerButton(
+                CustomContainerButton(
                   buttonText: 'History',
+                  onTap: () {
+                    Get.to(() => const BookHistoryScreen(),curve: Curves.easeInOut, transition: Transition.cupertino);
+                  },
                 ),
               ],
             ),

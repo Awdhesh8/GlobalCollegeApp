@@ -8,10 +8,10 @@ import '../../../../../../../utils/constants/sizes.dart';
 
 
 
-class BookDetailsWidget extends StatelessWidget {
+class EBookDetailsContainer extends StatelessWidget {
   final Map<String, dynamic> bookData;
 
-  const BookDetailsWidget({Key? key, required this.bookData}) : super(key: key);
+  const EBookDetailsContainer({Key? key, required this.bookData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +69,7 @@ class BookDetailsWidget extends StatelessWidget {
                     const SizedBox(
                       height: ESizes.spaceBtwItems,
                     ),
+
                     DownloadPDFButtonWidget(
                         downloadLink: bookData['downloadLink']),
                     // DownloadPDFButtonWidget(),
@@ -222,6 +223,154 @@ class AvailableQuantityWidget extends StatelessWidget {
         const SizedBox(width: 10),
         Text(
           availableQty.toString(),
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class IssueDate extends StatelessWidget {
+  final String issueDate;
+
+
+  const IssueDate({Key? key, required this.issueDate})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Text(
+          'Issue Date :',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            issueDate,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class IssueTime extends StatelessWidget {
+  final String issueTime;
+
+
+  const IssueTime({Key? key, required this.issueTime})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Text(
+          'Issue Time :',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          issueTime,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ReturnDate extends StatelessWidget {
+  final String returnDate;
+
+
+  const ReturnDate({Key? key, required this.returnDate})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Text(
+          'Return Date :',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            returnDate,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ReturnTime extends StatelessWidget {
+  final String returnTime;
+
+
+  const ReturnTime({Key? key, required this.returnTime})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Text(
+          'Return Time :',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          returnTime,
           style: const TextStyle(
             color: Colors.black,
             fontSize: 14,
