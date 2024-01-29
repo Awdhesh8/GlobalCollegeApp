@@ -19,34 +19,42 @@ class ELibraryScreen extends StatelessWidget {
       {
         'imageUrl': 'assets/books/1book.jpg',
         'title': 'Space Forces',
-        'description': 'This is an amazing book, This book winner of the Nobel Prize for Physics',
+        'description':
+            'This is an amazing book, This book winner of the Nobel Prize for Physics',
         'author': 'Author Name here',
         'availableQty': 10,
-        'downloadLink': 'https://example.com/space_forces.pdf',
+        'downloadLink':
+            'https://web.pdx.edu/~pmoeck/books/Tipler_Llewellyn.pdf',
       },
       {
         'imageUrl': 'assets/books/2book.jpg',
         'title': 'Chemistry Wonders',
-        'description': 'Explore the wonders of chemistry with this insightful book',
+        'description':
+            'Explore the wonders of chemistry with this insightful book',
         'author': 'Chemist Extraordinaire',
         'availableQty': 5,
-        'downloadLink': 'https://example.com/chemistry_wonders.pdf',
-      },
-       {
-        'imageUrl': 'assets/books/2book.jpg',
-        'title': 'Chemistry Wonders',
-        'description': 'Explore the wonders of chemistry with this insightful book',
-        'author': 'Chemist Extraordinaire',
-        'availableQty': 5,
-        'downloadLink': 'https://example.com/chemistry_wonders.pdf',
+        'downloadLink':
+            'https://web.pdx.edu/~pmoeck/books/Tipler_Llewellyn.pdf',
       },
       {
         'imageUrl': 'assets/books/2book.jpg',
         'title': 'Chemistry Wonders',
-        'description': 'Explore the wonders of chemistry with this insightful book',
+        'description':
+            'Explore the wonders of chemistry with this insightful book',
         'author': 'Chemist Extraordinaire',
         'availableQty': 5,
-        'downloadLink': 'https://example.com/chemistry_wonders.pdf',
+        'downloadLink':
+            'https://web.pdx.edu/~pmoeck/books/Tipler_Llewellyn.pdf',
+      },
+      {
+        'imageUrl': 'assets/books/2book.jpg',
+        'title': 'Chemistry Wonders',
+        'description':
+            'Explore the wonders of chemistry with this insightful book',
+        'author': 'Chemist Extraordinaire',
+        'availableQty': 5,
+        'downloadLink':
+            'https://web.pdx.edu/~pmoeck/books/Tipler_Llewellyn.pdf',
       },
 
       // Add more books here...
@@ -67,13 +75,13 @@ class ELibraryScreen extends StatelessWidget {
         centerTitle: true,
         showBackArrow: true,
       ),
-
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-
-            const SizedBox(height: ESizes.spaceBtwSections + 40,),
+            const SizedBox(
+              height: ESizes.spaceBtwSections + 44,
+            ),
 
             /// Title Heading for Books
             const Row(
@@ -86,7 +94,9 @@ class ELibraryScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: ESizes.spaceBtwItems,),
+            const SizedBox(
+              height: ESizes.spaceBtwItems,
+            ),
 
             // Container with Book Data
             /// Container with Book Data
@@ -97,37 +107,22 @@ class ELibraryScreen extends StatelessWidget {
                   return BookDetailsWidget(bookData: bookData);
                 }).toList(),
               ),
-
             ),
-
           ],
         ),
       ),
-
       floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 60.0),
-        child: GestureDetector(
-          onTap: () {
-            // Handle the onTap event for the search container
-            // You can replace the Navigator.push with your own logic
-
-          },
-          child: const ESearchContainer(
-            text: 'Search Books',
-            icon: Iconsax.search_normal,
-            showBackground: true,
-            showBorder: true,
-            padding: EdgeInsets.symmetric(horizontal: ESizes.defaultSpace),
-          ),
+      floatingActionButton: const Padding(
+        padding: EdgeInsets.only(top: 66),
+        child: CustomSearchContainer(
+          showBackground: true,
+          dark: false,
+          showBorder: true,
         ),
       ),
     );
   }
 }
-
-
-
 
 final List<String> defaultEBookImages = [
   'assets/books/1book.jpg',

@@ -1,7 +1,11 @@
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../../../../common/widgets/book_contanier/book_contanier.dart';
 import '../../../../../../../utils/constants/sizes.dart';
+
 
 
 class BookDetailsWidget extends StatelessWidget {
@@ -47,16 +51,27 @@ class BookDetailsWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     BookTitleWidget(title: bookData['title']),
-                    const SizedBox(height: ESizes.spaceBtwItems,),
+                    const SizedBox(
+                      height: ESizes.spaceBtwItems,
+                    ),
                     BookDescriptionWidget(description: bookData['description']),
-                    const SizedBox(height: ESizes.spaceBtwItems,),
+                    const SizedBox(
+                      height: ESizes.spaceBtwItems,
+                    ),
                     AuthorLabelWidget(),
                     const SizedBox(height: 4),
                     AuthorNameWidget(author: bookData['author']),
-                    const SizedBox(height: ESizes.spaceBtwItems,),
-                    AvailableQuantityWidget(availableQty: bookData['availableQty']),
-                    const SizedBox(height: ESizes.spaceBtwItems,),
-                    DownloadPDFButtonWidget(),
+                    const SizedBox(
+                      height: ESizes.spaceBtwItems,
+                    ),
+                    AvailableQuantityWidget(
+                        availableQty: bookData['availableQty']),
+                    const SizedBox(
+                      height: ESizes.spaceBtwItems,
+                    ),
+                    DownloadPDFButtonWidget(
+                        downloadLink: bookData['downloadLink']),
+                    // DownloadPDFButtonWidget(),
                   ],
                 ),
               ),
@@ -79,7 +94,7 @@ class BookTitleWidget extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 16,
             fontFamily: 'Inter',
@@ -96,14 +111,15 @@ class BookTitleWidget extends StatelessWidget {
 class BookDescriptionWidget extends StatelessWidget {
   final String description;
 
-  const BookDescriptionWidget({Key? key, required this.description}) : super(key: key);
+  const BookDescriptionWidget({Key? key, required this.description})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        const Row(
           children: [
             Text(
               'Description :',
@@ -122,7 +138,7 @@ class BookDescriptionWidget extends StatelessWidget {
             Expanded(
               child: Text(
                 description,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 12,
                   fontFamily: 'Inter',
@@ -139,11 +155,10 @@ class BookDescriptionWidget extends StatelessWidget {
   }
 }
 
-
 class AuthorLabelWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       children: [
         Text(
           'Author :',
@@ -170,7 +185,7 @@ class AuthorNameWidget extends StatelessWidget {
         Expanded(
           child: Text(
             author,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 14,
               fontFamily: 'Inter',
@@ -188,13 +203,14 @@ class AuthorNameWidget extends StatelessWidget {
 class AvailableQuantityWidget extends StatelessWidget {
   final int availableQty;
 
-  const AvailableQuantityWidget({Key? key, required this.availableQty}) : super(key: key);
+  const AvailableQuantityWidget({Key? key, required this.availableQty})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
+        const Text(
           'Available Qty :',
           style: TextStyle(
             color: Colors.black,
@@ -206,7 +222,7 @@ class AvailableQuantityWidget extends StatelessWidget {
         const SizedBox(width: 10),
         Text(
           availableQty.toString(),
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 14,
             fontFamily: 'Inter',
@@ -219,11 +235,15 @@ class AvailableQuantityWidget extends StatelessWidget {
 }
 
 class DownloadPDFButtonWidget extends StatelessWidget {
+  final String downloadLink;
+
+  DownloadPDFButtonWidget({required this.downloadLink});
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
+        const Text(
           'Download: Read Anytime',
           style: TextStyle(
             color: Colors.black,
@@ -234,10 +254,37 @@ class DownloadPDFButtonWidget extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         IconButton(
-          onPressed: () {},
-          icon: Icon(Iconsax.document_download),
+          onPressed: () async {
+            // Open the link in the default web browser
+            await launch(downloadLink);
+          },
+          icon: const Icon(Iconsax.document_download),
         ),
       ],
     );
   }
 }
+
+// class DownloadPDFButtonWidget extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       children: [
+//         const Text(
+//           'Download: Read Anytime',
+//           style: TextStyle(
+//             color: Colors.black,
+//             fontSize: 8,
+//             fontFamily: 'Inter',
+//             fontWeight: FontWeight.w400,
+//           ),
+//         ),
+//         const SizedBox(width: 10),
+//         IconButton(
+//           onPressed: () {},
+//           icon: const Icon(Iconsax.document_download),
+//         ),
+//       ],
+//     );
+//   }
+// }
