@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../common/widgets/Heading_Container_Horizontal/horizontal_heading_Container.dart';
 import '../../common/widgets/time_table/time_table_widget.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
@@ -100,60 +101,7 @@ class TimetableScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: ESizes.spaceBtwItemsHeadings), // Adjust the height as needed
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              width: double.infinity,
-                              height: 50,
-                              decoration: ShapeDecoration(
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Period',
-                                      style: TextStyle(
-                                        color: Color(0xFF353535),
-                                        fontSize: 14,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-
-                                    Text(
-                                      'Subject & Professor',
-                                      style: TextStyle(
-                                        color: Color(0xFF353535),
-                                        fontSize: 14,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w500,
-                                        // height: 0,
-                                      ),
-                                    ),
-                                     SizedBox(width: 40,),
-                                    Text(
-                                      'Timing',
-                                      style: TextStyle(
-                                        color: Color(0xFF353535),
-                                        fontSize: 14,
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      const HeadingContainerTexts(titleOne: 'Period', titleSecond: 'Subject & Professor', titleThird: 'Timing',),
                       const SizedBox(height: ESizes.spaceBtwItemsHeadings), // Adjust the height as needed
                       Column(
                         children: [
@@ -179,3 +127,4 @@ class TimetableScreen extends StatelessWidget {
     );
   }
 }
+

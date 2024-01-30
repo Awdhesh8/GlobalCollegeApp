@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
+import 'package:globalcollegeapp/utils/constants/sizes.dart';
 import '../../../../../common/widgets/profile_image_name/profile_header_name_image.dart';
+import '../../../../../common/widgets/texts/text_styles.dart';
 import 'fees_contanier/fees_contents_contanier.dart';
 
 class FeesScreen extends StatelessWidget {
-  const FeesScreen({super.key,});
+  const FeesScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: EColors.backgroundColor,
-      appBar: GAppBar(
+      appBar: const GAppBar(
         backgroundColor: Colors.transparent,
         showBackArrow: true,
         title: Text(
@@ -22,30 +26,115 @@ class FeesScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: [
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          child: Column(
+            children: [
+              /// --- Circular Avatar User Profile Image & Edit Button ---
+              const Padding(
+                padding: EdgeInsets.only(right: 40),
+                child: UserProfile(
+                  userText2: 'Surya Pratap Singh',
+                  userText: 'GN/212/ME/2024/CS',
+                  imagePath: 'assets/images/user_icon.png',
+                  showEditButton: false,
+                  width: 80,
+                  height: 80,
+                ),
+              ),
 
-          /// --- Circular Avatar User Profile Image & Edit Button ---
-          Padding(
-            padding: EdgeInsets.only(right: 40),
-            child: UserProfile(
-              userText: 'GN/212/ME/2024/CS',
-              imagePath: 'assets/images/user_icon.png',
-              showEditButton: false,
-              width: 80,
-              height: 80,
-            ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                child: Divider(
+                  height: 10,
+                ),
+              ),
+
+              const SizedBox(
+                height: ESizes.spaceBtwItemsHeadings,
+              ),
+
+              /// Heading Title
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF823333),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CustomTextStyle(
+                          text: 'Breakdown of Student Fees by Semester',
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              /// Heading | Title Text
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: EColors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          width: 8,
+                        ),
+                        CustomTextStyle(
+                          text: 'Semester',
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        CustomTextStyle(
+                          text: 'Per Semester',
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        CustomTextStyle(
+                          text: 'Paid Amount',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              Container(
+                decoration: BoxDecoration(
+                  color: EColors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  children: [
+                    FeesData(),
+                  ],
+                ),
+              ),
+            ],
           ),
-
-
-
-
-        ],
+        ),
       ),
     );
   }
 }
-
 
 class FeesData extends StatelessWidget {
   final List<Map<String, String>> semesterDetails = [
@@ -55,13 +144,15 @@ class FeesData extends StatelessWidget {
     {'Semester': '4', 'Per Semester': '2000.00', 'Paid Amount': '20000.00'},
     {'Semester': '5', 'Per Semester': '10000.00', 'Paid Amount': '20000.00'},
     {'Semester': '6', 'Per Semester': '15000.00', 'Paid Amount': '20000.00'},
-
+    {'Semester': '7', 'Per Semester': '15000.00', 'Paid Amount': '20000.00'},
+    {'Semester': '8', 'Per Semester': '15000.00', 'Paid Amount': '20000.00'},
 
     //   "Total" :
     // 'Per Semester total': '30000.00',
     //  'Paid Amount total': '40000.00',
     // 'Balance Amount': 'Balance Amount',
     // 'Total Balance Amount': '1,23,569.00',
+
   ];
 
   final Map<String, String> totalDetails = {
@@ -73,55 +164,55 @@ class FeesData extends StatelessWidget {
     'Total Balance Amount': '1,23,569.00',
   };
 
-  FeesData({super.key, });
+  FeesData({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Column(
-        children: [
-          for (var details in semesterDetails)
-            FeesDataContainer(
-              semester: details['Semester'] ?? '',
-              preSemester: details['Per Semester'] ?? '',
-              paidAmount: details['Paid Amount'] ?? '',
-            ),
-
-
-          // FeesTotalRow(
-          //   totalPerSemesters: semesterDetails
-          //       .map((details) => double.parse(details['Per Semester']!))
-          //       .toList(),
-          //   totalPaidAmounts: semesterDetails
-          //       .map((details) => double.parse(details['Paid Amount']!))
-          //       .toList(),
-          // ),
-
-          // FeesDataContainer(
-          //   semester: totalDetails['Total'] ?? '',
-          //   preSemester: totalDetails['Per Semester total'] ?? '',
-          //   paidAmount: totalDetails['Paid Amount total'] ?? '',
-          // ),
-          const SizedBox(height: 10,),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Divider(height: 4),
+    return Column(
+      children: [
+        for (var details in semesterDetails)
+          FeesDataContainer(
+            semester: details['Semester'] ?? '',
+            preSemester: details['Per Semester'] ?? '',
+            paidAmount: details['Paid Amount'] ?? '',
           ),
 
-          TotalFeesDataContainer(
-            totalText: totalDetails['Total'] ?? '',
-            preSemester: totalDetails['Total Amt'] ?? '',
-            paidAmount: totalDetails['Paid Amount total'] ?? '',
-          ),
+        // FeesTotalRow(
+        //   totalPerSemesters: semesterDetails
+        //       .map((details) => double.parse(details['Per Semester']!))
+        //       .toList(),
+        //   totalPaidAmounts: semesterDetails
+        //       .map((details) => double.parse(details['Paid Amount']!))
+        //       .toList(),
+        // ),
 
-          TotalFeesDataContainer(
-            totalText: totalDetails['Balance Amount'] ?? '',
-            preSemester: totalDetails['Total Balance Amount'] ?? '',
-            paidAmount: '',
-          ),
-        ],
-      ),
+        // FeesDataContainer(
+        //   semester: totalDetails['Total'] ?? '',
+        //   preSemester: totalDetails['Per Semester total'] ?? '',
+        //   paidAmount: totalDetails['Paid Amount total'] ?? '',
+        // ),
+        const SizedBox(
+          height: 10,
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          child: Divider(height: 4),
+        ),
+
+        TotalFeesDataContainer(
+          totalText: totalDetails['Total'] ?? '',
+          preSemester: totalDetails['Total Amt'] ?? '',
+          paidAmount: totalDetails['Paid Amount total'] ?? '',
+        ),
+
+        TotalFeesDataContainer(
+          totalText: totalDetails['Balance Amount'] ?? '',
+          preSemester: totalDetails['Total Balance Amount'] ?? '',
+          paidAmount: '',
+        ),
+      ],
     );
   }
 }
@@ -130,14 +221,16 @@ class FeesTotalRow extends StatelessWidget {
   final List<double> totalPerSemesters;
   final List<double> totalPaidAmounts;
 
-  const FeesTotalRow({super.key,
+  const FeesTotalRow({
+    super.key,
     required this.totalPerSemesters,
     required this.totalPaidAmounts,
   });
 
   @override
   Widget build(BuildContext context) {
-    final double totalPerSemestersSum = totalPerSemesters.reduce((a, b) => a + b);
+    final double totalPerSemestersSum =
+        totalPerSemesters.reduce((a, b) => a + b);
     final double totalPaidAmountsSum = totalPaidAmounts.reduce((a, b) => a + b);
 
     return ListTile(

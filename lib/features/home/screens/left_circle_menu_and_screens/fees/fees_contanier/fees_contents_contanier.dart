@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../../../../../utils/constants/colors.dart';
+
 class FeesDataContainer extends StatelessWidget {
   final String semester;
   final String preSemester;
@@ -87,7 +89,7 @@ class FeesDataContainer extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                   ),
 
-                                  IconButton(onPressed: (){}, icon: const Icon(Iconsax.arrow_down_25))
+                                  IconButton(onPressed: (){}, icon: const Icon(Iconsax.arrow_circle_right5, color: EColors.textColorPrimary1, size: 20,))
 
                                 ],
                               ),
