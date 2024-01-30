@@ -5,6 +5,7 @@ import 'package:globalcollegeapp/features/personalization/screens/settings/widge
 import 'package:globalcollegeapp/features/personalization/screens/settings/widgets/rounded_radio_buttons.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
+import '../../../../common/widgets/profile_image_name/profile_header_name_image.dart';
 import '../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../utils/constants/colors.dart';
 import 'edit_profile/edit_Profile.dart';
@@ -51,73 +52,12 @@ class SettingsScreen extends StatelessWidget {
       body: Column(
         children: [
           /// --- Circular Avatar User Profile Image & Edit Button ---
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 20,
-              top: 10,
-              right: 20,
-            ),
-            child: Column(
-              children: [
-                /// User Image | User Name | Edit Profile button.
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            /// User Profile Image
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.asset(
-                                'assets/images/user_icon.png',
-                                fit: BoxFit.cover,
-                                width: 120,
-                                height: 120,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            const Text(' Surya Pratap Singh',
-                                style: TextStyle(fontSize: 16)),
-
-                            /// Edit Information Button.
-                            TextButton(
-                              onPressed: () {
-                                Get.to(
-                                  () => EditProfile(),
-                                  transition: Transition
-                                      .rightToLeftWithFade, // You can choose the desired transition here
-                                  duration: const Duration(
-                                      milliseconds:
-                                          300), // Optional: Set the duration of the transition
-                                );
-                              },
-                              child: const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Text('Edit Profile'),
-                                  SizedBox(
-                                    width: 4,
-                                  ),
-                                  Icon(Iconsax.edit)
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          const UserProfile(
+            userText: 'Surya Pratap Singh',
+            imagePath: 'assets/images/user_icon.png',
+            showEditButton: true, // or false
           ),
+
 
           /// Rounded Radio buttons To show the Information | Personal OR Educational
           Padding(
