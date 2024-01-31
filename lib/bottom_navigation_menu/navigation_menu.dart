@@ -164,7 +164,7 @@ class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
   final screens = [
-    const MyHomePage(),
+    MyHomePage(),
     const TimeTable(),
     Notice(),
     SettingsScreen(),
