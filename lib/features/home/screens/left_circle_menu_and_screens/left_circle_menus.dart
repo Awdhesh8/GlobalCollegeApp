@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import '../../../../utils/constants/colors.dart';
 import 'package:get/get.dart';
-import 'fees/fees_screen.dart';
 import 'library/library_screen.dart';
 
 class LeftSideCircularScrollingBoxes extends StatefulWidget {

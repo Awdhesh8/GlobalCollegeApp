@@ -47,11 +47,11 @@ import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/features/home/screens/profile_card/profile_box.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import '../../../Circular Menus/circular_menus_with_circle.dart';
+import '../widgets/animation_switcher/hide_show_animation.dart';
 import 'left_circle_menu_and_screens/fees/fees_card/fees_card_contanier.dart';
-import 'left_circle_menu_and_screens/fees/fees_contanier/fees_container.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({
+  const MyHomePage({
     Key? key,
   }) : super(key: key);
 
@@ -87,11 +87,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 });
               },
             ),
-            if (shouldShowFeesCard()) ...[
-              const FeesCard(),
-            ] else ...[
-              const ProfileBox(),
-            ],
+            AnimatedSwitcherWidget(
+              firstWidget: const FeesCard(),
+              secondWidget: const ProfileBox(),
+              showFirst: showFeesCard,
+              selectedIndex: selectedIndex,
+            ),
           ],
         ),
       ),
@@ -106,14 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     });
   }
-
-
-
-  bool shouldShowFeesCard() {
-    // Show FeesCard for index 0 or 10, hide for others
-    return (selectedIndex == 0 || selectedIndex == 10) && showFeesCard;
-  }
-
 }
+
 
 

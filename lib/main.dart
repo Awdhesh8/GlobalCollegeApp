@@ -67,9 +67,9 @@ class MyApp extends StatelessWidget {
       title: 'The Flutter Way',
       theme: ThemeData(
         fontFamily: "Intel",
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(foregroundColor: Colors.white),
-        ),
+        // elevatedButtonTheme: ElevatedButtonThemeData(
+        //   style: ElevatedButton.styleFrom(foregroundColor: Colors.white),
+        // ),
         inputDecorationTheme: const InputDecorationTheme(
           filled: true,
           fillColor: Colors.white,

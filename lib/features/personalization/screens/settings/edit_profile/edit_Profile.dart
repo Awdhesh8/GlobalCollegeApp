@@ -160,7 +160,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import '../controllers/profile_controller.dart';
 

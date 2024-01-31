@@ -34,7 +34,7 @@ class RoundedButton extends StatelessWidget {
         elevation: isSelected ? null : MaterialStateProperty.all(4.0), // Elevation or shadow when selected
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         child: Text(
           label,
           style: const TextStyle(
