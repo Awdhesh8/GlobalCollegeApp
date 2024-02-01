@@ -3,12 +3,9 @@ import 'package:get/get.dart';
 import 'package:globalcollegeapp/features/personalization/screens/settings/widgets/education_details_tab.dart';
 import 'package:globalcollegeapp/features/personalization/screens/settings/widgets/personal_details_tab.dart';
 import 'package:globalcollegeapp/features/personalization/screens/settings/widgets/rounded_radio_buttons.dart';
-import 'package:iconsax/iconsax.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/profile_image_name/profile_header_name_image.dart';
-import '../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../utils/constants/colors.dart';
-import 'edit_profile/edit_Profile.dart';
 
 class SettingsController extends GetxController {
   RxBool showPersonalDetails = true.obs;
