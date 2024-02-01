@@ -111,7 +111,7 @@ class FeesCard extends StatelessWidget {
             const Row(
               children: [
                 Text(
-                  '1,10,159  ',
+                  '1,10,159',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
