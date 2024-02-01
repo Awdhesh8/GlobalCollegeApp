@@ -572,3 +572,132 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 //
 //
 //
+
+/// Random calendar code!!!..
+//import 'dart:convert';
+// import 'package:flutter/material.dart';
+// import 'package:table_calendar/table_calendar.dart';
+//
+// void main() {
+//   runApp(MyApp());
+// }
+//
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: const Text('Attendance Calendar'),
+//         ),
+//         body: AttendanceCalendar(),
+//       ),
+//     );
+//   }
+// }
+//
+// class Event {
+//   final String status;
+//   final Color color;
+//
+//   Event(this.status, this.color);
+// }
+//
+// class AttendanceCalendar extends StatefulWidget {
+//   @override
+//   _AttendanceCalendarState createState() => _AttendanceCalendarState();
+// }
+//
+// class _AttendanceCalendarState extends State<AttendanceCalendar> {
+//   late Map<DateTime, List<Event>> events;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//
+//     // Replace this string with your JSON data
+//     String jsonData = '''
+//       {
+//         "events": [
+//           {"date": "2024-02-01", "status": "present", "color": "#FF4CAF50"},
+//           {"date": "2024-02-05", "status": "absent", "color": "#FFF44336"},
+//           {"date": "2024-02-10", "status": "leave", "color": "#FF2196F3"},
+//           {"date": "2024-02-15", "status": "present", "color": "#FF4CAF50"},
+//           {"date": "2024-02-20", "status": "absent", "color": "#FFF44336"},
+//           {"date": "2024-02-25", "status": "leave", "color": "#FF2196F3"},
+//           {"date": "2024-03-01", "status": "present", "color": "#FF4CAF50"},
+//           {"date": "2024-03-05", "status": "absent", "color": "#FFF44336"},
+//           {"date": "2024-03-10", "status": "leave", "color": "#FF2196F3"}
+//         ]
+//       }
+//     ''';
+//
+//     // Parse the JSON data
+//     Map<String, dynamic> data = json.decode(jsonData);
+//
+//     // Convert the data to the required format
+//     events = Map<DateTime, List<Event>>.fromIterable(
+//       data['events'],
+//       key: (item) {
+//         var date = DateTime.parse(item['date']);
+//         print("Parsed date: $date");
+//         return date;
+//       },
+//       value: (item) {
+//         var color = Color(int.parse(item['color'].substring(1), radix: 16));
+//         print("Parsed color: $color");
+//         return [Event(item['status'], color)];
+//       },
+//     );
+//
+//     print("Events: $events");
+//   }
+//
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return TableCalendar(
+//       firstDay: DateTime.utc(2024, 1, 1),
+//       lastDay: DateTime.utc(2024, 12, 31),
+//       focusedDay: DateTime.now(),
+//       eventLoader: (day) => events[day] ?? [],
+//       calendarFormat: CalendarFormat.month,
+//       startingDayOfWeek: StartingDayOfWeek.monday,
+//       headerStyle: const HeaderStyle(
+//         formatButtonVisible: false,
+//       ),
+//       calendarStyle: const CalendarStyle(
+//         // Add any additional styling you need here
+//       ),
+//       daysOfWeekStyle: const DaysOfWeekStyle(
+//         // Add any styling for the days of the week here
+//       ),
+//       calendarBuilders: CalendarBuilders(
+//         defaultBuilder: (context, date, dayOfWeek) {
+//           print("Building for date: $date");
+//
+//           Color color = Colors.grey; // Default color for days without events
+//
+//           if (events.containsKey(date)) {
+//             print("Events for $date: ${events[date]}");
+//             color = events[date]![0].color;
+//           }
+//
+//           return Container(
+//             margin: const EdgeInsets.all(4.0),
+//             alignment: Alignment.center,
+//             decoration: BoxDecoration(
+//               shape: BoxShape.circle,
+//               color: color,
+//             ),
+//             child: Text(
+//               date.day.toString(),
+//               style: TextStyle(color: Colors.white),
+//             ),
+//           );
+//         },
+//
+//       ),
+//     );
+//   }
+// }
