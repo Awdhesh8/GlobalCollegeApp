@@ -145,6 +145,182 @@ class AttendanceScreen extends StatelessWidget {
 
 
 
+
+class AttendanceColor {
+  final String type;
+  final Color color;
+
+  AttendanceColor({required this.type, required this.color});
+}
+
+class ColoredDayCell extends StatelessWidget {
+  final DateTime day;
+  final List<AttendanceColor> events;
+
+  ColoredDayCell({required this.day, required this.events});
+
+  @override
+  Widget build(BuildContext context) {
+    Color getEventColor(String eventType) {
+      switch (eventType.toLowerCase()) {
+        case 'present':
+          return Colors.blue;
+        case 'absent':
+          return Colors.red;
+        case 'holiday':
+          return Colors.amber;
+        case 'weekend holiday':
+          return Colors.yellow;
+        case 'leave':
+          return Colors.green;
+        default:
+          return Colors.transparent;
+      }
+    }
+
+    Color backgroundColor =
+    events.isNotEmpty ? getEventColor(events.first.type) : Colors.transparent;
+
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: backgroundColor,
+      ),
+      child: Center(
+        child: Text(
+          day.day.toString(),
+          style: TextStyle(
+            color: events.isNotEmpty ? Colors.white : Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CalendarWidget extends StatefulWidget {
+  @override
+  _CalendarWidgetState createState() => _CalendarWidgetState();
+}
+
+class _CalendarWidgetState extends State<CalendarWidget> {
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
+  String jsonAttendanceColors = '''
+    {
+      "2024-01-01": [{"type": "Holiday", "color": "holiday"}],
+      "2024-01-06": [{"type": "Weekend Holiday", "color": "weekend holiday"}],
+      "2024-01-13": [{"type": "Present", "color": "present"}],
+      "2024-01-20": [{"type": "Absent", "color": "absent"}],
+      "2024-01-27": [{"type": "Leave", "color": "leave"}],
+      "2024-02-03": [{"type": "Present", "color": "present"}],
+      "2024-02-10": [{"type": "Absent", "color": "absent"}],
+      "2024-02-17": [{"type": "Leave", "color": "leave"}]
+    }
+  ''';
+
+  Map<DateTime, List<AttendanceColor>> _attendanceColors = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _attendanceColors = _processJsonData(jsonAttendanceColors);
+  }
+
+  Map<DateTime, List<AttendanceColor>> _processJsonData(String jsonData) {
+    Map<String, dynamic> data = json.decode(jsonData);
+    Map<DateTime, List<AttendanceColor>> result = {};
+
+    data.forEach((key, value) {
+      DateTime date = DateTime.parse(key);
+      List<AttendanceColor> colors = _getColorsFromJson(value);
+      result[date] = colors;
+    });
+
+    return result;
+  }
+
+  List<AttendanceColor> _getColorsFromJson(List<dynamic> jsonList) {
+    return jsonList
+        .map((item) =>
+        AttendanceColor(type: item['type'], color: _getColorFromString(item['color'])))
+        .toList();
+  }
+
+  Color _getColorFromString(String colorName) {
+    switch (colorName.toLowerCase()) {
+      case 'present':
+        return Colors.blue;
+      case 'absent':
+        return Colors.red;
+      case 'holiday':
+        return Colors.amber;
+      case 'weekend holiday':
+        return Colors.yellow;
+      case 'leave':
+        return Colors.green;
+      default:
+        return Colors.transparent;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TableCalendar<AttendanceColor>(
+      calendarFormat: _calendarFormat,
+      focusedDay: _focusedDay,
+      firstDay: DateTime(2000),
+      lastDay: DateTime(2050),
+      eventLoader: _getEventsForDay,
+      onFormatChanged: (format) {
+        setState(() {
+          _calendarFormat = format;
+        });
+      },
+      onDaySelected: (selectedDay, focusedDay) {
+        setState(() {
+          _selectedDay = selectedDay;
+          _focusedDay = focusedDay;
+        });
+      },
+      calendarStyle: CalendarStyle(
+        todayDecoration: BoxDecoration(
+            color: Colors.lightBlueAccent,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(8)),
+        selectedDecoration: BoxDecoration(
+            color: Colors.green,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(8)),
+        weekendDecoration: BoxDecoration(
+            color: Color(0xFFD6D6D6),
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(8)),
+      ),
+      headerStyle: HeaderStyle(
+        formatButtonShowsNext: false,
+        titleCentered: true,
+      ),
+      calendarBuilders: CalendarBuilders(
+        defaultBuilder: (context, date, _) {
+          // Check if there are events for the date
+          List<AttendanceColor> events = _attendanceColors[date] ?? [];
+          return ColoredDayCell(day: date, events: events);
+        },
+      ),
+    );
+  }
+
+  List<AttendanceColor> _getEventsForDay(DateTime day) {
+    return _attendanceColors[day] ?? [];
+  }
+}
+
+
+
+/*
 class AttendanceColor {
   final String type;
   final Color color;
@@ -276,146 +452,6 @@ class ColoredDayCell extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-
-
-
-/*
-class AttendanceColor {
-  final String type;
-  final Color color;
-
-  AttendanceColor({required this.type, required this.color});
-}
-
-class ColoredDayCell extends StatelessWidget {
-  final DateTime day;
-  final List<AttendanceColor> events;
-
-  ColoredDayCell({required this.day, required this.events});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: events.isNotEmpty ? events.first.color : Colors.transparent,
-      ),
-      child: Center(
-        child: Text(
-          day.day.toString(),
-          style: TextStyle(
-            color: events.isNotEmpty ? Colors.white : Colors.black,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class CalendarWidget extends StatefulWidget {
-  @override
-  _CalendarWidgetState createState() => _CalendarWidgetState();
-}
-
-class _CalendarWidgetState extends State<CalendarWidget> {
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-
-  String jsonAttendanceColors = '''
-    {
-      "2024-01-01": [{"type": "Holiday", "color": 4294944000}],
-      "2024-01-06": [{"type": "Weekend Holiday", "color": 4294944000}],
-      "2024-01-13": [{"type": "Present", "color": 4278190335}],
-      "2024-01-20": [{"type": "Absent", "color": 4294901760}],
-      "2024-01-27": [{"type": "Leave", "color": 4278255360}],
-      "2024-02-03": [{"type": "Present", "color": 4278190335}],
-      "2024-02-10": [{"type": "Absent", "color": 4294901760}],
-      "2024-02-17": [{"type": "Leave", "color": 4278255360}]
-    }
-  ''';
-
-  Map<DateTime, List<AttendanceColor>> _attendanceColors = {};
-
-  @override
-  void initState() {
-    super.initState();
-    _attendanceColors = _processJsonData(jsonAttendanceColors);
-  }
-
-  Map<DateTime, List<AttendanceColor>> _processJsonData(String jsonData) {
-    Map<String, dynamic> data = json.decode(jsonData);
-    Map<DateTime, List<AttendanceColor>> result = {};
-
-    data.forEach((key, value) {
-      DateTime date = DateTime.parse(key);
-      List<AttendanceColor> colors = _getColorsFromJson(value);
-      result[date] = colors;
-    });
-
-    return result;
-  }
-
-  List<AttendanceColor> _getColorsFromJson(List<dynamic> jsonList) {
-    return jsonList
-        .map((item) =>
-        AttendanceColor(type: item['type'], color: Color(item['color'])))
-        .toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TableCalendar<AttendanceColor>(
-      calendarFormat: _calendarFormat,
-      focusedDay: _focusedDay,
-      firstDay: DateTime(2000),
-      lastDay: DateTime(2050),
-      eventLoader: _getEventsForDay,
-      onFormatChanged: (format) {
-        setState(() {
-          _calendarFormat = format;
-        });
-      },
-      onDaySelected: (selectedDay, focusedDay) {
-        setState(() {
-          _selectedDay = selectedDay;
-          _focusedDay = focusedDay;
-        });
-      },
-      calendarStyle: CalendarStyle(
-        todayDecoration: BoxDecoration(
-            color: Colors.lightBlueAccent,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(8)),
-        selectedDecoration: BoxDecoration(
-            color: Colors.green,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(8)),
-        weekendDecoration: BoxDecoration(
-            color: Color(0xFFD6D6D6),
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(8)),
-      ),
-      headerStyle: HeaderStyle(
-        formatButtonShowsNext: false,
-        titleCentered: true,
-      ),
-      calendarBuilders: CalendarBuilders(
-         // singleMarkerBuilder:
-         //  outsideBuilder:
-        // defaultBuilder:
-        // markerBuilder:
-        // prioritizedBuilder:
-
-      ),
-    );
-  }
-
-  List<AttendanceColor> _getEventsForDay(DateTime day) {
-    return _attendanceColors[day] ?? [];
   }
 }
 
