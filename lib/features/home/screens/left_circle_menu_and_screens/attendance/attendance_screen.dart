@@ -159,16 +159,16 @@ class _CalendarPageState extends State<CalendarPage> {
                 cellColor = Colors.red.shade200;
                 break;
               case 'present':
-                cellColor = Colors.cyan.shade200;
+                cellColor = Colors.cyan.shade100;
                 break;
               case 'leave':
-                cellColor = Colors.green.shade200;
+                cellColor = Colors.green.shade300;
                 break;
               case 'holiday':
-                cellColor = Colors.orange.shade200;
+                cellColor = Colors.orange.shade300;
                 break;
               case 'weekend_holiday':
-                cellColor = Colors.yellow.shade200;
+                cellColor = Colors.yellow.shade300;
                 break;
             }
           }

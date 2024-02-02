@@ -43,7 +43,7 @@ class ColorIndicationBoxExample extends StatelessWidget {
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                    color: EColors.primary,
+                    color: Colors.red.shade200,
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: const [
                       BoxShadow(
@@ -67,7 +67,7 @@ class ColorIndicationBoxExample extends StatelessWidget {
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                    color: Colors.amberAccent,
+                    color: Colors.orange.shade300,
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: const [
                       BoxShadow(
@@ -84,6 +84,30 @@ class ColorIndicationBoxExample extends StatelessWidget {
                 'Holiday',
                 style: TextStyle(fontSize: 12, fontFamily: 'Inter'),
               ),
+              const SizedBox(
+                width: 10,
+              ),
+              Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                    color: Colors.green.shade300,
+                    borderRadius: BorderRadius.circular(4),
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 8,
+                        spreadRadius: 0,
+                        color: Colors.black12,
+                      )
+                    ]),
+              ),
+              const SizedBox(
+                width: 4,
+              ),
+              const Text(
+                'Leave',
+                style: TextStyle(fontSize: 12, fontFamily: 'Inter'),
+              ),
             ],
           ),
           const SizedBox(
@@ -95,7 +119,7 @@ class ColorIndicationBoxExample extends StatelessWidget {
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                    color: Colors.orangeAccent,
+                    color: Colors.yellow.shade300,
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: const [
                       BoxShadow(
