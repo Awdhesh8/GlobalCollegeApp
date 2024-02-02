@@ -20,12 +20,11 @@ class ColorIndicationBoxExample extends StatelessWidget {
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.cyan.shade50,
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: const [
                       BoxShadow(
                         blurRadius: 8,
-                        spreadRadius: 0,
                         color: Colors.black12,
                       )
                     ]),

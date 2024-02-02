@@ -11,6 +11,7 @@ class EColors {
   static const Color backgroundColor = Color.fromRGBO(255, 244, 244, 1);
   static const Color circleAvatar = Color.fromRGBO(255, 235, 235, 1);
   static const Color circleCardColor = Color.fromRGBO(255, 226, 226, 1);
+  static const Color calenderBoxColor = Color.fromRGBO(251, 251, 252, 1);
 
   // Gradient Colors
   static const Gradient linerGradient = LinearGradient(

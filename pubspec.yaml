@@ -72,7 +72,7 @@ dependencies:
   flip_card: ^0.7.0
   particles_fly: ^0.0.8
 
-  tab_container: ^2.0.0
+  flutter_calendar_carousel: ^2.4.2
 
 
 
