@@ -17,7 +17,7 @@ class SignInForm extends StatefulWidget {
 }
 
 class _SignInFormState extends State<SignInForm> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeySignIn = GlobalKey<FormState>();
   bool isShowLoading = false;
   bool isShowConfetti = false;
   late SMITrigger error;
@@ -53,7 +53,7 @@ class _SignInFormState extends State<SignInForm> {
     Future.delayed(
       const Duration(seconds: 1),
       () {
-        if (_formKey.currentState!.validate()) {
+        if (_formKeySignIn.currentState!.validate()) {
           success.fire();
           Future.delayed(
             const Duration(seconds: 2),
@@ -96,7 +96,7 @@ class _SignInFormState extends State<SignInForm> {
     return Stack(
       children: [
         Form(
-          key: _formKey,
+          key: _formKeySignIn,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

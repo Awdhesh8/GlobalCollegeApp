@@ -48,6 +48,7 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
+
           /// --- Circular Avatar User Profile Image & Edit Button ---
           const UserProfile(
             userText: 'Surya Pratap Singh',

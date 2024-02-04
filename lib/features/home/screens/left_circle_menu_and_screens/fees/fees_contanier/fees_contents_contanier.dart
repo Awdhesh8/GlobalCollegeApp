@@ -8,13 +8,14 @@ class FeesDataContainer extends StatelessWidget {
   final String preSemester;
   final String paidAmount;
   final String? time;
+  final VoidCallback onPressed;
 
   const FeesDataContainer({
     required this.semester,
     required this.preSemester,
     required this.paidAmount,
     this.time,
-    Key? key,
+    Key? key, required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -89,7 +90,7 @@ class FeesDataContainer extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                   ),
 
-                                  IconButton(onPressed: (){}, icon: const Icon(Iconsax.arrow_circle_right5, color: EColors.textColorPrimary1, size: 20,))
+                                  IconButton(onPressed: onPressed, icon: const Icon(Iconsax.arrow_circle_right5, color: EColors.textColorPrimary1, size: 20,))
 
                                 ],
                               ),

@@ -52,7 +52,7 @@ dependencies:
   image_picker: ^1.0.7
 
   # Calendar
-  table_calendar: ^3.0.9
+  table_calendar: ^3.0.0
 
 
 
@@ -71,8 +71,12 @@ dependencies:
   curved_navigation_bar: ^1.0.3
   flip_card: ^0.7.0
   particles_fly: ^0.0.8
+  font_awesome_flutter: ^10.7.0
 
+  # Calendar
   flutter_calendar_carousel: ^2.4.2
+  cell_calendar: ^0.8.0
+
 
 
 

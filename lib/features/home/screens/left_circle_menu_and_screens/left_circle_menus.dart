@@ -187,7 +187,7 @@ class _LeftSideCircularScrollingBoxesState
         break;
         case 2:
           case 12:
-        screen = () => const AttendanceScreen();
+        screen = () => AttendanceScreen();
         break;
 
     // Add cases for other indices/screens as needed
