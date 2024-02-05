@@ -209,12 +209,10 @@ class AttendanceScreen extends StatelessWidget {
 class CalendarEvent {
   final String eventName;
   final DateTime eventDate;
-  final TextStyle eventTextStyle;
 
   CalendarEvent({
     required this.eventName,
     required this.eventDate,
-    required this.eventTextStyle,
   });
 }
 
@@ -225,48 +223,33 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   late DateTime _currentMonth;
-  final List<CalendarEvent> _events = [
-    CalendarEvent(
-      eventName: 'P',
-      eventDate: DateTime(2024, 2, 2),
-      eventTextStyle: TextStyle(color: Colors.cyan.shade100, fontWeight: FontWeight.bold),
-    ),
-    CalendarEvent(
-      eventName: 'P',
-      eventDate: DateTime(2024, 2, 3),
-      eventTextStyle: TextStyle(color: Colors.cyan.shade100, fontWeight: FontWeight.bold),
-    ),
-    CalendarEvent(
-      eventName: 'P',
-      eventDate: DateTime(2024, 2, 4),
-      eventTextStyle: TextStyle(color: Colors.cyan.shade100, fontWeight: FontWeight.bold),
-    ),
-    CalendarEvent(
-      eventName: 'P',
-      eventDate: DateTime(2024, 2, 5),
-      eventTextStyle: TextStyle(color: Colors.cyan.shade100, fontWeight: FontWeight.bold),
-    ),
-    CalendarEvent(
-      eventName: 'A',
-      eventDate: DateTime(2024, 2, 6),
-      eventTextStyle: TextStyle(color: Colors.red.shade200, fontWeight: FontWeight.bold),
-    ),
-    CalendarEvent(
-      eventName: 'L',
-      eventDate: DateTime(2024, 2, 13),
-      eventTextStyle: TextStyle(color: Colors.green.shade500, fontWeight: FontWeight.bold),
-    ),
-    CalendarEvent(
-      eventName: 'H',
-      eventDate: DateTime(2024, 2, 15),
-      eventTextStyle: TextStyle(color: Colors.orange.shade300, fontWeight: FontWeight.bold),
-    ),
-    CalendarEvent(
-      eventName: 'WH',
-      eventDate: DateTime(2024, 2, 20),
-      eventTextStyle: TextStyle(color: Colors.yellow.shade300, fontWeight: FontWeight.bold),
-    ),
-  ];
+
+  // Sample JSON data representing events
+  final String jsonData = '''
+    [
+      {"eventName": "P", "eventDate": "2024-02-01"},
+      {"eventName": "P", "eventDate": "2024-02-02"},
+      {"eventName": "P", "eventDate": "2024-02-03"},
+      {"eventName": "A", "eventDate": "2024-02-04"},
+      {"eventName": "P", "eventDate": "2024-02-05"},
+      {"eventName": "A", "eventDate": "2024-02-06"},
+      {"eventName": "L", "eventDate": "2024-02-13"},
+      {"eventName": "H", "eventDate": "2024-02-15"},
+      {"eventName": "WH", "eventDate": "2024-02-20"}
+    ]
+  ''';
+
+  List<CalendarEvent> _events = [];
+
+  void _loadEventsFromJson() {
+    final List<dynamic> jsonDataList = jsonDecode(jsonData);
+    _events = jsonDataList.map((data) {
+      return CalendarEvent(
+        eventName: data['eventName'],
+        eventDate: DateTime.parse(data['eventDate']),
+      );
+    }).toList();
+  }
 
   Color getEventBackgroundColor(String eventName) {
     switch (eventName) {
@@ -285,36 +268,68 @@ class _CalendarPageState extends State<CalendarPage> {
     }
   }
 
-  Widget buildCell(DateTime date, List<CalendarEvent> events) {
+  Widget buildCell(DateTime date) {
+    List<CalendarEvent> eventsOnDate = _events
+        .where((event) => event.eventDate.isAtSameMomentAs(DateTime(date.year, date.month, date.day)))
+        .toList();
+
+    Color cellColor = Colors.transparent;
+
+    if (eventsOnDate.isNotEmpty) {
+      cellColor = getEventBackgroundColor(eventsOnDate.first.eventName);
+    }
+
     return Padding(
       padding: const EdgeInsets.all(6.0),
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(8),
-          color: getEventBackgroundColor(events.isNotEmpty ? events.first.eventName : ''),
+          color: cellColor,
         ),
-        child: Center(
-          child: Text(
-            date.day.toString(),
-            style: TextStyle(
-              color: Colors.black,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              date.day.toString(),
+              style: TextStyle(
+                color: Colors.black,
+              ),
             ),
-          ),
+            Text(
+              DateFormat('EEE').format(date), // Display the day of the week
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget buildDayNameCell(String dayName) {
-    return Center(
-      child: Text(
-        dayName,
-        style: const TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
+  Widget buildMonth(DateTime firstDayOfMonth) {
+    List<Widget> dayWidgets = [];
+    DateTime currentDate = DateTime(firstDayOfMonth.year, firstDayOfMonth.month, 1);
+    int daysInMonth = DateTime(firstDayOfMonth.year, firstDayOfMonth.month + 1, 0).day;
+
+    while (currentDate.month == firstDayOfMonth.month) {
+      dayWidgets.add(buildCell(currentDate));
+      currentDate = currentDate.add(Duration(days: 1));
+    }
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 7,
       ),
+      itemBuilder: (BuildContext context, int index) {
+        return dayWidgets[index];
+      },
+      itemCount: dayWidgets.length,
     );
   }
 
@@ -341,15 +356,11 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
-  List<Widget> buildDayNameRow() {
-    List<String> dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    return dayNames.map((dayName) => buildDayNameCell(dayName)).toList();
-  }
-
   @override
   void initState() {
     super.initState();
     _currentMonth = DateTime.now();
+    _loadEventsFromJson();
   }
 
   @override
@@ -357,60 +368,17 @@ class _CalendarPageState extends State<CalendarPage> {
     return Container(
       height: 360,
       child: ListView.builder(
-        itemCount: 10,
+        itemCount: 12,
         itemBuilder: (BuildContext context, int monthIndex) {
-          final DateTime firstDayOfMonth =
-          DateTime(_currentMonth.year, monthIndex + 1, 1);
-          final String monthName =
-          DateFormat('MMMM').format(firstDayOfMonth);
-
-          // Calculate the starting position of the days dynamically
-          final int startingDay = firstDayOfMonth.weekday % 7; // 0 represents Sunday
-
-          List<Widget> dayWidgets = List.generate(
-            startingDay,
-                (index) => buildCell(
-              DateTime(firstDayOfMonth.year, firstDayOfMonth.month, 1 - startingDay + index),
-              [],
-            ),
-          );
-          dayWidgets.addAll(
-            List.generate(
-              DateTime(firstDayOfMonth.year, firstDayOfMonth.month + 1, 0).day,
-                  (index) {
-                final DateTime date = firstDayOfMonth.add(Duration(days: index));
-                final List<CalendarEvent> events =
-                _events.where((event) => event.eventDate.isAtSameMomentAs(date)).toList();
-                return buildCell(date, events);
-              },
-            ),
-          );
+          final DateTime currentMonth = DateTime.now();
+          final DateTime firstDayOfMonth = DateTime(currentMonth.year, monthIndex + 1, 1);
 
           return Container(
             margin: EdgeInsets.all(10),
             child: Column(
               children: [
-                buildMonthHeader(monthName),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 7,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index < 7) {
-                      return buildDayNameRow()[index];
-                    } else {
-                      return dayWidgets[index - 7];
-                    }
-                  },
-                  itemCount: DateTime(
-                    firstDayOfMonth.year,
-                    firstDayOfMonth.month + 1,
-                    0,
-                  ).day +
-                      7,
-                ),
+                buildMonthHeader(DateFormat('MMMM').format(firstDayOfMonth)),
+                buildMonth(firstDayOfMonth),
               ],
             ),
           );

@@ -5,7 +5,6 @@ import 'package:iconsax/iconsax.dart';
 import '../features/authentication/screens/entryPoint/components/animated_bar.dart';
 import '../features/home/screens/home_page.dart';
 import '../features/notice/notice.dart';
-import '../features/personalization/screens/settings/profile_ui.dart';
 import '../features/personalization/screens/settings/settings.dart';
 import '../features/time_table/time_table.dart';
 import '../model/menu.dart';
@@ -92,7 +91,7 @@ class NavigationController extends GetxController {
 
   final screens = [
     MyHomePage(),
-    const TimeTable(),
+    TimeTable(),
     Notice(),
     // ProfileScreen(),
     SettingsScreen(),

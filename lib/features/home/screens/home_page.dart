@@ -66,7 +66,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: EColors.backgroundColor,
+      // backgroundColor: const Color(0xFFFFE0E5),
+       backgroundColor: EColors.backgroundColor,
       appBar: GAppBar(
         showBackArrow: false,
         title: Image.asset(
