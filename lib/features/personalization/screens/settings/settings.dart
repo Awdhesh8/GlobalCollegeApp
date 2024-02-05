@@ -5,7 +5,9 @@ import 'package:globalcollegeapp/features/personalization/screens/settings/widge
 import 'package:globalcollegeapp/features/personalization/screens/settings/widgets/rounded_radio_buttons.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/profile_image_name/profile_header_name_image.dart';
+import '../../../../controllers/user_controller_login_check/user_controller.dart';
 import '../../../../utils/constants/colors.dart';
+import '../../../authentication/screens/onboding/onboding_screen.dart';
 
 class SettingsController extends GetxController {
   RxBool showPersonalDetails = true.obs;
@@ -26,6 +28,8 @@ class SettingsController extends GetxController {
 
 class SettingsScreen extends StatelessWidget {
   final SettingsController controller = Get.put(SettingsController());
+  final UserController userController = Get.find<UserController>(); // Add this line
+
 
   SettingsScreen({Key? key}) : super(key: key);
 
@@ -89,6 +93,7 @@ class SettingsScreen extends StatelessWidget {
       ),
 
       /// Logout Button
+      /// Logout Button
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Container(
         margin: const EdgeInsets.all(8.0),
@@ -98,7 +103,7 @@ class SettingsScreen extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(20.0),
             onTap: () {
-              // Handle logout logic here
+              _showLogoutConfirmationDialog(context);
             },
             child: Container(
               padding: const EdgeInsets.all(10),
@@ -122,6 +127,33 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showLogoutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Do you really want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+
+              // Perform the logout actions (e.g., clear user session)
+              userController.logout();
+              // Navigate to OnbodingScreen and close everything
+              Get.offAll(() => OnbodingScreen());
+            },
+            child: const Text('Logout'),
+          ),
+        ],
       ),
     );
   }

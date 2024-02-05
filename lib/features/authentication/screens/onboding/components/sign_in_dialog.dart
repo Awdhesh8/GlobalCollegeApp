@@ -64,70 +64,6 @@ void showCustomDialog(BuildContext context, {required ValueChanged onValue}) {
                             ),
 
                             SignInForm(),
-                            /*
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Divider(),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
-                                  child: Text(
-                                    "OR",
-                                    style: TextStyle(
-                                      color: Colors.black26,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(child: Divider()),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 24),
-                              child: Text(
-                                "Sign up with Email, Apple or Google",
-                                style: TextStyle(color: Colors.black54),
-                              ),
-                            ),
-                            */
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-
-                                /*
-                                IconButton(
-                                  onPressed: () {},
-                                  padding: EdgeInsets.zero,
-                                  icon: SvgPicture.asset(
-                                    "assets/icons/email_box.svg",
-                                    height: 64,
-                                    width: 64,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  padding: EdgeInsets.zero,
-                                  icon: SvgPicture.asset(
-                                    "assets/icons/apple_box.svg",
-                                    height: 64,
-                                    width: 64,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  padding: EdgeInsets.zero,
-                                  icon: SvgPicture.asset(
-                                    "assets/icons/google_box.svg",
-                                    height: 64,
-                                    width: 64,
-                                  ),
-                                ),
-                                 */
-
-                              ],
-                            ),
                           ],
                         ),
                       ),
@@ -158,45 +94,6 @@ void showCustomDialog(BuildContext context, {required ValueChanged onValue}) {
                           ),
                         ),
                       ),
-
-                      // Positioned(
-                      //   left: 0,
-                      //   right: 0,
-                      //   bottom: -48,
-                      //   child: GestureDetector(
-                      //     onTap: () {
-                      //       Navigator.of(context).pop(); // Close the dialog
-                      //     },
-                      //     child: const CircleAvatar(
-                      //       radius: 16,
-                      //       backgroundColor: Colors.white,
-                      //       child: Icon(
-                      //         Icons.close,
-                      //         size: 20,
-                      //         color: Colors.black,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-
-                      /*
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: -48,
-                        child: const CircleAvatar(
-                          radius: 16,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.close,
-                            size: 20,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-
-                       */
-
                     ],
                   ),
                 ),

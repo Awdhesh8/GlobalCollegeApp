@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:globalcollegeapp/result.dart';
 import 'circle.dart';
 import 'custom_shape.dart';
 
@@ -110,7 +109,7 @@ class _FirstCircleSelectionState extends State<FirstCircleSelection> {
               text: 'Result',
               // textTransform: Matrix4.identity()..translate(-5, 35)..rotateZ(-0.28),
               onTap: () {
-                    Get.to(()=> const AcademicResult());
+                    // Get.to(()=> const AcademicResult());
           },
               translateX: -4, translateY: 31, textRotationDegree: -16,
             ),

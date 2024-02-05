@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-
 import '../../../../../common/widgets/list_tile/settings_menu_tile.dart';
 import '../../../../../utils/constants/colors.dart';
 

@@ -18,6 +18,8 @@ class AppRoutes {
   static List<GetPage> routes = [
     GetPage(name: defaultScreen, page: () => const DefaultScreen()),
     GetPage(name: splash, page: () => const SplashScreen()),
+    
+    /// These are sub screens
     GetPage(name: fees, page: () => const FeesScreen()),
     GetPage(name: library, page: () => const LibraryScreen()),
     GetPage(name: cvResume, page: () => const CVResumeScreen()),
