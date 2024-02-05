@@ -66,7 +66,15 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
+
   void checkAuthentication() async {
+    // Uncomment the next line if you want to simulate a logged-in user
+    // userController.login();
+
+    // Wait for preferences to load
+    WidgetsFlutterBinding.ensureInitialized();
+    await userController.init();
+
     if (userController.checkLogin()) {
       // If logged in, navigate to NavigationMenu
       Get.off(() => NavigationMenu());

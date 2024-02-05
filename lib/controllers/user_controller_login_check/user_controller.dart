@@ -1,9 +1,14 @@
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserController extends GetxController {
   RxBool isLoggedIn = false.obs;
+
+  Future<void> init() async {
+    // Initialize user status from SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isLoggedIn.value = prefs.getBool('isLoggedIn') ?? false;
+  }
 
   void login() async {
     isLoggedIn.value = true;
@@ -20,7 +25,6 @@ class UserController extends GetxController {
     // Update isLoggedIn status
     isLoggedIn.value = false;
   }
-
 
   bool checkLogin() {
     return isLoggedIn.value;
