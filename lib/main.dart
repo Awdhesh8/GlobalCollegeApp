@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:globalcollegeapp/routes_pages_navigation/named_routes_screens.dart';
-
 import 'controllers/user_controller_login_check/user_controller.dart';
 import 'features/authentication/screens/splash_screen/splash_screen.dart';
 

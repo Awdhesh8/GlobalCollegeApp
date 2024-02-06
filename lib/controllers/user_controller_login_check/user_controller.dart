@@ -10,12 +10,23 @@ class UserController extends GetxController {
     isLoggedIn.value = prefs.getBool('isLoggedIn') ?? false;
   }
 
-  void login() async {
+  void login(Map<String, dynamic> userData) async {
     isLoggedIn.value = true;
 
+    // Save user information to SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isLoggedIn', true);
+    prefs.setString('user_id', userData['user_id']);
+    prefs.setString('user_type', userData['user_type']);
   }
+
+
+  // void login() async {
+  //   isLoggedIn.value = true;
+  //
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setBool('isLoggedIn', true);
+  // }
 
   void logout() async {
     // Clear user session

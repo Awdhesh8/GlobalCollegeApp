@@ -327,13 +327,24 @@ class _SignInFormState extends State<SignInForm> {
         passwordController.text,
       );
 
+      print('API Response: $apiResponse');
+
       if (apiResponse['status'] == '1') {
         // Login successful
-        userController.login(); // Update user login status
+        // userController.login(); // Update user login status
 
-        // Set 'isLoggedIn' to true in SharedPreferences
+        /// Login successful
+        userController.login(apiResponse['response'][0]); // Pass user data
+        final Map<String, dynamic> userData = apiResponse['response'][0];
+
+        // Print user data
+        print('User ID: ${userData['user_id']}');
+        print('User Type: ${userData['user_type']}');
+
+        // Store necessary user information in local storage
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool('isLoggedIn', true);
+        prefs.setString('user_id', userData['user_id']);
+        prefs.setString('user_type', userData['user_type']);
 
         success.fire();
 
@@ -355,6 +366,7 @@ class _SignInFormState extends State<SignInForm> {
         });
       } else {
         // Login failed
+        print('Login failed: ${apiResponse['message']}');
         error.fire();
         Future.delayed(const Duration(seconds: 2), () {
           setState(() {
@@ -364,7 +376,8 @@ class _SignInFormState extends State<SignInForm> {
         });
       }
     } catch (e) {
-      print('Exception: $e');
+      // Handle exceptions
+      print('Exception during login: $e');
     }
   }
 

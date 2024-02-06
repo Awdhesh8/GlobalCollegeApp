@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   static const String baseUrl = 'http://myglobalapp.in/global/API005/';
@@ -33,5 +34,71 @@ class ApiService {
     }
   }
 
+
+  /// get profile
+
+
+  // static Future<Map<String, dynamic>> getProfileData(String userId, String userType) async {
+  //   var headers = {
+  //     'Cookie': 'ci_session=4pcler2uun7ssrlunk96te99m180dvh8; remember_code=2f44a97999d2b9906e7f718ffaa382b8757fddb1.a09e1027dfa46dd3dab3b6622e55761679815d5e3ac1292b9de93c63c28f1f28110005db701c9c83323d761faa75f923ccfca06e7c8ba4787a14ade3c965a5c7'
+  //   };
+  //
+  //   var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/profile_personal'));
+  //   request.fields.addAll({
+  //     'APIKEY': 'GNCS0225',
+  //     'USER_ID': userId,
+  //     'USER_TYPE': userType,
+  //   });
+  //
+  //   request.headers.addAll(headers);
+  //
+  //   try {
+  //     http.StreamedResponse response = await request.send();
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> responseData = json.decode(await http.Response.fromStream(response).then((value) => value.body));
+  //       return responseData;
+  //     } else {
+  //       return {'status': '0', 'message': 'Failed to fetch data'};
+  //     }
+  //   } catch (e) {
+  //     return {'status': '0', 'message': 'Error: $e'};
+  //   }
+  // }
+
+  static var headers = {
+    'Cookie':
+    'ci_session=kpcb9645ohr4uu75n4mpp1pvgskhvpet; remember_code=2f44a97999d2b9906e7f718ffaa382b8757fddb1.a09e1027dfa46dd3dab3b6622e55761679815d5e3ac1292b9de93c63c28f1f28110005db701c9c83323d761faa75f923ccfca06e7c8ba4787a14ade3c965a5c7'
+  };
+
+  static Future<Map<String, dynamic>?> getProfileData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString('user_id') ?? '';
+    String userType = prefs.getString('user_type') ?? '';
+
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('http://myglobalapp.in/global/API005/profile_personal'));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'USER_TYPE': userType,
+    });
+
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        var responseData = json.decode(await response.stream.bytesToString());
+        return responseData;
+      } else {
+        print('API error: ${response.reasonPhrase}');
+        return null;
+      }
+    } catch (e) {
+      print('Error in API call: $e');
+      return null;
+    }
+  }
 
 }
