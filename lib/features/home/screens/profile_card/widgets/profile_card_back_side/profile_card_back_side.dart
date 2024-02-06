@@ -100,3 +100,113 @@ class UserDetailsWidget extends StatelessWidget {
     );
   }
 }
+
+class BackUserDetailsWidget extends StatelessWidget {
+  final String fatherName;
+  final String motherName;
+  final String studentSession;
+  final String mobile;
+  final String text;
+
+  const BackUserDetailsWidget({
+    Key? key,
+    required this.fatherName,
+    required this.motherName,
+    required this.studentSession,
+    required this.mobile,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(15),
+      decoration: ShapeDecoration(
+        color: EColors.primarySecond,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        shadows: const [
+          BoxShadow(
+            color: Color(0x26000000),
+            blurRadius: 10.90,
+            offset: Offset(0, 0),
+            spreadRadius: 0,
+          )
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(
+              width: ESizes.spaceBtwItems,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          'Father Name:  $fatherName',
+                          style: const TextStyle(
+                            color: EColors.white,
+                            fontSize: 18,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: ESizes.spaceBtwItemsHeadings),
+                  Text(
+                    'Mother Name:  $motherName',
+                    style: const TextStyle(
+                      color: EColors.white,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    'Session: $studentSession',
+                    style: const TextStyle(
+                      color: EColors.white,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    'Contact: $mobile',
+                    style: const TextStyle(
+                      color: EColors.white,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    text,
+                    style: const TextStyle(
+                      color: EColors.white,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

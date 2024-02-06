@@ -1,16 +1,13 @@
 
-
 /// -- LIST OF CONSTANTS USED IN APIs --
 
-//
 
 class APIConstants {
 
   // Base URL
-  static const String baseUrl = 'http://myglobalapp.in/global/Web0001';
-
+  static const String baseUrl = 'http://myglobalapp.in/global/API005/';
   // Endpoints
-  static const String loginEndpoint = '/login';
+  static const String loginEndpoint = 'login';
   // Add more endpoints as needed
 
   // Full URLs

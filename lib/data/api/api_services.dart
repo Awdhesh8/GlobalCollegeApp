@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'http://myglobalapp.in/global/Web0001/';
+  static const String baseUrl = 'http://myglobalapp.in/global/API005/';
   static const String loginEndpoint = 'login';
 
   static Future<Map<String, dynamic>> loginUser(String username, String password) async {

@@ -60,12 +60,8 @@ class _ProfileBoxState extends State<ProfileBox> {
 
   Widget buildBack() {
     // Back side of the card here
-    return const UserDetailsWidget(
-      name: 'Surya Pratap Singh', // Replace with your name from API
-      enrollmentNumber:
-          '1201ME2024', // Replace with your enrollment number from API
-      semester: '2nd sem', // Replace with your semester from API
-      branch: 'Computer Science', // Replace with your branch from API
+    return BackUserDetailsWidget(fatherName: '', motherName: '', studentSession: '', mobile: '', text: '',
+
     );
   }
 }
