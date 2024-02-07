@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../data/api/api_services.dart';
@@ -42,13 +41,13 @@ class RankingCircleText extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 45,
+                top: 59,
                 right: 25,
                 child: Text(
                   '$ranking',
                   style: const TextStyle(
                     color: EColors.textPrimaryHeading,
-                    fontSize: 37,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -151,13 +150,13 @@ class AttendanceCircleText extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 55,
-                left: 21,
+                top: 59,
+                left: 17,
                 child: Text(
                   '$attendance',
                   style: const TextStyle(
                     color: EColors.textPrimaryHeading,
-                    fontSize: 22,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

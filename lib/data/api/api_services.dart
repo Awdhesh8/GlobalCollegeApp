@@ -34,6 +34,37 @@ class ApiService {
 
   /// Get Profile Data --->>>
 
+  // static Future<Map<String, dynamic>?> getProfileData() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String userId = prefs.getString('user_id') ?? '';
+  //   String userType = prefs.getString('user_type') ?? '';
+  //
+  //   var request = http.MultipartRequest(
+  //       'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getProfileEndpoint)));
+  //   request.fields.addAll({
+  //     'APIKEY': 'GNCS0225',
+  //     'USER_ID': userId,
+  //     'USER_TYPE': userType,
+  //   });
+  //
+  //   request.headers.addAll(APIConstants.headers);
+  //
+  //   try {
+  //     http.StreamedResponse response = await request.send();
+  //
+  //     if (response.statusCode == 200) {
+  //       var responseData = json.decode(await response.stream.bytesToString());
+  //       return responseData;
+  //     } else {
+  //       print('API error: ${response.reasonPhrase}');
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     print('Error in API call: $e');
+  //     return null;
+  //   }
+  // }
+
   static Future<Map<String, dynamic>?> getProfileData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('user_id') ?? '';
@@ -54,7 +85,14 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var responseData = json.decode(await response.stream.bytesToString());
-        return responseData;
+
+        // Check if 'response' key is present and not null
+        if (responseData.containsKey('response') && responseData['response'] != null) {
+          return responseData;
+        } else {
+          print('Error: Missing or null "response" key in the API response.');
+          return null;
+        }
       } else {
         print('API error: ${response.reasonPhrase}');
         return null;

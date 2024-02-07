@@ -6,6 +6,7 @@ import 'package:globalcollegeapp/features/personalization/screens/settings/widge
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/profile_image_name/profile_header_name_image.dart';
 import '../../../../controllers/user_controller_login_check/user_controller.dart';
+import '../../../../data/api/api_services.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../authentication/screens/onboding/onboding_screen.dart';
 
@@ -81,32 +82,109 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
 
+          // /// Display Data according to the Selected Button
+          // Expanded(
+          //   child: Obx(() => controller.showPersonalDetails.value
+          //       ? UserDetails(data: personalDetails)
+          //       : EducationDetailsPanel(
+          //           educationalDetails: educationalDetails,
+          //         )),
+          // ),
+          //
+
+          Expanded(
+            child: FutureBuilder<Map<String, dynamic>?>(
+              future: ApiService.getProfileData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return UserDetails(data: []);
+                } else if (snapshot.hasError || snapshot.data == null) {
+                  print('Error loading data: ${snapshot.error}');
+                  return Center(child: Text('Error loading data'));
+                } else {
+                  final responseData = snapshot.data!;
+                  print('API Response: $responseData');
+
+                  // Check if 'data' key is present and not null
+                  if (responseData.containsKey('response') && responseData['response'] != null) {
+                    final dataList = responseData['response'] as List<dynamic>? ?? [];
+                    return Obx(() => controller.showPersonalDetails.value
+                        ? UserDetails(data: dataList.cast<Map<String, dynamic>>())
+                        : EducationDetailsPanel(
+                      educationalDetails: educationalDetails,
+                    ));
+                  } else {
+                    print('Error: Missing or null "data" key in the API response.');
+                    return Center(child: Text('Error loading data'));
+                  }
+                }
+              },
+            ),
+          ),
+
+
+
+
+          /*
           /// Display Data according to the Selected Button
           Expanded(
-            child: Obx(() => controller.showPersonalDetails.value
-                ? UserDetails(data: personalDetails)
-                : EducationDetailsPanel(
+            child: FutureBuilder<Map<String, dynamic>?>(
+              future: ApiService.getProfileData(),  // Use the ApiService to call getProfileData
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return UserDetails(data: {});
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error loading data'));
+                } else {
+                  return Obx(() => controller.showPersonalDetails.value
+                      ? UserDetails(data: snapshot.data ?? {})
+                      : EducationDetailsPanel(
                     educationalDetails: educationalDetails,
-                  )),
+                  ));
+                }
+              },
+            ),
           ),
+           */
+
+
         ],
       ),
 
 
       /// Logout Button
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: Container(
         margin: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14.0),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.white,
+              // color: Color(0xFFFFC1C5),
+              offset: Offset(-5, -5),
+              blurRadius: 5,
+              spreadRadius: 1,
+            ),
+            BoxShadow(
+              color: Colors.white,
+              offset: Offset(5, 5),
+              blurRadius: 5,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
         child: Material(
-          borderRadius: BorderRadius.circular(20.0),
-          color: EColors.primary,
+          borderRadius: BorderRadius.circular(14.0),
+          elevation: 8,
+          color: EColors.primarySecond,
           child: InkWell(
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(14.0),
             onTap: () {
               _showLogoutConfirmationDialog(context);
             },
             child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(8),
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -118,7 +196,7 @@ class SettingsScreen extends StatelessWidget {
                   Text(
                     'Logout',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 13,
                       color: EColors.white,
                     ),
                   ),
