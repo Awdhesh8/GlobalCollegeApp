@@ -113,6 +113,7 @@ class _ProfileBoxState extends State<ProfileBox> {
   }
 
   Widget buildShimmer() {
+    double containerWidth = MediaQuery.of(context).size.width * 0.9;
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
@@ -121,79 +122,12 @@ class _ProfileBoxState extends State<ProfileBox> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
         ),
-        width: double.infinity,
+        width: containerWidth,
         height: 125,
       ),
     );
   }
 
-  // Widget buildFront() {
-  //   double containerWidth = MediaQuery.of(context).size.width * 0.9;
-  //
-  //   if (profileData?['response'] != null && profileData!['response'].isNotEmpty) {
-  //     var responseData = profileData!['response'][0];
-  //
-  //     return Column(
-  //       children: [
-  //         Container(
-  //           width: containerWidth,
-  //           height: 125,
-  //           decoration: BoxDecoration(
-  //             color: EColors.primarySecond,
-  //             borderRadius: BorderRadius.circular(10),
-  //             boxShadow: const [
-  //               BoxShadow(
-  //                 offset: Offset(0, 0),
-  //                 blurRadius: 10,
-  //                 color: Colors.black12,
-  //               )
-  //             ],
-  //           ),
-  //           child: Container(
-  //             decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(20),
-  //             ),
-  //             padding: const EdgeInsets.all(0),
-  //             child: UserProfileWidget(
-  //               imageUrl: responseData[17]['value'] ?? '',
-  //               name: responseData[0]['value'] ?? 'Unknown',
-  //               branch: responseData[8]['value'] ?? 'Unknown',
-  //               courseType: responseData[7]['value'] ?? 'Unknown',
-  //               enroll: responseData[1]['value'] ?? 'Unknown',
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     );
-  //   } else {
-  //     // Handle the case when response or its sublists are null or empty
-  //     return Container(
-  //       width: containerWidth,
-  //       height: 125,
-  //       decoration: BoxDecoration(
-  //         color: EColors.primarySecond,
-  //         borderRadius: BorderRadius.circular(10),
-  //         boxShadow: const [
-  //           BoxShadow(
-  //             offset: Offset(0, 0),
-  //             blurRadius: 10,
-  //             color: Colors.black12,
-  //           )
-  //         ],
-  //       ),
-  //       child: Center(
-  //         child: Text(
-  //           'Profile data is not available.',
-  //           style: TextStyle(
-  //             color: EColors.textColorPrimary1,
-  //             fontSize: 16,
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
 
   Widget buildFront() {
     double containerWidth = MediaQuery.of(context).size.width * 0.9;
@@ -273,10 +207,10 @@ class _ProfileBoxState extends State<ProfileBox> {
 
   Widget buildBack() {
     return BackUserDetailsWidget(
-      fatherName: profileData?['response']?[0][2]['value'] ?? '',
-      motherName: profileData?['response']?[0][3]['value'] ?? '',
-      studentSession: profileData?['response']?[0][4]['value'] ?? '',
-      mobile: profileData?['response']?[0][5]['value'] ?? '',
+      fatherName: profileData?['response']?[0][3]['value'] ?? '',
+      motherName: profileData?['response']?[0][4]['value'] ?? '',
+      studentSession: profileData?['response']?[0][5]['value'] ?? '',
+      mobile: profileData?['response']?[0][6]['value'] ?? '',
       text: '', // Replace with the actual details
     );
   }

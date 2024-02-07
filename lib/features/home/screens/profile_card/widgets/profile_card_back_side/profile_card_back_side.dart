@@ -147,24 +147,18 @@ class BackUserDetailsWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'Father Name:  $fatherName',
-                          style: const TextStyle(
-                            color: EColors.white,
-                            fontSize: 18,
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w600,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
+
+                  Text(
+                    'Father Name:  $fatherName',
+                    style: const TextStyle(
+                      color: EColors.white,
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: ESizes.spaceBtwItemsHeadings),
                   Text(
                     'Mother Name:  $motherName',
                     style: const TextStyle(
