@@ -21,7 +21,7 @@ class _MirrorContainerState extends State<MirrorContainer> {
            const Positioned(
             top: 94.4,
             right: -84, // Change 'left' to 'right' for mirroring
-            child: CustomCircle(
+            child: RankingCircleText(
               width: 180.0,
               height: 192.27,
             ),

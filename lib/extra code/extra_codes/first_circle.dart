@@ -42,7 +42,7 @@ class _FirstCircleSelectionState extends State<FirstCircleSelection> {
           const Positioned(
             top: 94.4,
             left: -84,
-            child: CustomCircle(
+            child: RankingCircleText(
               width: 180.0,
               height: 192.0,
             ),

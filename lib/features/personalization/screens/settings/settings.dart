@@ -92,7 +92,7 @@ class SettingsScreen extends StatelessWidget {
         ],
       ),
 
-      /// Logout Button
+
       /// Logout Button
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Container(
@@ -149,7 +149,7 @@ class SettingsScreen extends StatelessWidget {
               // Perform the logout actions (e.g., clear user session)
               userController.logout();
               // Navigate to OnbodingScreen and close everything
-              Get.offAll(() => OnbodingScreen());
+              Get.offAll(() => const OnbodingScreen());
             },
             child: const Text('Logout'),
           ),

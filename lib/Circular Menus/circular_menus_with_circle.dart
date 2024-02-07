@@ -134,7 +134,7 @@ class CircularMenuWithCircle extends StatelessWidget {
             Positioned(
               top: 110.4,
               right: 95,
-              child: CustomCircle(
+              child: RankingCircleText(
                 width: 168.0,
                 height: 168.0,
               ),
@@ -146,7 +146,7 @@ class CircularMenuWithCircle extends StatelessWidget {
             Positioned(
               top: 110.4,
               right: -78,
-              child: CustomCircle2(
+              child: AttendanceCircleText(
                 width: 168.0,
                 height: 168.0,
               ),

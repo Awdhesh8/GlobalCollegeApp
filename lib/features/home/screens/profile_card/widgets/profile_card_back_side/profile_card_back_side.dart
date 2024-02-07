@@ -106,7 +106,7 @@ class BackUserDetailsWidget extends StatelessWidget {
   final String motherName;
   final String studentSession;
   final String mobile;
-  final String text;
+  final String email;
 
   const BackUserDetailsWidget({
     Key? key,
@@ -114,7 +114,7 @@ class BackUserDetailsWidget extends StatelessWidget {
     required this.motherName,
     required this.studentSession,
     required this.mobile,
-    required this.text,
+    required this.email,
   }) : super(key: key);
 
   @override
@@ -169,7 +169,7 @@ class BackUserDetailsWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Session: $studentSession',
+                    'Date Of Birth: $studentSession',
                     style: const TextStyle(
                       color: EColors.white,
                       fontSize: 13,
@@ -187,7 +187,7 @@ class BackUserDetailsWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    text,
+                    'Email: $email',
                     style: const TextStyle(
                       color: EColors.white,
                       fontSize: 13,
