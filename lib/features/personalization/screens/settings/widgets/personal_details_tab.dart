@@ -4,70 +4,167 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../../common/widgets/list_tile/settings_menu_tile.dart';
 import '../../../../../utils/constants/colors.dart';
 
-// class UserDetails extends StatelessWidget {
-//   final Map<String, dynamic> data;
-//
-//   const UserDetails({Key? key, required this.data}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return SingleChildScrollView(
-//       physics: const BouncingScrollPhysics(),
-//       child: Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-//         child: Container(
-//           height: 380,
-//           decoration: BoxDecoration(
-//             color: const Color(0xFFFFE0E5),
-//             borderRadius: BorderRadius.circular(20),
-//             boxShadow: const [
-//               BoxShadow(
-//                 color: Color(0xFFFFC1C5),
-//                 offset: Offset(-2, -2),
-//                 blurRadius: 5,
-//                 spreadRadius: 1,
-//               ),
-//               BoxShadow(
-//                 color: Colors.white,
-//                 offset: Offset(5, 5),
-//                 blurRadius: 5,
-//                 spreadRadius: 1,
-//               ),
-//             ],
-//           ),
-//           margin: const EdgeInsets.all(8),
-//           child: data.isNotEmpty
-//               ? Scrollbar(
-//             child: ListView(
-//               shrinkWrap: true,
-//               physics: const BouncingScrollPhysics(),
-//               children: data.entries.map((entry) {
-//                 return ESettingsMenuTile(
-//                   title: entry.key,
-//                   subTitle: entry.value.toString(),
-//                   onTap: () {
-//                     // Add any onTap functionality here if needed
-//                   },
-//                   icon: Iconsax.document_text_14,
-//                 );
-//               }).toList(),
-//             ),
-//           )
-//               : Shimmer.fromColors(
-//             baseColor: Colors.grey[300]!,
-//             highlightColor: Colors.grey[100]!,
-//             child: ListView.builder(
-//               shrinkWrap: true,
-//               itemCount: 5, // Adjust the number of shimmer lines as needed
-//               itemBuilder: (_, __) => ListTileShimmer(),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+/*
+class UserDetails extends StatelessWidget {
+  final Map<String, dynamic> data;
 
+  const UserDetails({Key? key, required this.data}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        child: Container(
+          height: 380,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFE0E5),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0xFFFFC1C5),
+                offset: Offset(-2, -2),
+                blurRadius: 5,
+                spreadRadius: 1,
+              ),
+              BoxShadow(
+                color: Colors.white,
+                offset: Offset(5, 5),
+                blurRadius: 5,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          margin: const EdgeInsets.all(8),
+          child: data.isNotEmpty
+              ? Scrollbar(
+            child: ListView(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              children: data.entries.map((entry) {
+                return ESettingsMenuTile(
+                  title: entry.key,
+                  subTitle: entry.value.toString(),
+                  onTap: () {
+                    // Add any onTap functionality here if needed
+                  },
+                  icon: Iconsax.document_text_14,
+                );
+              }).toList(),
+            ),
+          )
+              : Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: 5, // Adjust the number of shimmer lines as needed
+              itemBuilder: (_, __) => ListTileShimmer(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+ */
+
+class UserDetails extends StatelessWidget {
+  final Map<String, dynamic> data;
+  final List<Map<String, dynamic>> dataList;
+
+  const UserDetails({Key? key, required this.data, required this.dataList})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        child: Container(
+          height: 380,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFE0E5),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0xFFFFC1C5),
+                offset: Offset(-2, -2),
+                blurRadius: 5,
+                spreadRadius: 1,
+              ),
+              BoxShadow(
+                color: Colors.white,
+                offset: Offset(5, 5),
+                blurRadius: 5,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          margin: const EdgeInsets.all(8),
+          child: dataList.isNotEmpty
+              ? Scrollbar(
+                  child: ListView(
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
+                    children: dataList[0].entries.map((entry) {
+                      return ESettingsMenuTile(
+                        title: entry.key,
+                        subTitle: entry.value.toString(),
+                        onTap: () {
+                          // Add any onTap functionality here if needed
+                        },
+                        icon: Iconsax.document_text_14,
+                      );
+                    }).toList(),
+                    // return ListTile(
+                    //   title: Text(entry.key),
+                    //   subtitle: Text(entry.value.toString()),
+                    // );
+                    // }).toList(),
+                  ),
+                )
+              : Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: 8,
+                    itemBuilder: (_, __) => ListTile(
+                      leading: CircleAvatar(
+                        radius: 30,
+                        backgroundColor:Colors.grey,
+                      ),
+                      title: SizedBox(
+                        height: 20,
+                        width: 100,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(20)
+                          ),
+                        ),
+                      ),
+                      subtitle: SizedBox(
+                        height: 15,
+                        width: 50,
+                        child: Container( decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(20)
+                        ),),
+                      ),
+                    ),
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+}
+
+/*
 class UserDetails extends StatelessWidget {
   final List<Map<String, dynamic>> data;
 
@@ -102,21 +199,15 @@ class UserDetails extends StatelessWidget {
           margin: const EdgeInsets.all(8),
           child: data.isNotEmpty
               ? Scrollbar(
-                  child: ListView.builder(
+                  child: ListView(
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      final item = data[index];
-                      return ESettingsMenuTile(
-                        title: item['type'] ?? '',
-                        subTitle: item['value']?.toString() ?? '',
-                        onTap: () {
-                          // Add any onTap functionality here if needed
-                        },
-                        icon: Iconsax.document_text_14,
+                    children: data[0].entries.map((entry) {
+                      return ListTile(
+                        title: Text(entry.key),
+                        subtitle: Text(entry.value.toString()),
                       );
-                    },
+                    }).toList(),
                   ),
                 )
               : Shimmer.fromColors(
@@ -124,9 +215,19 @@ class UserDetails extends StatelessWidget {
                   highlightColor: Colors.grey[100]!,
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount:
-                        5, // Adjust the number of shimmer lines as needed
-                    itemBuilder: (_, __) => ListTileShimmer(),
+                    itemCount: 1,
+                    itemBuilder: (_, __) => ListTile(
+                      title: SizedBox(
+                        height: 20,
+                        width: 100,
+                        child: Container(color: Colors.grey),
+                      ),
+                      subtitle: SizedBox(
+                        height: 15,
+                        width: 50,
+                        child: Container(color: Colors.grey),
+                      ),
+                    ),
                   ),
                 ),
         ),
@@ -135,31 +236,108 @@ class UserDetails extends StatelessWidget {
   }
 }
 
-class ListTileShimmer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Container(
-        height: 16,
-        width: MediaQuery.of(context).size.width * 0.5,
-        color: Colors.grey[300],
-      ),
-      subtitle: Container(
-        height: 12,
-        width: MediaQuery.of(context).size.width * 0.3,
-        color: Colors.grey[300],
-      ),
-      leading: Container(
-        height: 40,
-        width: 40,
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          shape: BoxShape.circle,
-        ),
-      ),
-    );
-  }
-}
+
+ */
+
+// class UserDetails extends StatelessWidget {
+//   final List<dynamic> data;
+//
+//   const UserDetails({Key? key, required this.data}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return SingleChildScrollView(
+//       physics: const BouncingScrollPhysics(),
+//       child: Padding(
+//         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+//         child: Container(
+//           height: 380,
+//           decoration: BoxDecoration(
+//             color: const Color(0xFFFFE0E5),
+//             borderRadius: BorderRadius.circular(20),
+//             boxShadow: const [
+//               BoxShadow(
+//                 color: Color(0xFFFFC1C5),
+//                 offset: Offset(-2, -2),
+//                 blurRadius: 5,
+//                 spreadRadius: 1,
+//               ),
+//               BoxShadow(
+//                 color: Colors.white,
+//                 offset: Offset(5, 5),
+//                 blurRadius: 5,
+//                 spreadRadius: 1,
+//               ),
+//             ],
+//           ),
+//           margin: const EdgeInsets.all(8),
+//           child: data.isNotEmpty
+//               ? Scrollbar(
+//             child: ListView.builder(
+//               shrinkWrap: true,
+//               physics: const BouncingScrollPhysics(),
+//               itemCount: data.length,
+//               itemBuilder: (context, index) {
+//                 final item = data[index];
+//                 if (item is List<dynamic>) {
+//                   // Handle the case when item is a list
+//                   return Column(
+//                     children: item.map((nestedItem) {
+//                       if (nestedItem is Map<String, dynamic>) {
+//                         return ListTile(
+//                           title: Text(nestedItem['type'] ?? ''),
+//                           subtitle: Text(nestedItem['value']?.toString() ?? ''),
+//                           onTap: () {
+//                             // Add any onTap functionality here if needed
+//                           },
+//                           leading: Icon(Iconsax.document_text_14),
+//                         );
+//                       } else {
+//                         return SizedBox.shrink(); // Handle other cases or provide a fallback
+//                       }
+//                     }).toList(),
+//                   );
+//                 } else if (item is Map<String, dynamic>) {
+//                   // Handle the case when item is a map
+//                   return Container(
+//                     margin: const EdgeInsets.symmetric(vertical: 8),
+//                     child: Card(
+//                       elevation: 2,
+//                       child: ListTile(
+//                         title: Text(item['type'] ?? ''),
+//                         subtitle: Text(item['value']?.toString() ?? ''),
+//                         onTap: () {
+//                           // Add any onTap functionality here if needed
+//                         },
+//                         leading: Icon(Iconsax.document_text_14),
+//                       ),
+//                     ),
+//                   );
+//                 } else {
+//                   return SizedBox.shrink(); // Handle other cases or provide a fallback
+//                 }
+//               },
+//             ),
+//           )
+//               : Shimmer.fromColors(
+//             baseColor: Colors.grey[300]!,
+//             highlightColor: Colors.grey[100]!,
+//             child: ListView.builder(
+//               shrinkWrap: true,
+//               itemCount: 5,
+//               itemBuilder: (_, __) => ListTile(
+//                 title: SizedBox.shrink(),
+//                 subtitle: SizedBox.shrink(),
+//                 leading: Icon(Iconsax.document_text_14),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 
 // import 'package:flutter/material.dart';
 // import 'package:iconsax/iconsax.dart';

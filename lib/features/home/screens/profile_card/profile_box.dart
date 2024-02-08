@@ -60,51 +60,77 @@ class _ProfileBoxState extends State<ProfileBox> {
     );
   }
 
-
   Widget buildFront() {
     double containerWidth = MediaQuery.of(context).size.width * 0.9;
 
     if (profileData?['response'] != null && profileData!['response'].isNotEmpty) {
       var responseData = profileData!['response'][0];
 
-      // Find the index of 'Profile photo' in responseData
-      int photoIndex = responseData.indexWhere((field) => field['type'] == 'Profile photo');
+      // Check if 'response' contains 'student_name' and 'GNo' keys
+      if (responseData.containsKey('student_name') && responseData.containsKey('GNo')) {
+        // Use the profile photo URL if available, otherwise use a default image URL
+        String imageUrl = responseData['Profile_photo'] ?? 'assets/avaters/Avatar Default.jpg';
 
-      // Use the profile photo URL if found, otherwise use a default image URL
-      String imageUrl = photoIndex != -1 ? responseData[photoIndex]['value'] : 'assets/avaters/Avatar Default.jpg';
-
-      return Column(
-        children: [
-          Container(
-            width: containerWidth,
-            height: 125,
-            decoration: BoxDecoration(
-              color: EColors.primarySecond,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: const [
-                BoxShadow(
-                  offset: Offset(0, 0),
-                  blurRadius: 10,
-                  color: Colors.black12,
-                )
-              ],
-            ),
-            child: Container(
+        return Column(
+          children: [
+            Container(
+              width: containerWidth,
+              height: 125,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+                color: EColors.primarySecond,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: const [
+                  BoxShadow(
+                    offset: Offset(0, 0),
+                    blurRadius: 10,
+                    color: Colors.black12,
+                  )
+                ],
               ),
-              padding: const EdgeInsets.all(0),
-              child: UserProfileWidget(
-                imageUrl: imageUrl,
-                name: responseData[0]['value'] ?? 'Unknown',
-                branch: responseData[8]['value'] ?? 'Unknown',
-                courseType: responseData[7]['value'] ?? 'Unknown',
-                enroll: responseData[1]['value'] ?? 'Unknown',
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.all(0),
+                child: UserProfileWidget(
+                  imageUrl: imageUrl,
+                  name: responseData['student_name'] ?? 'Unknown',
+                  branch: responseData['Branch'] ?? 'Unknown',
+                  courseType: responseData['Course'] ?? 'Unknown',
+                  enroll: responseData['GNo'] ?? 'Unknown',
+                ),
+              ),
+            ),
+          ],
+        );
+      } else {
+        // Handle the case when required keys are not present in the response
+        return Container(
+          width: containerWidth,
+          height: 125,
+          decoration: BoxDecoration(
+            color: EColors.primarySecond,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: const [
+              BoxShadow(
+                offset: Offset(0, 0),
+                blurRadius: 10,
+                color: Colors.black12,
+              )
+            ],
+          ),
+          child: const Center(
+            child: Text(
+              'Profile data is not available.',
+              style: TextStyle(
+                color: EColors.textColorPrimary1,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
-        ],
-      );
+        );
+      }
     } else {
       // Handle the case when response or its sublists are null or empty
       return Container(
@@ -136,17 +162,95 @@ class _ProfileBoxState extends State<ProfileBox> {
   }
 
 
+  // Widget buildFront() {
+  //   double containerWidth = MediaQuery.of(context).size.width * 0.9;
+  //
+  //   if (profileData?['response'] != null && profileData!['response'].isNotEmpty) {
+  //     var responseData = profileData!['response'][0];
+  //
+  //     // Find the index of 'Profile photo' in responseData
+  //     int photoIndex = responseData.indexWhere((field) => field['type'] == 'Profile photo');
+  //
+  //     // Use the profile photo URL if found, otherwise use a default image URL
+  //     String imageUrl = photoIndex != -1 ? responseData[photoIndex]['value'] : 'assets/avaters/Avatar Default.jpg';
+  //
+  //     return Column(
+  //       children: [
+  //         Container(
+  //           width: containerWidth,
+  //           height: 125,
+  //           decoration: BoxDecoration(
+  //             color: EColors.primarySecond,
+  //             borderRadius: BorderRadius.circular(10),
+  //             boxShadow: const [
+  //               BoxShadow(
+  //                 offset: Offset(0, 0),
+  //                 blurRadius: 10,
+  //                 color: Colors.black12,
+  //               )
+  //             ],
+  //           ),
+  //           child: Container(
+  //             decoration: BoxDecoration(
+  //               borderRadius: BorderRadius.circular(20),
+  //             ),
+  //             padding: const EdgeInsets.all(0),
+  //             child: UserProfileWidget(
+  //               imageUrl: imageUrl,
+  //               name: responseData[0]['value'] ?? 'Unknown',
+  //               branch: responseData[8]['value'] ?? 'Unknown',
+  //               courseType: responseData[7]['value'] ?? 'Unknown',
+  //               enroll: responseData[1]['value'] ?? 'Unknown',
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     );
+  //   } else {
+  //     // Handle the case when response or its sublists are null or empty
+  //     return Container(
+  //       width: containerWidth,
+  //       height: 125,
+  //       decoration: BoxDecoration(
+  //         color: EColors.primarySecond,
+  //         borderRadius: BorderRadius.circular(10),
+  //         boxShadow: const [
+  //           BoxShadow(
+  //             offset: Offset(0, 0),
+  //             blurRadius: 10,
+  //             color: Colors.black12,
+  //           )
+  //         ],
+  //       ),
+  //       child: const Center(
+  //         child: Text(
+  //           'Profile data is not available.',
+  //           style: TextStyle(
+  //             color: EColors.textColorPrimary1,
+  //             fontSize: 16,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
+
+
 
   Widget buildBack() {
     return BackUserDetailsWidget(
-      fatherName: profileData?['response']?[0][3]['value'] ?? '',
-      motherName: profileData?['response']?[0][4]['value'] ?? '',
-      studentSession: profileData?['response']?[0][5]['value'] ?? '',
-      mobile: profileData?['response']?[0][6]['value'] ?? '',
-      email: profileData?['response']?[0][11]['value'] ?? 'NA',
+      fatherName: profileData?['response']?[0]?[3]?['value'] ?? '',
+      motherName: profileData?['response']?[0]?[4]?['value'] ?? '',
+      studentSession: profileData?['response']?[0]?[5]?['value'] ?? '',
+      mobile: profileData?['response']?[0]?[6]?['value'] ?? '',
+      email: profileData?['response']?[0]?[11]?['value'] ?? 'NA',
     );
   }
+
 }
+
+
 
 // import 'package:flutter/material.dart';
 // import 'package:globalcollegeapp/features/home/screens/profile_card/widgets/profile_card_back_side/profile_card_back_side.dart';

@@ -71,7 +71,8 @@ class ApiService {
     String userType = prefs.getString('user_type') ?? '';
 
     var request = http.MultipartRequest(
-        'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getProfileEndpoint)));
+      'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getProfileEndpoint)),
+    );
     request.fields.addAll({
       'APIKEY': 'GNCS0225',
       'USER_ID': userId,

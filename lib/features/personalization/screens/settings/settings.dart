@@ -29,8 +29,7 @@ class SettingsController extends GetxController {
 
 class SettingsScreen extends StatelessWidget {
   final SettingsController controller = Get.put(SettingsController());
-  final UserController userController = Get.find<UserController>(); // Add this line
-
+  final UserController userController = Get.find<UserController>();
 
   SettingsScreen({Key? key}) : super(key: key);
 
@@ -53,70 +52,51 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-
-          /// --- Circular Avatar User Profile Image & Edit Button ---
           const UserProfile(
             userText: 'Surya Pratap Singh',
             imagePath: 'assets/images/user_icon.png',
-            showEditButton: true, // or false
+            showEditButton: true,
           ),
-
-
-          /// Rounded Radio buttons To show the Information | Personal OR Educational
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Obx(() => RoundedButton(
-                      label: 'Personal Info',
-                      isSelected: controller.showPersonalDetails.value,
-                      onPressed: () => controller.showPersonalInfo(),
-                    )),
+                  label: 'Personal Info',
+                  isSelected: controller.showPersonalDetails.value,
+                  onPressed: () => controller.showPersonalInfo(),
+                )),
                 Obx(() => RoundedButton(
-                      label: 'Educational Info',
-                      isSelected: !controller.showPersonalDetails.value,
-                      onPressed: () => controller.showEducationalInfo(),
-                    )),
+                  label: 'Educational Info',
+                  isSelected: !controller.showPersonalDetails.value,
+                  onPressed: () => controller.showEducationalInfo(),
+                )),
               ],
             ),
           ),
-
-          // /// Display Data according to the Selected Button
-          // Expanded(
-          //   child: Obx(() => controller.showPersonalDetails.value
-          //       ? UserDetails(data: personalDetails)
-          //       : EducationDetailsPanel(
-          //           educationalDetails: educationalDetails,
-          //         )),
-          // ),
-          //
 
           Expanded(
             child: FutureBuilder<Map<String, dynamic>?>(
               future: ApiService.getProfileData(),
               builder: (context, snapshot) {
+                print('Connection State: ${snapshot.connectionState}');
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return UserDetails(data: []);
-                } else if (snapshot.hasError || snapshot.data == null) {
+                  print('Waiting for data...');
+                  return UserDetails(dataList: [], data: {},); // Pass an empty list for now.
+                } else if (snapshot.hasError) {
                   print('Error loading data: ${snapshot.error}');
                   return Center(child: Text('Error loading data'));
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  print('Received data: ${snapshot.data}');
+                  List<Map<String, dynamic>> dataList = [snapshot.data!['response'][0]];
+                  return Obx(() => controller.showPersonalDetails.value
+                      ? UserDetails(data: snapshot.data!['response'][0], dataList: dataList)
+                      : EducationDetailsPanel(
+                    educationalDetails: educationalDetails,
+                  ));
                 } else {
-                  final responseData = snapshot.data!;
-                  print('API Response: $responseData');
-
-                  // Check if 'data' key is present and not null
-                  if (responseData.containsKey('response') && responseData['response'] != null) {
-                    final dataList = responseData['response'] as List<dynamic>? ?? [];
-                    return Obx(() => controller.showPersonalDetails.value
-                        ? UserDetails(data: dataList.cast<Map<String, dynamic>>())
-                        : EducationDetailsPanel(
-                      educationalDetails: educationalDetails,
-                    ));
-                  } else {
-                    print('Error: Missing or null "data" key in the API response.');
-                    return Center(child: Text('Error loading data'));
-                  }
+                  return Center(child: Text('No data available'));
                 }
               },
             ),
@@ -126,18 +106,21 @@ class SettingsScreen extends StatelessWidget {
 
 
           /*
-          /// Display Data according to the Selected Button
           Expanded(
             child: FutureBuilder<Map<String, dynamic>?>(
-              future: ApiService.getProfileData(),  // Use the ApiService to call getProfileData
+              future: ApiService.getProfileData(),
               builder: (context, snapshot) {
+                print('Connection State: ${snapshot.connectionState}');
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return UserDetails(data: {});
+                  print('Waiting for data...');
+                  return UserDetails(data: []);
                 } else if (snapshot.hasError) {
+                  print('Error loading data: ${snapshot.error}');
                   return Center(child: Text('Error loading data'));
                 } else {
+                  print('Received data: ${snapshot.data}');
                   return Obx(() => controller.showPersonalDetails.value
-                      ? UserDetails(data: snapshot.data ?? {})
+                      ? UserDetails(data: [snapshot.data ?? {}])
                       : EducationDetailsPanel(
                     educationalDetails: educationalDetails,
                   ));
@@ -145,7 +128,42 @@ class SettingsScreen extends StatelessWidget {
               },
             ),
           ),
+
            */
+
+          // Expanded(
+          //   child: FutureBuilder<Map<String, dynamic>?>(
+          //     future: ApiService.getProfileData(),
+          //     builder: (context, snapshot) {
+          //       print('Connection State: ${snapshot.connectionState}');
+          //       if (snapshot.connectionState == ConnectionState.waiting) {
+          //         print('Waiting for data...');
+          //         return UserDetails(data: []);
+          //       } else if (snapshot.hasError) {
+          //         print('Error loading data: ${snapshot.error}');
+          //         return Center(child: Text('Error loading data'));
+          //       } else if (snapshot.hasData && snapshot.data != null) {
+          //         print('Received data: ${snapshot.data}');
+          //         var responseData = snapshot.data!["response"] as List<dynamic>? ?? [];
+          //         List<Map<String, dynamic>> mappedData = [];
+          //
+          //         if (responseData.isNotEmpty && responseData[0] is List<dynamic>) {
+          //           mappedData = (responseData[0] as List<dynamic>)
+          //               .cast<Map<String, dynamic>>()
+          //               .toList();
+          //         }
+          //
+          //         return Obx(() => controller.showPersonalDetails.value
+          //             ? UserDetails(data: mappedData)
+          //             : EducationDetailsPanel(
+          //           educationalDetails: educationalDetails,
+          //         ));
+          //       } else {
+          //         return Center(child: Text('No data available'));
+          //       }
+          //     },
+          //   ),
+          // ),
 
 
         ],
@@ -236,4 +254,180 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
+// class SettingsScreen extends StatelessWidget {
+//   final SettingsController controller = Get.put(SettingsController());
+//   final UserController userController = Get.find<UserController>(); // Add this line
+//
+//   SettingsScreen({Key? key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: EColors.backgroundColor,
+//       appBar: const GAppBar(
+//         showBackArrow: false,
+//         title: Text(
+//           'Account',
+//           style: TextStyle(
+//             fontSize: 20.0,
+//             color: Colors.white,
+//             fontWeight: FontWeight.w600,
+//           ),
+//         ),
+//         backgroundColor: EColors.primary,
+//         centerTitle: true,
+//       ),
+//       body: Column(
+//         children: [
+//
+//           /// --- Circular Avatar User Profile Image & Edit Button ---
+//           const UserProfile(
+//             userText: 'Surya Pratap Singh',
+//             imagePath: 'assets/images/user_icon.png',
+//             showEditButton: true, // or false
+//           ),
+//
+//
+//           /// Rounded Radio buttons To show the Information | Personal OR Educational
+//           Padding(
+//             padding: const EdgeInsets.symmetric(vertical: 8),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//               children: [
+//                 Obx(() => RoundedButton(
+//                       label: 'Personal Info',
+//                       isSelected: controller.showPersonalDetails.value,
+//                       onPressed: () => controller.showPersonalInfo(),
+//                     )),
+//                 Obx(() => RoundedButton(
+//                       label: 'Educational Info',
+//                       isSelected: !controller.showPersonalDetails.value,
+//                       onPressed: () => controller.showEducationalInfo(),
+//                     )),
+//               ],
+//             ),
+//           ),
+//
+//           // /// Display Data according to the Selected Button
+//           // Expanded(
+//           //   child: Obx(() => controller.showPersonalDetails.value
+//           //       ? UserDetails(data: personalDetails)
+//           //       : EducationDetailsPanel(
+//           //           educationalDetails: educationalDetails,
+//           //         )),
+//           // ),
+//           //
+//
+//
+//
+//           /// Display Data according to the Selected Button
+//           Expanded(
+//             child: FutureBuilder<Map<String, dynamic>?>(
+//               future: ApiService.getProfileData(),  // Use the ApiService to call getProfileData
+//               builder: (context, snapshot) {
+//                 if (snapshot.connectionState == ConnectionState.waiting) {
+//                   return UserDetails(data: {});
+//                 } else if (snapshot.hasError) {
+//                   return Center(child: Text('Error loading data'));
+//                 } else {
+//                   return Obx(() => controller.showPersonalDetails.value
+//                       ? UserDetails(data: snapshot.data ?? {})
+//                       : EducationDetailsPanel(
+//                     educationalDetails: educationalDetails,
+//                   ));
+//                 }
+//               },
+//             ),
+//           ),
+//
+//
+//
+//         ],
+//       ),
+//
+//
+//       /// Logout Button
+//       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+//       floatingActionButton: Container(
+//         margin: const EdgeInsets.all(8.0),
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(14.0),
+//           boxShadow: const [
+//             BoxShadow(
+//               color: Colors.white,
+//               // color: Color(0xFFFFC1C5),
+//               offset: Offset(-5, -5),
+//               blurRadius: 5,
+//               spreadRadius: 1,
+//             ),
+//             BoxShadow(
+//               color: Colors.white,
+//               offset: Offset(5, 5),
+//               blurRadius: 5,
+//               spreadRadius: 1,
+//             ),
+//           ],
+//         ),
+//         child: Material(
+//           borderRadius: BorderRadius.circular(14.0),
+//           elevation: 8,
+//           color: EColors.primarySecond,
+//           child: InkWell(
+//             borderRadius: BorderRadius.circular(14.0),
+//             onTap: () {
+//               _showLogoutConfirmationDialog(context);
+//             },
+//             child: Container(
+//               padding: const EdgeInsets.all(8),
+//               child: const Row(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   Icon(
+//                     Icons.logout,
+//                     color: EColors.white,
+//                   ),
+//                   SizedBox(width: 8),
+//                   Text(
+//                     'Logout',
+//                     style: TextStyle(
+//                       fontSize: 13,
+//                       color: EColors.white,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   void _showLogoutConfirmationDialog(BuildContext context) {
+//     showDialog(
+//       context: context,
+//       builder: (context) => AlertDialog(
+//         title: const Text('Logout'),
+//         content: const Text('Do you really want to logout?'),
+//         actions: [
+//           TextButton(
+//             onPressed: () => Navigator.of(context).pop(false),
+//             child: const Text('Cancel'),
+//           ),
+//           TextButton(
+//             onPressed: () {
+//               Navigator.of(context).pop(true);
+//
+//               // Perform the logout actions (e.g., clear user session)
+//               userController.logout();
+//               // Navigate to OnbodingScreen and close everything
+//               Get.offAll(() => const OnbodingScreen());
+//             },
+//             child: const Text('Logout'),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
