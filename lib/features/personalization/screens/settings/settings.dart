@@ -75,7 +75,7 @@ class SettingsScreen extends StatelessWidget {
                     // profilePhoto: profilePhoto,
                     contactNo: userData['ContactNo'] ?? '',
                     email: userData['Email'] ?? '',
-                    bloodGroup: userData['Blood_Group'] ?? '',
+                    // bloodGroup: userData['Blood_Group'] ?? '',
                     samagraId: userData['SamagraId'] ?? '',
                     laptop: userData['Laptop'] ?? '',
                   ));

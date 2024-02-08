@@ -161,6 +161,8 @@ import 'package:get/get.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../../../data/api/api_services.dart';
+import '../../../../../utils/constants/api_constants.dart';
 import '../controllers/profile_controller.dart';
 
 class EditProfile extends StatelessWidget {
@@ -168,7 +170,7 @@ class EditProfile extends StatelessWidget {
   final String profilePhoto;
   final String contactNo;
   final String email;
-  final String bloodGroup;
+  // final String bloodGroup;
   final String samagraId;
   final String laptop;
   EditProfile({
@@ -176,7 +178,7 @@ class EditProfile extends StatelessWidget {
     required this.profilePhoto,
     required this.contactNo,
     required this.email,
-    required this.bloodGroup,
+    // required this.bloodGroup,
     required this.samagraId,
     required this.laptop,
   }) : super(key: key);
@@ -218,7 +220,7 @@ class EditProfile extends StatelessWidget {
             const SizedBox(height: 16),
             _buildTextField('Contact Number', contactNo),
             _buildTextField('Email', email),
-            _buildTextField('Blood Group', bloodGroup),
+            _buildBloodGroupDropdown(),
             _buildTextField('Samagra ID', samagraId),
             const SizedBox(height: 16),
             _buildLaptopSection(),
@@ -234,6 +236,43 @@ class EditProfile extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildBloodGroupDropdown() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: FutureBuilder<List<String>>(
+        future: ApiService.getBloodGroup(APIConstants.headers),
+        builder: (context, snapshot) {
+          print('Snapshot: $snapshot'); // Print the entire snapshot
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            print('Error: ${snapshot.error}'); // Print the error details
+            return Text('Error loading blood groups');
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Text('No blood groups available');
+          } else {
+            return DropdownButton<String>(
+              value: profileController.selectedBloodGroup.value,
+              onChanged: (String? newValue) {
+                profileController.selectedBloodGroup.value = newValue ?? '';
+              },
+              items: snapshot.data!
+                  .map<DropdownMenuItem<String>>(
+                    (String value) => DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                ),
+              )
+                  .toList(),
+            );
+          }
+        },
+      ),
+    );
+  }
+
 
   Widget _buildTextField(String label, String text) {
     RxString controller = RxString(text);
@@ -287,6 +326,41 @@ class EditProfile extends StatelessWidget {
     );
   }
 
+  // Future<void> _pickImage(BuildContext context) async {
+  //   final picker = ImagePicker();
+  //   final pickedFile = await showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: const Text('Select Image Source'),
+  //         content: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             ElevatedButton(
+  //               onPressed: () async {
+  //                 Navigator.of(context)
+  //                     .pop(await picker.pickImage(source: ImageSource.gallery));
+  //               },
+  //               child: const Text('Gallery'),
+  //             ),
+  //             ElevatedButton(
+  //               onPressed: () async {
+  //                 Navigator.of(context)
+  //                     .pop(await picker.pickImage(source: ImageSource.camera));
+  //               },
+  //               child: const Text('Camera'),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  //
+  //   if (pickedFile != null) {
+  //     profileController.imagePath.value = pickedFile.path;
+  //   }
+  // }
+
   Future<void> _pickImage(BuildContext context) async {
     final picker = ImagePicker();
     final pickedFile = await showDialog(
@@ -318,6 +392,8 @@ class EditProfile extends StatelessWidget {
     );
 
     if (pickedFile != null) {
+      // Remove the current image when a new image is picked
+      profileController.imagePath.value = '';
       profileController.imagePath.value = pickedFile.path;
     }
   }
@@ -394,25 +470,50 @@ class CircularAvatar extends StatelessWidget {
             width: 120, // Adjust width as needed
             height: 120, // Adjust height as needed
             decoration: BoxDecoration(
-              shape: BoxShape.circle, // Use rectangle shape
-              image: imagePath.isNotEmpty
-                  ? DecorationImage(
-                image: NetworkImage(imagePath),
-                fit: BoxFit.fill, // Cover the container
-              )
-                  : null,
+              shape: BoxShape.circle,
               color: Colors.grey[300], // Add a background color
             ),
-            child: imagePath.isEmpty
-                ? const Icon(Icons.person, size: 50, color: Colors.white)
-                : null,
+            child: _buildAvatarContent(),
           ),
         ),
         uploadIcon,
       ],
     );
   }
+
+  Widget _buildAvatarContent() {
+    if (imagePath.isNotEmpty) {
+      // Check if imagePath is a network image
+      if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: NetworkImage(imagePath),
+              fit: BoxFit.fill,
+            ),
+          ),
+        );
+      } else {
+        // Local file image
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: FileImage(File(imagePath)),
+              fit: BoxFit.fill,
+            ),
+          ),
+        );
+      }
+    } else {
+      // Show default icon if imagePath is empty
+      return const Icon(Icons.person, size: 50, color: Colors.white);
+    }
+  }
 }
+
+
 
 
 

@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/constants/api_constants.dart';
 
 class ApiService {
+
+  /// User Login --->>>
   static Future<Map<String, dynamic>> loginUser(String username, String password) async {
     try {
       var headers = {
@@ -104,7 +106,7 @@ class ApiService {
     }
   }
 
-  ///
+  /// Get Rank Attendance -->>>
   static Future<Map<String, dynamic>?> getRankAndAttendanceData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('user_id') ?? '';
@@ -136,7 +138,61 @@ class ApiService {
     }
   }
 
+  /// Get Blood Group --->>>
+  static Future<List<String>> getBloodGroup(Map<String, String> headers) async {
+    try {
+      var response = await http.post(
+        Uri.parse(APIConstants.getFullUrl(APIConstants.getBloodGroup)),
+        headers: headers,
+        body: {'APIKEY': 'GNCS0225'},
+      );
+
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        // Parse the response and extract blood groups
+        List<String> bloodGroups =
+        (json.decode(response.body) as List<dynamic>).cast<String>();
+
+        return bloodGroups;
+      } else {
+        print('HTTP Error: ${response.reasonPhrase}');
+        print('Response not OK. Throwing exception...');
+        throw Exception('Failed to fetch blood groups');
+      }
+    } catch (e, stackTrace) {
+      print('Error: $e');
+      print('Stack Trace: $stackTrace');
+      throw Exception('Failed to fetch blood groups');
+    }
+  }
+
+
 }
+
+  // static Future<void> getBloodGroup() async {
+  //   var headers = APIConstants.headers;
+  //
+  //   var request = http.MultipartRequest(
+  //       'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getBloodGroup)));
+  //   request.fields.addAll({'APIKEY': 'GNCS0225'});
+  //   request.headers.addAll(headers);
+  //
+  //   try {
+  //     http.StreamedResponse response = await request.send();
+  //
+  //     if (response.statusCode == 200) {
+  //       print(await response.stream.bytesToString());
+  //     } else {
+  //       print(response.reasonPhrase);
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
+
+
 
 
 // import 'dart:convert';
