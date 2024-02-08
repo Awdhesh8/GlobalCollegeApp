@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../features/personalization/screens/settings/edit_profile/edit_Profile.dart';
+import '../../../utils/constants/colors.dart';
 
 class UserProfile extends StatelessWidget {
   final String userText;
@@ -11,15 +12,19 @@ class UserProfile extends StatelessWidget {
   final double? width;
   final double? height;
   final bool showEditButton;
+  final VoidCallback onPressed; // Define onPressed here
 
-  const UserProfile({super.key,
+
+  const UserProfile({
+    Key? key,
     required this.userText,
     required this.imagePath,
     this.showEditButton = true,
     this.width = 120,
     this.height = 120,
     this.userText2,
-  });
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +41,16 @@ class UserProfile extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: Image.asset(
+                        child: imagePath.startsWith('http')
+                            ? Image.network(
                           imagePath,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
+                          width: width,
+                          height: height,
+                        )
+                            : Image.asset(
+                          imagePath,
+                          fit: BoxFit.fill,
                           width: width,
                           height: height,
                         ),
@@ -50,14 +62,20 @@ class UserProfile extends StatelessWidget {
                     children: [
                       Text(
                         userText2 ?? '',
-                        style: const TextStyle(fontSize: 16),
+                        style: const TextStyle(
+                            fontSize: 16,),
                       ),
                       Text(
                         userText,
-                        style: const TextStyle(fontSize: 16),
-                      ),
+                        style:
+                          const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: EColors.textColorPrimary1,
+                          ),
+                        ),
                       if (showEditButton) const SizedBox(height: 8),
-                      if (showEditButton) const EditButton(),
+                      if (showEditButton) EditButton(onPressed: onPressed,),
                     ],
                   ),
                 ],
@@ -70,19 +88,24 @@ class UserProfile extends StatelessWidget {
   }
 }
 
+
 class EditButton extends StatelessWidget {
-  const EditButton({super.key});
+
+  final VoidCallback onPressed;
+  const EditButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {
-        Get.to(
-              () => EditProfile(),
-          transition: Transition.rightToLeftWithFade,
-          duration: const Duration(milliseconds: 300),
-        );
-      },
+      onPressed: onPressed,
+    // () {
+
+        // Get.to(
+        //       () => EditProfile(),
+        //   transition: Transition.rightToLeftWithFade,
+        //   duration: const Duration(milliseconds: 300),
+        // );
+      // },
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [

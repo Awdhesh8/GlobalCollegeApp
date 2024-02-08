@@ -165,20 +165,35 @@ import '../controllers/profile_controller.dart';
 
 class EditProfile extends StatelessWidget {
   final ProfileController profileController = Get.put(ProfileController());
-
-  EditProfile({super.key,});
+  final String profilePhoto;
+  final String contactNo;
+  final String email;
+  final String bloodGroup;
+  final String samagraId;
+  final String laptop;
+  EditProfile({
+    Key? key,
+    required this.profilePhoto,
+    required this.contactNo,
+    required this.email,
+    required this.bloodGroup,
+    required this.samagraId,
+    required this.laptop,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    profileController.imagePath.value = profilePhoto; // Set the profile photo
+
     return Scaffold(
       backgroundColor: EColors.backgroundColor,
       appBar: const GAppBar(
         backgroundColor: Colors.transparent,
-        title: Text('Edit Profile',
-        style: TextStyle(
-          color: EColors.primary
+        title: Text(
+          'Edit Profile',
+          style: TextStyle(color: EColors.textColorPrimary1),
         ),
-        ),
+        centerTitle: false,
         showBackArrow: true,
       ),
       body: SingleChildScrollView(
@@ -191,18 +206,20 @@ class EditProfile extends StatelessWidget {
               child: Obx(() => CircularAvatar(
                 imagePath: profileController.imagePath.value,
                 onTap: () => _pickImage(context),
-                // Add an IconButton with an "Upload" icon
                 uploadIcon: IconButton(
-                  icon: const Icon(Icons.upload , color: Colors.white,),  // You can customize the icon here
+                  icon: const Icon(
+                    Icons.upload,
+                    color: Colors.white,
+                  ),
                   onPressed: () => _pickImage(context),
                 ),
               )),
             ),
             const SizedBox(height: 16),
-            _buildTextField('Contact Number', profileController.contactNumber),
-            _buildTextField('Email', profileController.email),
-            _buildTextField('Blood Group', profileController.bloodGroup),
-            _buildTextField('Samara ID', profileController.samaraId),
+            _buildTextField('Contact Number', contactNo),
+            _buildTextField('Email', email),
+            _buildTextField('Blood Group', bloodGroup),
+            _buildTextField('Samagra ID', samagraId),
             const SizedBox(height: 16),
             _buildLaptopSection(),
             const SizedBox(height: 16),
@@ -218,15 +235,14 @@ class EditProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String label, RxString controller) {
+  Widget _buildTextField(String label, String text) {
+    RxString controller = RxString(text);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(
-            color: EColors.textColorPrimary1
-          )
+          labelStyle: const TextStyle(color: EColors.textColorPrimary1),
         ),
         controller: TextEditingController(text: controller.value),
         onChanged: (value) => controller.value = value,
@@ -244,7 +260,7 @@ class EditProfile extends StatelessWidget {
             const SizedBox(width: 16),
             Obx(
                   () => Switch(
-                    activeColor: EColors.primarySecond,
+                activeColor: EColors.primarySecond,
                 value: profileController.hasLaptop.value,
                 onChanged: (value) => profileController.toggleLaptop(value),
               ),
@@ -255,10 +271,12 @@ class EditProfile extends StatelessWidget {
           if (profileController.hasLaptop.value) {
             return Column(
               children: [
-                _buildTextField('Laptop Brand', profileController.laptopBrand),
-                _buildTextField('Laptop RAM', profileController.laptopRam),
-                _buildTextField('Laptop Processor', profileController.laptopProcessor),
-                _buildTextField('Laptop Configuration', profileController.laptopConfig),
+                _buildTextField('Laptop Brand', profileController.laptopBrand.value),
+                _buildTextField('Laptop RAM', profileController.laptopRam.value),
+                _buildTextField(
+                    'Laptop Processor', profileController.laptopProcessor.value),
+                _buildTextField(
+                    'Laptop Configuration', profileController.laptopConfig.value),
               ],
             );
           } else {
@@ -281,13 +299,15 @@ class EditProfile extends StatelessWidget {
             children: [
               ElevatedButton(
                 onPressed: () async {
-                  Navigator.of(context).pop(await picker.pickImage(source: ImageSource.gallery));
+                  Navigator.of(context)
+                      .pop(await picker.pickImage(source: ImageSource.gallery));
                 },
                 child: const Text('Gallery'),
               ),
               ElevatedButton(
                 onPressed: () async {
-                  Navigator.of(context).pop(await picker.pickImage(source: ImageSource.camera));
+                  Navigator.of(context)
+                      .pop(await picker.pickImage(source: ImageSource.camera));
                 },
                 child: const Text('Camera'),
               ),
@@ -349,15 +369,19 @@ class EditProfile extends StatelessWidget {
     // Navigate back to the SettingsScreen after Snackbar is closed
     Navigator.of(context).pop();
   }
-
 }
 
 class CircularAvatar extends StatelessWidget {
   final String imagePath;
   final Function onTap;
-  final Widget uploadIcon; // Add this property
+  final Widget uploadIcon;
 
-  const CircularAvatar({super.key, required this.imagePath, required this.onTap, required this.uploadIcon});
+  const CircularAvatar({
+    Key? key,
+    required this.imagePath,
+    required this.onTap,
+    required this.uploadIcon,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -366,13 +390,24 @@ class CircularAvatar extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () => onTap(),
-          child: CircleAvatar(
-            radius: 50,
-            backgroundImage: imagePath.isNotEmpty ? FileImage(File(imagePath)) : null,
-            child: imagePath.isEmpty ? const Icon(Icons.person, size: 50, color: Colors.white) : null,
+          child: Container(
+            width: 120, // Adjust width as needed
+            height: 120, // Adjust height as needed
+            decoration: BoxDecoration(
+              shape: BoxShape.circle, // Use rectangle shape
+              image: imagePath.isNotEmpty
+                  ? DecorationImage(
+                image: NetworkImage(imagePath),
+                fit: BoxFit.fill, // Cover the container
+              )
+                  : null,
+              color: Colors.grey[300], // Add a background color
+            ),
+            child: imagePath.isEmpty
+                ? const Icon(Icons.person, size: 50, color: Colors.white)
+                : null,
           ),
         ),
-        // Add the uploadIcon
         uploadIcon,
       ],
     );
@@ -381,7 +416,241 @@ class CircularAvatar extends StatelessWidget {
 
 
 
-
+// import 'dart:io';
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
+// import 'package:globalcollegeapp/utils/constants/colors.dart';
+// import 'package:image_picker/image_picker.dart';
+// import '../controllers/profile_controller.dart';
+//
+// class EditProfile extends StatelessWidget {
+//   final ProfileController profileController = Get.put(ProfileController());
+//
+//   EditProfile({
+//     super.key, required String profilePhoto, required contactNo, required email, required bloodGroup, required samagraId, required laptop,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: EColors.backgroundColor,
+//       appBar: const GAppBar(
+//         backgroundColor: Colors.transparent,
+//         title: Text(
+//           'Edit Profile',
+//           style: TextStyle(color: EColors.textColorPrimary1),
+//         ),
+//         centerTitle: false,
+//         showBackArrow: true,
+//       ),
+//       body: SingleChildScrollView(
+//         padding: const EdgeInsets.all(16),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.center,
+//           children: [
+//             Hero(
+//               tag: 'avatarHero',
+//               child: Obx(() => CircularAvatar(
+//                     imagePath: profileController.imagePath.value,
+//                     onTap: () => _pickImage(context),
+//                     // Add an IconButton with an "Upload" icon
+//                     uploadIcon: IconButton(
+//                       icon: const Icon(
+//                         Icons.upload,
+//                         color: Colors.white,
+//                       ), // You can customize the icon here
+//                       onPressed: () => _pickImage(context),
+//                     ),
+//                   )),
+//             ),
+//             const SizedBox(height: 16),
+//             _buildTextField('Contact Number', profileController.contactNumber),
+//             _buildTextField('Email', profileController.email),
+//             _buildTextField('Blood Group', profileController.bloodGroup),
+//             _buildTextField('Samara ID', profileController.samaraId),
+//             const SizedBox(height: 16),
+//             _buildLaptopSection(),
+//             const SizedBox(height: 16),
+//             ElevatedButton(
+//               onPressed: () {
+//                 _showConfirmationDialog(context);
+//               },
+//               child: const Text('Save'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildTextField(String label, RxString controller) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 8),
+//       child: TextField(
+//         decoration: InputDecoration(
+//             labelText: label,
+//             labelStyle: const TextStyle(color: EColors.textColorPrimary1)),
+//         controller: TextEditingController(text: controller.value),
+//         onChanged: (value) => controller.value = value,
+//       ),
+//     );
+//   }
+//
+//   Widget _buildLaptopSection() {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Row(
+//           children: [
+//             const Text('Do you have a Laptop?'),
+//             const SizedBox(width: 16),
+//             Obx(
+//               () => Switch(
+//                 activeColor: EColors.primarySecond,
+//                 value: profileController.hasLaptop.value,
+//                 onChanged: (value) => profileController.toggleLaptop(value),
+//               ),
+//             ),
+//           ],
+//         ),
+//         Obx(() {
+//           if (profileController.hasLaptop.value) {
+//             return Column(
+//               children: [
+//                 _buildTextField('Laptop Brand', profileController.laptopBrand),
+//                 _buildTextField('Laptop RAM', profileController.laptopRam),
+//                 _buildTextField(
+//                     'Laptop Processor', profileController.laptopProcessor),
+//                 _buildTextField(
+//                     'Laptop Configuration', profileController.laptopConfig),
+//               ],
+//             );
+//           } else {
+//             return Container(); // Empty container when switch is off
+//           }
+//         }),
+//       ],
+//     );
+//   }
+//
+//   Future<void> _pickImage(BuildContext context) async {
+//     final picker = ImagePicker();
+//     final pickedFile = await showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: const Text('Select Image Source'),
+//           content: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               ElevatedButton(
+//                 onPressed: () async {
+//                   Navigator.of(context)
+//                       .pop(await picker.pickImage(source: ImageSource.gallery));
+//                 },
+//                 child: const Text('Gallery'),
+//               ),
+//               ElevatedButton(
+//                 onPressed: () async {
+//                   Navigator.of(context)
+//                       .pop(await picker.pickImage(source: ImageSource.camera));
+//                 },
+//                 child: const Text('Camera'),
+//               ),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//
+//     if (pickedFile != null) {
+//       profileController.imagePath.value = pickedFile.path;
+//     }
+//   }
+//
+//   void _saveProfile() {
+//     // Perform save logic here
+//   }
+//
+//   void _showConfirmationDialog(BuildContext context) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: const Text('Update Profile'),
+//           content: const Text('Do you really want to update your profile?'),
+//           actions: [
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop(); // Close the dialog
+//                 _updateProfileAndShowSnackbar(context);
+//               },
+//               child: const Text('Yes'),
+//             ),
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop(); // Close the dialog
+//                 Get.back(); // Pop back to EditProfile
+//               },
+//               child: const Text('No'),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+//
+//   Future<void> _updateProfileAndShowSnackbar(BuildContext context) async {
+//     // Perform update logic here
+//     _saveProfile(); // Assuming this should save the profile
+//
+//     // Show Snackbar
+//     await Get.snackbar(
+//       'Update Request Send',
+//       'Your profile has been update soon.',
+//       snackPosition: SnackPosition.TOP, // Change this position if needed
+//       duration: const Duration(seconds: 2), // Adjust duration as needed
+//     );
+//
+//     // Navigate back to the SettingsScreen after Snackbar is closed
+//     Navigator.of(context).pop();
+//   }
+// }
+//
+// class CircularAvatar extends StatelessWidget {
+//   final String imagePath;
+//   final Function onTap;
+//   final Widget uploadIcon; // Add this property
+//
+//   const CircularAvatar(
+//       {super.key,
+//       required this.imagePath,
+//       required this.onTap,
+//       required this.uploadIcon});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Stack(
+//       alignment: Alignment.bottomRight,
+//       children: [
+//         GestureDetector(
+//           onTap: () => onTap(),
+//           child: CircleAvatar(
+//             radius: 50,
+//             backgroundImage:
+//                 imagePath.isNotEmpty ? FileImage(File(imagePath)) : null,
+//             child: imagePath.isEmpty
+//                 ? const Icon(Icons.person, size: 50, color: Colors.white)
+//                 : null,
+//           ),
+//         ),
+//         // Add the uploadIcon
+//         uploadIcon,
+//       ],
+//     );
+//   }
+// }
 
 /*
 
@@ -587,4 +856,3 @@ class CircularAvatar extends StatelessWidget {
 
 
  */
-

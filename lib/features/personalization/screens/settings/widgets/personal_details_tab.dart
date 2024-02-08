@@ -79,93 +79,143 @@ class UserDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double containerHeight = MediaQuery.of(context).size.height * 0.5;
+    double containerHeight = MediaQuery.of(context).size.height * 0.48;
 
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        child: Container(
-          height: containerHeight,
-          // height: 380,
-          decoration: BoxDecoration(
-            color: const Color(0xFFFFE0E5),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0xFFFFC1C5),
-                offset: Offset(-2, -2),
-                blurRadius: 5,
-                spreadRadius: 1,
-              ),
-              BoxShadow(
-                color: Colors.white,
-                offset: Offset(5, 5),
-                blurRadius: 5,
-                spreadRadius: 1,
-              ),
-            ],
+    // Filter out entries with keys "student_name" and "Profile_photo"
+    List<MapEntry<String, dynamic>> filteredEntries = data.entries.where((entry) =>
+    entry.key != "student_name" && entry.key != "Profile_photo").toList();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      child: Container(
+        height: containerHeight,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0xFFFFC1C5),
+              offset: Offset(-5, -5),
+              blurRadius: 5,
+              spreadRadius: 1,
+            ),
+            BoxShadow(
+              color: Color(0xFFFFC1C5),
+              offset: Offset(5, 5),
+              blurRadius: 5,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        margin: const EdgeInsets.all(8),
+        child: dataList.isNotEmpty
+            ? Scrollbar(
+          child: ListView(
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            children: filteredEntries.map((entry) {
+              return ESettingsMenuTile(
+                title: entry.key,
+                subTitle: entry.value.toString(),
+                onTap: () {
+                  // Add any onTap functionality here if needed
+                },
+                icon: Iconsax.document_text_14,
+              );
+            }).toList(),
           ),
-          margin: const EdgeInsets.all(8),
-          child: dataList.isNotEmpty
-              ? Scrollbar(
-                  child: ListView(
-                    shrinkWrap: true,
-                    physics: const BouncingScrollPhysics(),
-                    children: dataList[0].entries.map((entry) {
-                      return ESettingsMenuTile(
-                        title: entry.key,
-                        subTitle: entry.value.toString(),
-                        onTap: () {
-                          // Add any onTap functionality here if needed
-                        },
-                        icon: Iconsax.document_text_14,
-                      );
-                    }).toList(),
-                    // return ListTile(
-                    //   title: Text(entry.key),
-                    //   subtitle: Text(entry.value.toString()),
-                    // );
-                    // }).toList(),
-                  ),
-                )
-              : Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 8,
-                    itemBuilder: (_, __) => ListTile(
-                      leading: CircleAvatar(
-                        radius: 30,
-                        backgroundColor:Colors.grey,
-                      ),
-                      title: SizedBox(
-                        height: 20,
-                        width: 100,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(20)
-                          ),
-                        ),
-                      ),
-                      subtitle: SizedBox(
-                        height: 15,
-                        width: 50,
-                        child: Container( decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(20)
-                        ),),
-                      ),
-                    ),
+        )
+            : Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: 8,
+            itemBuilder: (_, __) => ListTile(
+              leading: const CircleAvatar(
+                radius: 30,
+                backgroundColor:Colors.grey,
+              ),
+              title: SizedBox(
+                height: 20,
+                width: 100,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(20)
                   ),
                 ),
+              ),
+              subtitle: SizedBox(
+                height: 15,
+                width: 50,
+                child: Container( decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(20)
+                ),),
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 }
+
+class ShimmerProfileLoading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Column(
+        // mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 8), // Add some spacing
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: Colors.grey[300],
+                  ),
+                ),
+              Column(
+                children: [
+                  Container(
+                    height: 20,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey[300],
+                    ),
+                  ),
+                  const SizedBox(height: 20,),
+                  Container(
+                    height: 20,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey[300],
+                    ),
+                  ),
+                ],
+              ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 /*
 class UserDetails extends StatelessWidget {

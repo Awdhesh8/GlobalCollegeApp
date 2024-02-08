@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:globalcollegeapp/features/personalization/screens/settings/edit_profile/edit_Profile.dart';
 import 'package:globalcollegeapp/features/personalization/screens/settings/widgets/education_details_tab.dart';
 import 'package:globalcollegeapp/features/personalization/screens/settings/widgets/personal_details_tab.dart';
 import 'package:globalcollegeapp/features/personalization/screens/settings/widgets/rounded_radio_buttons.dart';
+import 'package:globalcollegeapp/features/personalization/screens/settings/widgets/top_heading.dart';
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/profile_image_name/profile_header_name_image.dart';
 import '../../../../controllers/user_controller_login_check/user_controller.dart';
@@ -52,10 +54,37 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const UserProfile(
-            userText: 'Surya Pratap Singh',
-            imagePath: 'assets/images/user_icon.png',
-            showEditButton: true,
+          FutureBuilder<Map<String, dynamic>?>(
+            future: ApiService.getProfileData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: ShimmerProfileLoading());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error loading data'));
+              } else if (snapshot.hasData && snapshot.data != null) {
+                final Map<String, dynamic> userData = snapshot.data!['response'][0];
+                final String profilePhoto = userData['Profile_photo'] ?? 'assets/images/user_icon.png';
+                final String studentName = userData['student_name'] ?? '';
+
+                return UserProfile(
+                  userText: studentName,
+                  imagePath: profilePhoto,
+                  showEditButton: true, onPressed: () {
+                  Get.to(EditProfile(
+                    profilePhoto: userData['Profile_photo'] ?? 'assets/images/user_icon.png',
+                    // profilePhoto: profilePhoto,
+                    contactNo: userData['ContactNo'] ?? '',
+                    email: userData['Email'] ?? '',
+                    bloodGroup: userData['Blood_Group'] ?? '',
+                    samagraId: userData['SamagraId'] ?? '',
+                    laptop: userData['Laptop'] ?? '',
+                  ));
+                },
+                );
+              } else {
+                return Center(child: Text('No data available'));
+              }
+            },
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
@@ -75,20 +104,24 @@ class SettingsScreen extends StatelessWidget {
               ],
             ),
           ),
-
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+              children: [
+                const TopHeading(text: 'Your Information', fontSize: 18),
+              ],
+            ),
+          ),
           Expanded(
             child: FutureBuilder<Map<String, dynamic>?>(
               future: ApiService.getProfileData(),
               builder: (context, snapshot) {
-                print('Connection State: ${snapshot.connectionState}');
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  print('Waiting for data...');
-                  return UserDetails(dataList: [], data: {},); // Pass an empty list for now.
+                  return UserDetails(dataList: [], data: {},);
                 } else if (snapshot.hasError) {
-                  print('Error loading data: ${snapshot.error}');
                   return Center(child: Text('Error loading data'));
                 } else if (snapshot.hasData && snapshot.data != null) {
-                  print('Received data: ${snapshot.data}');
                   List<Map<String, dynamic>> dataList = [snapshot.data!['response'][0]];
                   return Obx(() => controller.showPersonalDetails.value
                       ? UserDetails(data: snapshot.data!['response'][0], dataList: dataList)
@@ -102,6 +135,93 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
 
+
+// class SettingsScreen extends StatelessWidget {
+//   final SettingsController controller = Get.put(SettingsController());
+//   final UserController userController = Get.find<UserController>();
+//
+//   SettingsScreen({Key? key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: EColors.backgroundColor,
+//       appBar: const GAppBar(
+//         showBackArrow: false,
+//         title: Text(
+//           'Account',
+//           style: TextStyle(
+//             fontSize: 20.0,
+//             color: Colors.white,
+//             fontWeight: FontWeight.w600,
+//           ),
+//         ),
+//         backgroundColor: EColors.primary,
+//         centerTitle: true,
+//       ),
+//       body: Column(
+//         children: [
+//           const UserProfile(
+//             userText: 'Surya Pratap Singh',
+//             imagePath: 'assets/images/user_icon.png',
+//             showEditButton: true,
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.symmetric(vertical: 8),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//               children: [
+//                 Obx(() => RoundedButton(
+//                   label: 'Personal Info',
+//                   isSelected: controller.showPersonalDetails.value,
+//                   onPressed: () => controller.showPersonalInfo(),
+//                 )),
+//                 Obx(() => RoundedButton(
+//                   label: 'Educational Info',
+//                   isSelected: !controller.showPersonalDetails.value,
+//                   onPressed: () => controller.showEducationalInfo(),
+//                 )),
+//               ],
+//             ),
+//           ),
+//
+//           SizedBox(height: 10,),
+//           Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 15),
+//             child: Row(
+//               children: [
+//                 const TopHeading(text: 'Your Information', fontSize: 18),
+//               ],
+//             ),
+//           ),
+//           // SizedBox(height: 4,),
+//
+//           Expanded(
+//             child: FutureBuilder<Map<String, dynamic>?>(
+//               future: ApiService.getProfileData(),
+//               builder: (context, snapshot) {
+//                 print('Connection State: ${snapshot.connectionState}');
+//                 if (snapshot.connectionState == ConnectionState.waiting) {
+//                   print('Waiting for data...');
+//                   return UserDetails(dataList: [], data: {},); // Pass an empty list for now.
+//                 } else if (snapshot.hasError) {
+//                   print('Error loading data: ${snapshot.error}');
+//                   return Center(child: Text('Error loading data'));
+//                 } else if (snapshot.hasData && snapshot.data != null) {
+//                   print('Received data: ${snapshot.data}');
+//                   List<Map<String, dynamic>> dataList = [snapshot.data!['response'][0]];
+//                   return Obx(() => controller.showPersonalDetails.value
+//                       ? UserDetails(data: snapshot.data!['response'][0], dataList: dataList)
+//                       : EducationDetailsPanel(
+//                     educationalDetails: educationalDetails,
+//                   ));
+//                 } else {
+//                   return Center(child: Text('No data available'));
+//                 }
+//               },
+//             ),
+//           ),
+//
 
 
 
