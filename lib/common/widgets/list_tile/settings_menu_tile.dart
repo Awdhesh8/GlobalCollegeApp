@@ -22,6 +22,7 @@ class ESettingsMenuTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Container(
         decoration: BoxDecoration(
+          // color: Colors.white70,
           color: const Color(0xFFFFE0E5),
           borderRadius: BorderRadius.circular(20),
           boxShadow: const [
@@ -40,7 +41,7 @@ class ESettingsMenuTile extends StatelessWidget {
           ],
         ),
         child: ListTile(
-          leading: Icon(icon, size: 28, color: EColors.primary,),
+          leading: Icon(icon, size: 24, color: EColors.primary,),
           title: Text(title, style: Theme.of(context).textTheme.titleMedium,),
           subtitle: Text(subTitle, style: Theme.of(context).textTheme.labelSmall,),
           // trailing: const Icon(Iconsax.arrow_right_3, size: 20),
