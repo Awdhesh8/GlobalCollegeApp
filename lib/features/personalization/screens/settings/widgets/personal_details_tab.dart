@@ -79,12 +79,15 @@ class UserDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double containerHeight = MediaQuery.of(context).size.height * 0.5;
+
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         child: Container(
-          height: 380,
+          height: containerHeight,
+          // height: 380,
           decoration: BoxDecoration(
             color: const Color(0xFFFFE0E5),
             borderRadius: BorderRadius.circular(20),
