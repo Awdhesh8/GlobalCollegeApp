@@ -139,6 +139,34 @@ class ApiService {
   }
 
   /// Get Blood Group --->>>
+  static Future<List<String>> fetchBloodGroups() async {
+    try {
+      final response = await http.post(
+        Uri.parse(APIConstants.getFullUrl(APIConstants.getBloodGroup)), // Modify this line
+        headers: APIConstants.headers,
+        body: {'APIKEY': 'GNCS0225'},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data['status'] == "1") {
+          List<dynamic> bloodGroupData = data['response'];
+          List<String> bloodGroups = bloodGroupData
+              .map((bloodGroup) => bloodGroup['bloodg'].toString())
+              .toList();
+          return bloodGroups;
+        } else {
+          throw Exception(data['message']);
+        }
+      } else {
+        throw Exception('Failed to load blood groups: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Exception while fetching blood groups: $e');
+    }
+  }
+
+  /*
   static Future<List<String>> getBloodGroup(Map<String, String> headers) async {
     try {
       var response = await http.post(
@@ -168,6 +196,7 @@ class ApiService {
     }
   }
 
+   */
 
 }
 

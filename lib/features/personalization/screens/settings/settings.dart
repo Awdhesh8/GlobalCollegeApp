@@ -72,10 +72,10 @@ class SettingsScreen extends StatelessWidget {
                   showEditButton: true, onPressed: () {
                   Get.to(EditProfile(
                     profilePhoto: userData['Profile_photo'] ?? 'assets/images/user_icon.png',
-                    // profilePhoto: profilePhoto,
+                   // profilePhoto: profilePhoto,
                     contactNo: userData['ContactNo'] ?? '',
                     email: userData['Email'] ?? '',
-                    // bloodGroup: userData['Blood_Group'] ?? '',
+                    bloodGroup: userData['Blood_Group'] ?? '',
                     samagraId: userData['SamagraId'] ?? '',
                     laptop: userData['Laptop'] ?? '',
                   ));

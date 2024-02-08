@@ -4,7 +4,9 @@ class ProfileController extends GetxController {
   RxString imagePath = ''.obs;
   RxString contactNumber = ''.obs;
   RxString email = ''.obs;
-  RxString selectedBloodGroup = ''.obs;
+  // RxString selectedBloodGroup = ''.obs;
+  var bloodGroup = ''.obs; // Add this line
+
   RxString samaraId = ''.obs;
   RxBool hasLaptop = false.obs;
   RxString laptopBrand = ''.obs;
