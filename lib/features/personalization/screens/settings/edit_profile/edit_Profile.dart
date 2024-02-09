@@ -542,19 +542,18 @@ class EditProfile extends StatelessWidget {
                         _buildTextField('Laptop RAM', profileController.laptopRam.value, (value) {
                           profileController.laptopRam.value = value;
                         }),
-                        // hh
                         _buildTextField('Laptop Processor', profileController.laptopProcessor.value, (value) {
                           profileController.laptopProcessor.value = value;
                         }),
                         _buildTextField('Laptop Configuration', profileController.laptopConfig.value, (value) {
                           profileController.laptopConfig.value = value;
                         }),
-
                       ],
                     ),
                 ],
               ),
             ),
+
 
 
 /*
