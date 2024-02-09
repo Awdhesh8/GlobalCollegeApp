@@ -409,6 +409,375 @@ import 'package:get/get.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../../../data/api/api_services.dart';
+import '../controllers/profile_controller.dart';
+
+class EditProfile extends StatelessWidget {
+  final ProfileController profileController = Get.put(ProfileController());
+  final String profilePhoto;
+  final String contactNo;
+  final String email;
+  final String samagraId;
+  final String laptop;
+  final String bloodGroup;
+  final String laptopBrand;
+  final String laptopRam;
+  final String laptopProcessor;
+  final String laptopConfig;
+
+  EditProfile({
+    Key? key,
+    required this.profilePhoto,
+    required this.contactNo,
+    required this.email,
+    required this.samagraId,
+    required this.laptop,
+    required this.bloodGroup,
+    required this.laptopBrand,
+    required this.laptopRam,
+    required this.laptopProcessor,
+    required this.laptopConfig,
+  }) : super(key: key) {
+    // Initialize values in the controller when the widget is created
+    profileController.imagePath.value = profilePhoto;
+    profileController.contactNumber.value = contactNo;
+    profileController.email.value = email;
+    profileController.samaraId.value = samagraId;
+    profileController.bloodGroup.value = bloodGroup;
+    profileController.laptopBrand.value = laptopBrand;
+    profileController.laptopRam.value = laptopRam;
+    profileController.laptopProcessor.value = laptopProcessor;
+    profileController.laptopConfig.value = laptopConfig;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: const GAppBar(
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Edit Profile',
+          style: TextStyle(color: EColors.textColorPrimary1),
+        ),
+        centerTitle: false,
+        showBackArrow: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Hero(
+              tag: 'avatarHero',
+              child: Obx(() => CircularAvatar(
+                imagePath: profileController.imagePath.value,
+                onTap: () => _pickImage(context),
+                uploadIcon: IconButton(
+                  icon: const Icon(
+                    Icons.upload,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => _pickImage(context),
+                ),
+              )),
+            ),
+            const SizedBox(height: 16),
+            _buildTextField('Contact Number', profileController.contactNumber.value),
+            _buildTextField('Email', profileController.email.value),
+
+            /// Blood Groups Dropdown--->>>
+            FutureBuilder<List<String>>(
+              future: ApiService.fetchBloodGroups(), // Fetch blood groups
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Show shimmer loading effect while fetching
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: double.infinity,
+                      height: 50, // Adjust height as needed
+                      color: Colors.white,
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  // If data is fetched successfully
+                  return _buildBloodGroupDropdown(snapshot.data!);
+                }
+              },
+            ),
+
+            _buildTextField('Samagra ID', profileController.samaraId.value),
+            const SizedBox(height: 16),
+
+            Row(
+              children: [
+                Text('Laptop Information'),
+                Switch(
+                  value: profileController.laptopBrand.value.isNotEmpty,
+                  onChanged: (value) {
+                    if (value) {
+                      profileController.laptopBrand.value = 'Default Brand';
+                    } else {
+                      profileController.laptopBrand.value = '';
+                    }
+                  },
+                ),
+              ],
+            ),
+            _buildTextField('Laptop Brand', profileController.laptopBrand.value),
+            _buildTextField('Laptop RAM', profileController.laptopRam.value),
+            _buildTextField('Laptop Processor', profileController.laptopProcessor.value),
+            _buildTextField('Laptop Configuration', profileController.laptopConfig.value),
+
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                _showConfirmationDialog(context);
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _buildTextField(String label, String text) {
+    RxString controller = RxString(text);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: TextField(
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: EColors.textColorPrimary1),
+        ),
+        controller: TextEditingController(text: controller.value),
+        onChanged: (value) => controller.value = value,
+      ),
+    );
+  }
+
+  Widget _buildBloodGroupDropdown(List<String> bloodGroups) {
+    String initialValue = profileController.bloodGroup.value ?? '';
+
+    if (initialValue.isEmpty) {
+      initialValue = 'Select Your Blood Group'; // Set default prompt
+    }
+
+    return DropdownButtonFormField<String>(
+      value: initialValue, // Set initial value here
+      decoration: InputDecoration(
+        labelText: 'Blood Group',
+        labelStyle: const TextStyle(color: EColors.textColorPrimary1),
+      ),
+      onChanged: (String? newValue) {
+        profileController.bloodGroup.value =
+        newValue!; // Update the selected blood group
+      },
+      items: [
+        DropdownMenuItem<String>(
+          value: 'Select Your Blood Group', // Set value for default prompt
+          child: Text('Select Your Blood Group'), // Set text for default prompt
+        ),
+        ...bloodGroups.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  Future<void> _pickImage(BuildContext context) async {
+    final picker = ImagePicker();
+    final pickedFile = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Image Source'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context)
+                      .pop(await picker.pickImage(source: ImageSource.gallery));
+                },
+                child: const Text('Gallery'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context)
+                      .pop(await picker.pickImage(source: ImageSource.camera));
+                },
+                child: const Text('Camera'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (pickedFile != null) {
+      profileController.imagePath.value = '';
+      profileController.imagePath.value = pickedFile.path;
+    }
+  }
+
+  void _saveProfile() async {
+    // Retrieve userId and userType from local storage
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString('user_id') ?? ''; // Use the actual key used for user ID
+    String userType = prefs.getString('user_type') ?? ''; // Use the actual key used for user type
+
+    // Prepare the data to send
+    Map<String, String> data = {
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'USER_TYPE': userType,
+      'contact_no': profileController.contactNumber.value,
+      'stud_email': profileController.email.value,
+      'samagra_id': profileController.samaraId.value,
+      'stud_bgroup': profileController.bloodGroup.value,
+      'laptop': profileController.laptopBrand.value.isNotEmpty ? '1' : '0',
+      'lap_brand': profileController.laptopBrand.value,
+      'lap_ram': profileController.laptopRam.value,
+      'lap_processor': profileController.laptopProcessor.value,
+      'lap_config': profileController.laptopConfig.value,
+    };
+
+    // Get the image path
+    String imagePath = profileController.imagePath.value;
+
+    // Call the API to update profile
+    ApiService.updateProfile(data, imagePath).then((response) {
+      // Handle the response accordingly
+    }).catchError((error) {
+      // Handle errors
+    });
+  }
+  void _showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Profile'),
+          content: const Text('Do you really want to update your profile?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _updateProfileAndShowSnackbar(context);
+              },
+              child: const Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                Get.back(); // Pop back to EditProfile
+              },
+              child: const Text('No'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateProfileAndShowSnackbar(BuildContext context) async {
+    _saveProfile();
+
+    // Show Snackbar
+    await Get.snackbar(
+      'Update Request Sent',
+      'Your profile has been updated.',
+      snackPosition: SnackPosition.TOP,
+      duration: const Duration(seconds: 2),
+    );
+
+    // Navigate back to the SettingsScreen after Snackbar is closed
+    Navigator.of(context).pop();
+  }
+}
+
+class CircularAvatar extends StatelessWidget {
+  final String imagePath;
+  final Function onTap;
+  final Widget uploadIcon;
+
+  const CircularAvatar({
+    Key? key,
+    required this.imagePath,
+    required this.onTap,
+    required this.uploadIcon,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        GestureDetector(
+          onTap: () => onTap(),
+          child: Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[300],
+            ),
+            child: _buildAvatarContent(),
+          ),
+        ),
+        uploadIcon,
+      ],
+    );
+  }
+
+  Widget _buildAvatarContent() {
+    if (imagePath.isNotEmpty) {
+      if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: NetworkImage(imagePath),
+              fit: BoxFit.fill,
+            ),
+          ),
+        );
+      } else {
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: FileImage(File(imagePath)),
+              fit: BoxFit.fill,
+            ),
+          ),
+        );
+      }
+    } else {
+      return const Icon(Icons.person, size: 50, color: Colors.white);
+    }
+  }
+}
+
+
+
+/*
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../data/api/api_services.dart';
 import '../controllers/profile_controller.dart';
@@ -740,6 +1109,8 @@ class CircularAvatar extends StatelessWidget {
   }
 }
 
+
+ */
 
 
 /// Laptop Switch widget
@@ -1428,5 +1799,4 @@ class ApiService {
 }
 
 
- */
  */

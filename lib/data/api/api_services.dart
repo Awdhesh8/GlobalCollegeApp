@@ -135,6 +135,30 @@ class ApiService {
   }
 
   /// Edit Profile --->>>>
+  static Future<void> updateProfile(Map<String, String> data, String imagePath) async {
+    try {
+      var headers = {
+        'Cookie': 'ci_session=g6gqltpt0vbrgjfi4n29vnb2dmbsi99n'
+      };
+      var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/update_profile'));
+      request.fields.addAll(data);
+      if (imagePath.isNotEmpty) {
+        request.files.add(await http.MultipartFile.fromPath('form_file', imagePath));
+      }
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print(await response.stream.bytesToString());
+      } else {
+        print(response.reasonPhrase);
+      }
+    } catch (e) {
+      print('Error in API call: $e');
+    }
+  }
+
 
 
 }
