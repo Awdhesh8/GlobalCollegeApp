@@ -545,16 +545,11 @@ class EditProfile extends StatelessWidget {
                 ],
               ),
 
-
-
-
-
 /*
             _buildTextField('Laptop Brand', profileController.laptopBrand.value),
             _buildTextField('Laptop RAM', profileController.laptopRam.value),
             _buildTextField('Laptop Processor', profileController.laptopProcessor.value),
             _buildTextField('Laptop Configuration', profileController.laptopConfig.value),
-
  */
             const SizedBox(height: 16),
             ElevatedButton(
@@ -698,6 +693,34 @@ class EditProfile extends StatelessWidget {
       // Handle errors
     });
   }
+  // void _showConfirmationDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: const Text('Update Profile'),
+  //         content: const Text('Do you really want to update your profile?'),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop(); // Close the dialog
+  //               _updateProfileAndShowSnackbar(context);
+  //             },
+  //             child: const Text('Yes'),
+  //           ),
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop(); // Close the dialog
+  //               Get.back(); // Pop back to EditProfile
+  //             },
+  //             child: const Text('No'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   void _showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -709,6 +732,7 @@ class EditProfile extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
+                _saveProfile(); // Call _saveProfile directly
                 _updateProfileAndShowSnackbar(context);
               },
               child: const Text('Yes'),
@@ -725,6 +749,7 @@ class EditProfile extends StatelessWidget {
       },
     );
   }
+
 
   Future<void> _updateProfileAndShowSnackbar(BuildContext context) async {
     _saveProfile();

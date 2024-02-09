@@ -150,7 +150,8 @@ class ApiService {
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        print(await response.stream.bytesToString());
+        print('Response status code: ${response.statusCode}');
+        print('Response body: ${await response.stream.bytesToString()}');
       } else {
         print(response.reasonPhrase);
       }
