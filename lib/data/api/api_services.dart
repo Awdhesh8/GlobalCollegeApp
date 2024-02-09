@@ -142,24 +142,31 @@ class ApiService {
       };
       var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/update_profile'));
       request.fields.addAll(data);
-      if (imagePath.isNotEmpty) {
+      if (imagePath.isNotEmpty && imagePath.startsWith('http')) {
+        // Only add the image file if the imagePath is a URL
         request.files.add(await http.MultipartFile.fromPath('form_file', imagePath));
       }
+
+      // Print the request being sent to the API
+      print('API Request: ${request.fields}');
+
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
+        // Print the response status code and body if successful
         print('Response status code: ${response.statusCode}');
         print('Response body: ${await response.stream.bytesToString()}');
       } else {
+        // Print the response reason phrase if not successful
         print(response.reasonPhrase);
       }
     } catch (e) {
+      // Handle errors
       print('Error in API call: $e');
     }
   }
-
 
 
 }

@@ -402,7 +402,7 @@
 //     Navigator.of(context).pop();
 //   }
 // }
-
+/*
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -656,9 +656,386 @@ class EditProfile extends StatelessWidget {
     );
 
     if (pickedFile != null) {
-      profileController.imagePath.value = '';
-      profileController.imagePath.value = pickedFile.path;
+      // Check if the image is picked from the device's gallery or captured using the camera
+      // If so, update the image path
+      if (!(profileController.imagePath.value.startsWith('http') ||
+          profileController.imagePath.value.startsWith('https'))) {
+        profileController.imagePath.value = pickedFile.path;
+      }
     }
+  }
+
+
+  void _saveProfile() async {
+    // Retrieve userId and userType from local storage
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString('user_id') ?? ''; // Use the actual key used for user ID
+    String userType = prefs.getString('user_type') ?? ''; // Use the actual key used for user type
+
+    // Prepare the data to send
+    Map<String, String> data = {
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'USER_TYPE': userType,
+      'contact_no': profileController.contactNumber.value,
+      'stud_email': profileController.email.value,
+      'samagra_id': profileController.samaraId.value,
+      'stud_bgroup': profileController.bloodGroup.value,
+      'laptop': profileController.laptopBrand.value.isNotEmpty ? '1' : '0',
+      'lap_brand': profileController.laptopBrand.value,
+      'lap_ram': profileController.laptopRam.value,
+      'lap_processor': profileController.laptopProcessor.value,
+      'lap_config': profileController.laptopConfig.value,
+    };
+
+    // Call the API to update profile
+    try {
+      await ApiService.updateProfile(data, imagePath);
+      // Show a snackbar to inform the user about the status of the update request
+      Get.snackbar(
+        'Update Request Sent',
+        'Your profile has been updated.',
+        snackPosition: SnackPosition.TOP,
+        duration: const Duration(seconds: 2),
+      );
+    } catch (error) {
+      // Handle errors
+      print('Error updating profile: $error');
+      Get.snackbar(
+        'Error',
+        'Failed to update profile. Please try again later.',
+        snackPosition: SnackPosition.TOP,
+        duration: const Duration(seconds: 2),
+      );
+    }
+  }
+
+
+  void _showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Profile'),
+          content: const Text('Do you really want to update your profile?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _saveProfile(); // Call _saveProfile directly
+              },
+              child: const Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('No'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
+
+  Future<void> _updateProfileAndShowSnackbar(BuildContext context) async {
+    _saveProfile();
+
+    // Show Snackbar
+    await Get.snackbar(
+      'Update Request Sent',
+      'Your profile has been updated.',
+      snackPosition: SnackPosition.TOP,
+      duration: const Duration(seconds: 2),
+    );
+
+    // Navigate back to the SettingsScreen after Snackbar is closed
+    Navigator.of(context).pop();
+  }
+}
+ */
+
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../../../data/api/api_services.dart';
+import '../controllers/profile_controller.dart';
+
+class EditProfile extends StatelessWidget {
+  final ProfileController profileController = Get.put(ProfileController());
+  final String profilePhoto;
+  final String contactNo;
+  final String email;
+  final String samagraId;
+  final String laptop;
+  final String bloodGroup;
+  final String laptopBrand;
+  final String laptopRam;
+  final String laptopProcessor;
+  final String laptopConfig;
+
+  EditProfile({
+    Key? key,
+    required this.profilePhoto,
+    required this.contactNo,
+    required this.email,
+    required this.samagraId,
+    required this.laptop,
+    required this.bloodGroup,
+    required this.laptopBrand,
+    required this.laptopRam,
+    required this.laptopProcessor,
+    required this.laptopConfig,
+  }) : super(key: key) {
+    // Initialize values in the controller when the widget is created
+    profileController.imagePath.value = profilePhoto;
+    profileController.contactNumber.value = contactNo;
+    profileController.email.value = email;
+    profileController.samaraId.value = samagraId;
+    profileController.bloodGroup.value = bloodGroup;
+    profileController.laptopBrand.value = laptopBrand;
+    profileController.laptopRam.value = laptopRam;
+    profileController.laptopProcessor.value = laptopProcessor;
+    profileController.laptopConfig.value = laptopConfig;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: const GAppBar(
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Edit Profile',
+          style: TextStyle(color: EColors.textColorPrimary1),
+        ),
+        centerTitle: false,
+        showBackArrow: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Hero(
+              tag: 'avatarHero',
+              child: Obx(() => CircularAvatar(
+                imagePath: profileController.imagePath.value,
+                onTap: () => _pickImage(context),
+                uploadIcon: IconButton(
+                  icon: const Icon(
+                    Icons.upload,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => _pickImage(context),
+                ),
+              )),
+            ),
+            const SizedBox(height: 16),
+            _buildTextField1('Contact Number', profileController.contactNumber.value),
+            _buildTextField1('Email', profileController.email.value),
+
+            /// Blood Groups Dropdown--->>>
+            FutureBuilder<List<String>>(
+              future: ApiService.fetchBloodGroups(), // Fetch blood groups
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Show shimmer loading effect while fetching
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: double.infinity,
+                      height: 50, // Adjust height as needed
+                      color: Colors.white,
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  // If data is fetched successfully
+                  return _buildBloodGroupDropdown(snapshot.data!);
+                }
+              },
+            ),
+
+            _buildTextField1('Samagra ID', profileController.samaraId.value),
+            const SizedBox(height: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text('Your Laptop Details Here!!!'),
+                  ],
+                ),
+                // Show laptop details fields only if the switch is toggled on
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTextField('Laptop Brand', profileController.laptopBrand.value, (value) {
+                      profileController.laptopBrand.value = value;
+                    }),
+                    _buildTextField('Laptop RAM', profileController.laptopRam.value, (value) {
+                      profileController.laptopRam.value = value;
+                    }),
+                    _buildTextField('Laptop Processor', profileController.laptopProcessor.value, (value) {
+                      profileController.laptopProcessor.value = value;
+                    }),
+                    _buildTextField('Laptop Configuration', profileController.laptopConfig.value, (value) {
+                      profileController.laptopConfig.value = value;
+                    }),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                _showConfirmationDialog(context);
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String label, String text, void Function(String) onChanged) {
+    TextEditingController controller = TextEditingController(text: text);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: TextField(
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: EColors.textColorPrimary1),
+        ),
+        controller: controller,
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  Widget _buildTextField1(String label, String text) {
+    RxString controller = RxString(text);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: TextField(
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: EColors.textColorPrimary1),
+        ),
+        controller: TextEditingController(text: controller.value),
+        onChanged: (value) => controller.value = value,
+      ),
+    );
+  }
+
+  Widget _buildBloodGroupDropdown(List<String> bloodGroups) {
+    String initialValue = profileController.bloodGroup.value ?? '';
+
+    if (initialValue.isEmpty) {
+      initialValue = 'Select Your Blood Group'; // Set default prompt
+    }
+
+    return DropdownButtonFormField<String>(
+      value: initialValue, // Set initial value here
+      decoration: InputDecoration(
+        labelText: 'Blood Group',
+        labelStyle: const TextStyle(color: EColors.textColorPrimary1),
+      ),
+      onChanged: (String? newValue) {
+        profileController.bloodGroup.value =
+        newValue!; // Update the selected blood group
+      },
+      items: [
+        DropdownMenuItem<String>(
+          value: 'Select Your Blood Group', // Set value for default prompt
+          child: Text('Select Your Blood Group'), // Set text for default prompt
+        ),
+        ...bloodGroups.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  Future<void> _pickImage(BuildContext context) async {
+    final picker = ImagePicker();
+    final pickedFile = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Image Source'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context)
+                      .pop(await picker.pickImage(source: ImageSource.gallery));
+                },
+                child: const Text('Gallery'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context)
+                      .pop(await picker.pickImage(source: ImageSource.camera));
+                },
+                child: const Text('Camera'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (pickedFile != null) {
+      // Check if the image is picked from the device's gallery or captured using the camera
+      // If so, update the image path
+      if (!(profileController.imagePath.value.startsWith('http') ||
+          profileController.imagePath.value.startsWith('https'))) {
+        profileController.imagePath.value = pickedFile.path;
+      }
+    }
+  }
+
+  void _showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirmation'),
+        content: Text('Are you sure you want to save changes?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _saveProfile();
+            },
+            child: Text('Save'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _saveProfile() async {
@@ -683,87 +1060,76 @@ class EditProfile extends StatelessWidget {
       'lap_config': profileController.laptopConfig.value,
     };
 
-    // Get the image path
+    // Print the data being sent to the API
+    print('Profile data: $data');
+
     String imagePath = profileController.imagePath.value;
 
-    // Call the API to update profile
-    ApiService.updateProfile(data, imagePath).then((response) {
-      // Handle the response accordingly
-    }).catchError((error) {
-      // Handle errors
-    });
-  }
-  // void _showConfirmationDialog(BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Update Profile'),
-  //         content: const Text('Do you really want to update your profile?'),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop(); // Close the dialog
-  //               _updateProfileAndShowSnackbar(context);
-  //             },
-  //             child: const Text('Yes'),
-  //           ),
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop(); // Close the dialog
-  //               Get.back(); // Pop back to EditProfile
-  //             },
-  //             child: const Text('No'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
-  void _showConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Update Profile'),
-          content: const Text('Do you really want to update your profile?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                _saveProfile(); // Call _saveProfile directly
-                _updateProfileAndShowSnackbar(context);
-              },
-              child: const Text('Yes'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                Get.back(); // Pop back to EditProfile
-              },
-              child: const Text('No'),
-            ),
-          ],
+    if (imagePath.isNotEmpty && imagePath.startsWith('http')) {
+      // Call the API to update profile without image
+      try {
+        await ApiService.updateProfile(data, '');
+        // Show a snackbar to inform the user about the status of the update request
+        Get.snackbar(
+          'Update Request Sent',
+          'Your profile has been updated.',
+          snackPosition: SnackPosition.TOP,
+          duration: const Duration(seconds: 2),
         );
-      },
-    );
-  }
-
-
-  Future<void> _updateProfileAndShowSnackbar(BuildContext context) async {
-    _saveProfile();
-
-    // Show Snackbar
-    await Get.snackbar(
-      'Update Request Sent',
-      'Your profile has been updated.',
-      snackPosition: SnackPosition.TOP,
-      duration: const Duration(seconds: 2),
-    );
-
-    // Navigate back to the SettingsScreen after Snackbar is closed
-    Navigator.of(context).pop();
+      } catch (error) {
+        // Handle errors
+        print('Error updating profile: $error');
+        Get.snackbar(
+          'Error',
+          'Failed to update profile. Please try again later.',
+          snackPosition: SnackPosition.TOP,
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } else if (imagePath.isNotEmpty) {
+      // Call the API to update profile with image
+      try {
+        await ApiService.updateProfile(data, imagePath);
+        // Show a snackbar to inform the user about the status of the update request
+        Get.snackbar(
+          'Update Request Sent',
+          'Your profile has been updated.',
+          snackPosition: SnackPosition.TOP,
+          duration: const Duration(seconds: 2),
+        );
+      } catch (error) {
+        // Handle errors
+        print('Error updating profile: $error');
+        Get.snackbar(
+          'Error',
+          'Failed to update profile. Please try again later.',
+          snackPosition: SnackPosition.TOP,
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } else {
+      // No image path provided
+      // Call the API to update profile without image
+      try {
+        await ApiService.updateProfile(data, '');
+        // Show a snackbar to inform the user about the status of the update request
+        Get.snackbar(
+          'Update Request Sent',
+          'Your profile has been updated.',
+          snackPosition: SnackPosition.TOP,
+          duration: const Duration(seconds: 2),
+        );
+      } catch (error) {
+        // Handle errors
+        print('Error updating profile: $error');
+        Get.snackbar(
+          'Error',
+          'Failed to update profile. Please try again later.',
+          snackPosition: SnackPosition.TOP,
+          duration: const Duration(seconds: 2),
+        );
+      }
+    }
   }
 }
 
@@ -802,27 +1168,32 @@ class CircularAvatar extends StatelessWidget {
   }
 
   Widget _buildAvatarContent() {
-    if (imagePath.isNotEmpty) {
-      if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+    if (imagePath.isNotEmpty && imagePath.startsWith('http')) {
+      return Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            image: NetworkImage(imagePath),
+            fit: BoxFit.fill,
+          ),
+        ),
+      );
+    } else if (imagePath.isNotEmpty) {
+      // Check if imagePath is a file path
+      File file = File(imagePath);
+      if (file.existsSync()) {
         return Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             image: DecorationImage(
-              image: NetworkImage(imagePath),
+              image: FileImage(file),
               fit: BoxFit.fill,
             ),
           ),
         );
       } else {
-        return Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: FileImage(File(imagePath)),
-              fit: BoxFit.fill,
-            ),
-          ),
-        );
+        // Image path is not a valid file path, show default icon
+        return const Icon(Icons.person, size: 50, color: Colors.white);
       }
     } else {
       return const Icon(Icons.person, size: 50, color: Colors.white);
