@@ -20,11 +20,11 @@ class RoundedButton extends StatelessWidget {
       onPressed: onPressed,
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(
-          isSelected ? EColors.primarySecond : Colors.grey,
+          isSelected ? EColors.primarySecond : Colors.grey.shade400,
         ),
         shape: MaterialStateProperty.all<OutlinedBorder>(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(12.0),
             side: const BorderSide(
               color: Colors.white, // Border color
               width: 2.0, // Border width
@@ -33,15 +33,12 @@ class RoundedButton extends StatelessWidget {
         ),
         elevation: isSelected ? null : MaterialStateProperty.all(4.0), // Elevation or shadow when selected
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        child: Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 14,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );

@@ -154,18 +154,7 @@
 //     );
 //   }
 // }
-
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
-import 'package:globalcollegeapp/utils/constants/colors.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:shimmer/shimmer.dart';
-import '../../../../../data/api/api_services.dart';
-import '../../../../../utils/constants/api_constants.dart';
-import '../controllers/profile_controller.dart';
-
+/// ---->>>>>>>>>>>>>>>>>>>>
 // class EditProfile extends StatelessWidget {
 //   final ProfileController profileController = Get.put(ProfileController());
 //   final String profilePhoto;
@@ -414,12 +403,14 @@ import '../controllers/profile_controller.dart';
 //   }
 // }
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
-import '../../../../../data/api/api_services.dart'; // Import BloodGroupService
-import '../../../../../utils/constants/api_constants.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../../../data/api/api_services.dart';
 import '../controllers/profile_controller.dart';
 
 class EditProfile extends StatelessWidget {
@@ -429,6 +420,11 @@ class EditProfile extends StatelessWidget {
   final String email;
   final String samagraId;
   final String laptop;
+  final String bloodGroup;
+  final String laptopBrand;
+  final String laptopRam;
+  final String laptopProcessor;
+  final String laptopConfig;
 
   EditProfile({
     Key? key,
@@ -436,13 +432,27 @@ class EditProfile extends StatelessWidget {
     required this.contactNo,
     required this.email,
     required this.samagraId,
-    required this.laptop, required bloodGroup,
-  }) : super(key: key);
+    required this.laptop,
+    required this.bloodGroup,
+    required this.laptopBrand,
+    required this.laptopRam,
+    required this.laptopProcessor,
+    required this.laptopConfig,
+  }) : super(key: key) {
+    // Initialize values in the controller when the widget is created
+    profileController.imagePath.value = profilePhoto;
+    profileController.contactNumber.value = contactNo;
+    profileController.email.value = email;
+    profileController.samaraId.value = samagraId;
+    profileController.bloodGroup.value = bloodGroup;
+    profileController.laptopBrand.value = laptopBrand;
+    profileController.laptopRam.value = laptopRam;
+    profileController.laptopProcessor.value = laptopProcessor;
+    profileController.laptopConfig.value = laptopConfig;
+  }
 
   @override
   Widget build(BuildContext context) {
-    profileController.imagePath.value = profilePhoto;
-
     return Scaffold(
       backgroundColor: EColors.backgroundColor,
       appBar: const GAppBar(
@@ -474,8 +484,10 @@ class EditProfile extends StatelessWidget {
               )),
             ),
             const SizedBox(height: 16),
-            _buildTextField('Contact Number', contactNo),
-            _buildTextField('Email', email),
+            _buildTextField('Contact Number', profileController.contactNumber.value),
+            _buildTextField('Email', profileController.email.value),
+
+            /// Blood Groups Dropdown--->>>
             FutureBuilder<List<String>>(
               future: ApiService.fetchBloodGroups(), // Fetch blood groups
               builder: (context, snapshot) {
@@ -498,12 +510,21 @@ class EditProfile extends StatelessWidget {
                 }
               },
             ),
-            _buildTextField('Samagra ID', samagraId),
-            const SizedBox(height: 16),
-            // _buildLaptopSection(),
-        _buildLaptopSection(),
 
-        const SizedBox(height: 16),
+            _buildTextField('Samagra ID', profileController.samaraId.value),
+            const SizedBox(height: 16),
+
+            Row(
+              children: [
+                Text('Laptop Information'),
+              ],
+            ),
+            _buildTextField('Laptop Brand', profileController.laptopBrand.value),
+            _buildTextField('Laptop RAM', profileController.laptopRam.value),
+            _buildTextField('Laptop Processor', profileController.laptopProcessor.value),
+            _buildTextField('Laptop Configuration', profileController.laptopConfig.value),
+
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 _showConfirmationDialog(context);
@@ -515,7 +536,6 @@ class EditProfile extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildTextField(String label, String text) {
     RxString controller = RxString(text);
     return Padding(
@@ -532,11 +552,11 @@ class EditProfile extends StatelessWidget {
   }
 
   Widget _buildBloodGroupDropdown(List<String> bloodGroups) {
-    print('Blood Groups length: ${bloodGroups.length}');
-    print('Blood Groups: $bloodGroups');
-    print('Selected Blood Group: ${profileController.bloodGroup.value}');
+    // print('Blood Groups length: ${bloodGroups.length}');
+    // print('Blood Groups: $bloodGroups');
+    // print('Selected Blood Group: ${profileController.bloodGroup.value}');
 
-    String initialValue = profileController.bloodGroup.value ?? ''; // Set default initial value
+    String initialValue = profileController.bloodGroup.value ?? '';
 
     if (initialValue.isEmpty) {
       initialValue = 'Select Your Blood Group'; // Set default prompt
@@ -550,7 +570,8 @@ class EditProfile extends StatelessWidget {
       ),
       onChanged: (String? newValue) {
         print('New Blood Group selected: $newValue');
-        profileController.bloodGroup.value = newValue!; // Update the selected blood group
+        profileController.bloodGroup.value =
+            newValue!; // Update the selected blood group
       },
       items: [
         DropdownMenuItem<String>(
@@ -563,43 +584,6 @@ class EditProfile extends StatelessWidget {
             child: Text(value),
           );
         }).toList(),
-      ],
-    );
-  }
-
-  Widget _buildLaptopSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Text('Do you have a Laptop?'),
-            const SizedBox(width: 16),
-            Obx(
-                  () => Switch(
-                activeColor: EColors.primarySecond,
-                value: profileController.hasLaptop.value,
-                onChanged: (value) => profileController.toggleLaptop(value),
-              ),
-            ),
-          ],
-        ),
-        Obx(() {
-          if (profileController.hasLaptop.value) {
-            return Column(
-              children: [
-                _buildTextField('Laptop Brand', profileController.laptopBrand.value),
-                _buildTextField('Laptop RAM', profileController.laptopRam.value),
-                _buildTextField(
-                    'Laptop Processor', profileController.laptopProcessor.value),
-                _buildTextField(
-                    'Laptop Configuration', profileController.laptopConfig.value),
-              ],
-            );
-          } else {
-            return Container(); // Empty container when switch is off
-          }
-        }),
       ],
     );
   }
@@ -690,7 +674,6 @@ class EditProfile extends StatelessWidget {
   }
 }
 
-
 class CircularAvatar extends StatelessWidget {
   final String imagePath;
   final Function onTap;
@@ -757,6 +740,10 @@ class CircularAvatar extends StatelessWidget {
   }
 }
 
+
+
+/// Laptop Switch widget
+/*
 class LaptopSection extends StatelessWidget {
   final ProfileController profileController;
 
@@ -775,7 +762,7 @@ class LaptopSection extends StatelessWidget {
             const Text('Do you have a Laptop?'),
             const SizedBox(width: 16),
             Obx(
-                  () => Switch(
+              () => Switch(
                 activeColor: EColors.primarySecond,
                 value: profileController.hasLaptop.value,
                 onChanged: (value) => profileController.toggleLaptop(value),
@@ -822,8 +809,7 @@ class LaptopSection extends StatelessWidget {
   }
 }
 
-
-
+ */
 
 // import 'dart:io';
 // import 'package:flutter/material.dart';

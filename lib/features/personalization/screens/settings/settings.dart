@@ -78,6 +78,11 @@ class SettingsScreen extends StatelessWidget {
                     bloodGroup: userData['Blood_Group'] ?? '',
                     samagraId: userData['SamagraId'] ?? '',
                     laptop: userData['Laptop'] ?? '',
+                    laptopBrand: userData['lap_brand'] ?? '',
+                    laptopRam: userData['lap_ram'] ?? '',
+                    laptopProcessor: userData['lap_processor'] ?? '',
+                    laptopConfig: userData['lap_config'] ?? '',
+
                   ));
                 },
                 );
@@ -91,16 +96,17 @@ class SettingsScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Obx(() => RoundedButton(
-                  label: 'Personal Info',
-                  isSelected: controller.showPersonalDetails.value,
-                  onPressed: () => controller.showPersonalInfo(),
-                )),
-                Obx(() => RoundedButton(
-                  label: 'Educational Info',
-                  isSelected: !controller.showPersonalDetails.value,
-                  onPressed: () => controller.showEducationalInfo(),
-                )),
+               Obx(() => RoundedButton(
+                 label: '  Personal Info  ',
+                 isSelected: controller.showPersonalDetails.value,
+                 onPressed: () => controller.showPersonalInfo(),
+               )),
+               const SizedBox(width: 5,),
+               Obx(() => RoundedButton(
+                 label: 'Educational Info',
+                 isSelected: !controller.showPersonalDetails.value,
+                 onPressed: () => controller.showEducationalInfo(),
+               )),
               ],
             ),
           ),

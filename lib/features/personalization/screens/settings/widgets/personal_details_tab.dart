@@ -92,41 +92,45 @@ class UserDetails extends StatelessWidget {
       child: Container(
         height: containerHeight,
         decoration: BoxDecoration(
-          color: Colors.white60,
+          color: Colors.white70,
           borderRadius: BorderRadius.circular(14),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0xFFFFC1C5),
-              offset: Offset(-1, -1),
-              blurRadius: 5,
-              spreadRadius: 1,
-            ),
-            BoxShadow(
-              color: Color(0xFFFFC1C5),
-              offset: Offset(5, 5),
-              blurRadius: 5,
-              spreadRadius: 1,
-            ),
-          ],
+          // boxShadow: const [
+          //   BoxShadow(
+          //     color: Colors.white,
+          //     // color: Color(0xFFFFC1C5),
+          //     offset: Offset(-.5, -.5),
+          //     blurRadius: 1,
+          //     spreadRadius: 0,
+          //   ),
+          //   BoxShadow(
+          //     color: Color(0xFFFFC1C5),
+          //     offset: Offset(5, 5),
+          //     blurRadius: 1,
+          //     spreadRadius: 0,
+          //   ),
+          // ],
         ),
         margin: const EdgeInsets.all(8),
         child: dataList.isNotEmpty
-            ? Scrollbar(
-                child: ListView(
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
-                  children: filteredEntries.map((entry) {
-                    return ESettingsMenuTile(
-                      title: entry.key,
-                      subTitle: entry.value.toString(),
-                      onTap: () {
-                        // Add any onTap functionality here if needed
-                      },
-                      icon: Iconsax.document_text_14,
-                    );
-                  }).toList(),
+            ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              child: Scrollbar(
+                  child: ListView(
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
+                    children: filteredEntries.map((entry) {
+                      return ESettingsMenuTile(
+                        title: entry.key,
+                        subTitle: entry.value.toString(),
+                        onTap: () {
+                          // Add any onTap functionality here if needed
+                        },
+                        icon: Iconsax.document_text_14,
+                      );
+                    }).toList(),
+                  ),
                 ),
-              )
+            )
             : Shimmer.fromColors(
                 baseColor: Colors.grey[300]!,
                 highlightColor: Colors.grey[100]!,
