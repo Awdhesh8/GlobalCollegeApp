@@ -514,32 +514,23 @@ class EditProfile extends StatelessWidget {
 
             _buildTextField1('Samagra ID', profileController.samaraId.value),
             const SizedBox(height: 16),
-
-            Obx(
-                  () => Column(
+                 Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Text('Do you Have Laptop?'),
-                      Switch(
-                        value: profileController.laptop.value == '1',
-                        onChanged: (value) {
-                          // Update the laptop value based on the switch state
-                          profileController.laptop.value = value ? '1' : '0';
-                        },
-                      ),
+                      Text('Your Laptop Details Here!!!'),
+
                     ],
                   ),
                   // Show laptop details fields only if the switch is toggled on
-                  if (profileController.laptop.value == '1')
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                         _buildTextField1('Laptop Brand', profileController.laptopBrand.value),
-                        // _buildTextField('Laptop Brand', profileController.laptopBrand.value, (value) {
-                        //   profileController.laptopBrand.value = value;
-                       // }),
+                         // _buildTextField1('Laptop Brand', profileController.laptopBrand.value),
+                        _buildTextField('Laptop Brand', profileController.laptopBrand.value, (value) {
+                          profileController.laptopBrand.value = value;
+                       }),
                         _buildTextField('Laptop RAM', profileController.laptopRam.value, (value) {
                           profileController.laptopRam.value = value;
                         }),
@@ -553,7 +544,7 @@ class EditProfile extends StatelessWidget {
                     ),
                 ],
               ),
-            ),
+
 
 
 
