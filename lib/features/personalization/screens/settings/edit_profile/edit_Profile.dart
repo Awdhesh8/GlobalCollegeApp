@@ -485,8 +485,8 @@ class EditProfile extends StatelessWidget {
               )),
             ),
             const SizedBox(height: 16),
-            _buildTextField('Contact Number', profileController.contactNumber.value),
-            _buildTextField('Email', profileController.email.value),
+            _buildTextField1('Contact Number', profileController.contactNumber.value),
+            _buildTextField1('Email', profileController.email.value),
 
             /// Blood Groups Dropdown--->>>
             FutureBuilder<List<String>>(
@@ -512,29 +512,57 @@ class EditProfile extends StatelessWidget {
               },
             ),
 
-            _buildTextField('Samagra ID', profileController.samaraId.value),
+            _buildTextField1('Samagra ID', profileController.samaraId.value),
             const SizedBox(height: 16),
 
-            Row(
-              children: [
-                Text('Laptop Information'),
-                Switch(
-                  value: profileController.laptopBrand.value.isNotEmpty,
-                  onChanged: (value) {
-                    if (value) {
-                      profileController.laptopBrand.value = 'Default Brand';
-                    } else {
-                      profileController.laptopBrand.value = '';
-                    }
-                  },
-                ),
-              ],
+            Obx(
+                  () => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text('Do you Have Laptop?'),
+                      Switch(
+                        value: profileController.laptop.value == '1',
+                        onChanged: (value) {
+                          // Update the laptop value based on the switch state
+                          profileController.laptop.value = value ? '1' : '0';
+                        },
+                      ),
+                    ],
+                  ),
+                  // Show laptop details fields only if the switch is toggled on
+                  if (profileController.laptop.value == '1')
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTextField('Laptop Brand', profileController.laptopBrand.value, (value) {
+                          profileController.laptopBrand.value = value;
+                        }),
+                        _buildTextField('Laptop RAM', profileController.laptopRam.value, (value) {
+                          profileController.laptopRam.value = value;
+                        }),
+                        _buildTextField('Laptop Processor', profileController.laptopProcessor.value, (value) {
+                          profileController.laptopProcessor.value = value;
+                        }),
+                        _buildTextField('Laptop Configuration', profileController.laptopConfig.value, (value) {
+                          profileController.laptopConfig.value = value;
+                        }),
+
+                      ],
+                    ),
+                ],
+              ),
             ),
+
+
+/*
             _buildTextField('Laptop Brand', profileController.laptopBrand.value),
             _buildTextField('Laptop RAM', profileController.laptopRam.value),
             _buildTextField('Laptop Processor', profileController.laptopProcessor.value),
             _buildTextField('Laptop Configuration', profileController.laptopConfig.value),
 
+ */
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
@@ -547,7 +575,22 @@ class EditProfile extends StatelessWidget {
       ),
     );
   }
-  Widget _buildTextField(String label, String text) {
+  Widget _buildTextField(String label, String initialText, Function(String) onChanged) {
+    TextEditingController controller = TextEditingController(text: initialText);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: TextField(
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: EColors.textColorPrimary1),
+        ),
+        controller: controller,
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  Widget _buildTextField1(String label, String text) {
     RxString controller = RxString(text);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),

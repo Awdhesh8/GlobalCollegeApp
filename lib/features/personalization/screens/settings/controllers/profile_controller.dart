@@ -7,6 +7,7 @@ class ProfileController extends GetxController {
   var bloodGroup = ''.obs;
 
   RxString samaraId = ''.obs;
+  RxString laptop = ''.obs;
   RxString laptopBrand = ''.obs;
   RxString laptopRam = ''.obs;
   RxString laptopProcessor = ''.obs;
