@@ -23,19 +23,20 @@ class ESettingsMenuTile extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           // color: Colors.white70,
-          color: const Color(0xFFFFE0E5),
+          // color: const Color(0xFFFFE0E5),
           borderRadius: BorderRadius.circular(20),
+          color: const Color(0xFFFFE0E5),
           boxShadow: const [
             BoxShadow(
               color: Color(0xFFFFC1C5),
               offset: Offset(-2, -2),
-              blurRadius: 5,
+              blurRadius: 2,
               spreadRadius: 1,
             ),
             BoxShadow(
               color: Colors.white,
-              offset: Offset(5, 5),
-              blurRadius: 5,
+              offset: Offset(4, 4),
+              blurRadius: 2,
               spreadRadius: 1,
             ),
           ],
