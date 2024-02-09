@@ -536,9 +536,10 @@ class EditProfile extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildTextField('Laptop Brand', profileController.laptopBrand.value, (value) {
-                          profileController.laptopBrand.value = value;
-                        }),
+                         _buildTextField1('Laptop Brand', profileController.laptopBrand.value),
+                        // _buildTextField('Laptop Brand', profileController.laptopBrand.value, (value) {
+                        //   profileController.laptopBrand.value = value;
+                       // }),
                         _buildTextField('Laptop RAM', profileController.laptopRam.value, (value) {
                           profileController.laptopRam.value = value;
                         }),
@@ -553,6 +554,7 @@ class EditProfile extends StatelessWidget {
                 ],
               ),
             ),
+
 
 
 
@@ -575,8 +577,8 @@ class EditProfile extends StatelessWidget {
       ),
     );
   }
-  Widget _buildTextField(String label, String initialText, Function(String) onChanged) {
-    TextEditingController controller = TextEditingController(text: initialText);
+  Widget _buildTextField(String label, String text, void Function(String) onChanged) {
+    TextEditingController controller = TextEditingController(text: text);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
