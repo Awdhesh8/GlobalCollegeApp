@@ -135,36 +135,58 @@ class ApiService {
   }
 
   /// Edit Profile --->>>>
-  static Future<void> updateProfile(Map<String, String> data, String imagePath) async {
+  static Future<void> updateProfile({
+    required String contactNumber,
+    required String email,
+    required String samagraId,
+    required String laptop,
+    required String bloodGroup,
+    required String laptopBrand,
+    required String laptopRam,
+    required String laptopProcessor,
+    required String laptopConfig,
+    required String imagePath,
+  }) async {
     try {
-      var headers = {
-        'Cookie': 'ci_session=g6gqltpt0vbrgjfi4n29vnb2dmbsi99n'
-      };
-      var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/update_profile'));
-      request.fields.addAll(data);
-      if (imagePath.isNotEmpty && imagePath.startsWith('http')) {
-        // Only add the image file if the imagePath is a URL
-        request.files.add(await http.MultipartFile.fromPath('form_file', imagePath));
-      }
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String userId = prefs.getString('user_id') ?? '';
+      String userType = prefs.getString('user_type') ?? '';
 
-      // Print the request being sent to the API
-      print('API Request: ${request.fields}');
+      var headers = APIConstants.headers;
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(APIConstants.getFullUrl(APIConstants.updateProfile)),
+      );
+
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'USER_ID': userId, // Ensure this is not an empty string
+        'USER_TYPE': userType,
+        'contact_no': contactNumber,
+        'stud_email': email,
+        'samagra_id': samagraId,
+        'laptop': laptop,
+        'stud_bgroup': bloodGroup,
+        'lap_brand': laptopBrand,
+        'lap_ram': laptopRam,
+        'lap_processor': laptopProcessor,
+        'lap_config': laptopConfig,
+      });
+
+      var imageFile = await http.MultipartFile.fromPath('form_file', imagePath);
+      request.files.add(imageFile);
 
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        // Print the response status code and body if successful
-        print('Response status code: ${response.statusCode}');
-        print('Response body: ${await response.stream.bytesToString()}');
+        print(await response.stream.bytesToString());
       } else {
-        // Print the response reason phrase if not successful
         print(response.reasonPhrase);
       }
-    } catch (e) {
-      // Handle errors
-      print('Error in API call: $e');
+    } catch (error) {
+      print('Error: $error');
     }
   }
 

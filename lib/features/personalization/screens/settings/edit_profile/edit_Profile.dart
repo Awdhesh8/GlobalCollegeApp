@@ -1,3 +1,493 @@
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../../../data/api/api_services.dart';
+import '../controllers/profile_controller.dart';
+
+class EditProfile extends StatelessWidget {
+  final ProfileController profileController = Get.put(ProfileController());
+  final String profilePhoto;
+  final String contactNo;
+  final String email;
+  final String samagraId;
+  final String laptop;
+  final String bloodGroup;
+  final String laptopBrand;
+  final String laptopRam;
+  final String laptopProcessor;
+  final String laptopConfig;
+
+  EditProfile({
+    Key? key,
+    required this.profilePhoto,
+    required this.contactNo,
+    required this.email,
+    required this.samagraId,
+    required this.laptop,
+    required this.bloodGroup,
+    required this.laptopBrand,
+    required this.laptopRam,
+    required this.laptopProcessor,
+    required this.laptopConfig,
+  }) : super(key: key) {
+    // Initialize values in the controller when the widget is created
+    profileController.imagePath.value = profilePhoto;
+    profileController.contactNumber.value = contactNo;
+    profileController.email.value = email;
+    profileController.samaraId.value = samagraId;
+    profileController.bloodGroup.value = bloodGroup;
+    profileController.laptopBrand.value = laptopBrand;
+    profileController.laptopRam.value = laptopRam;
+    profileController.laptopProcessor.value = laptopProcessor;
+    profileController.laptopConfig.value = laptopConfig;
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: const GAppBar(
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Edit Profile',
+          style: TextStyle(color: EColors.textColorPrimary1),
+        ),
+        centerTitle: false,
+        showBackArrow: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Hero(
+              tag: 'avatarHero',
+              child: Obx(() => CircularAvatar(
+                imagePath: profileController.imagePath.value,
+                onTap: () => _pickImage(context),
+                uploadIcon: IconButton(
+                  icon: const Icon(
+                    Icons.upload,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => _pickImage(context),
+                ),
+              )),
+            ),
+            const SizedBox(height: 16),
+            // _buildTextField1('Contact Number', profileController.contactNumber.value),
+            _buildTextField('Contact Number', profileController.contactNumber.value, (value) {
+              profileController.contactNumber.value = value;
+            }),
+            // _buildTextField1('Contact Number', profileController.contactNumber.value),
+            // _buildTextField1('Email', profileController.email.value),
+            _buildTextField('Email', profileController.email.value, (value) {
+              profileController.email.value = value;
+            }),
+
+            /// Blood Groups Dropdown--->>>
+            FutureBuilder<List<String>>(
+              future: ApiService.fetchBloodGroups(), // Fetch blood groups
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Show shimmer loading effect while fetching
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: double.infinity,
+                      height: 50, // Adjust height as needed
+                      color: Colors.white,
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  // If data is fetched successfully
+                  return _buildBloodGroupDropdown(snapshot.data!);
+                }
+              },
+            ),
+
+            // _buildTextField1('Samagra ID', profileController.samaraId.value),
+            _buildTextField('Samagra ID', profileController.samaraId.value, (value) {
+              profileController.samaraId.value = value;
+            }),
+            const SizedBox(height: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text('Your Laptop Details Here!!!'),
+                  ],
+                ),
+                // Show laptop details fields only if the switch is toggled on
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTextField('Laptop Brand', profileController.laptopBrand.value, (value) {
+                      profileController.laptopBrand.value = value;
+                    }),
+                    _buildTextField('Laptop RAM', profileController.laptopRam.value, (value) {
+                      profileController.laptopRam.value = value;
+                    }),
+                    _buildTextField('Laptop Processor', profileController.laptopProcessor.value, (value) {
+                      profileController.laptopProcessor.value = value;
+                    }),
+                    _buildTextField('Laptop Configuration', profileController.laptopConfig.value, (value) {
+                      profileController.laptopConfig.value = value;
+                    }),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                _showConfirmationDialog(context);
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String label, String text, void Function(String) onChanged) {
+    TextEditingController controller = TextEditingController(text: text);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: TextField(
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: EColors.textColorPrimary1),
+        ),
+        controller: controller,
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  Widget _buildBloodGroupDropdown(List<String> bloodGroups) {
+    String initialValue = profileController.bloodGroup.value ?? '';
+
+    if (initialValue.isEmpty) {
+      initialValue = 'Select Your Blood Group'; // Set default prompt
+    }
+
+    return DropdownButtonFormField<String>(
+      value: initialValue, // Set initial value here
+      decoration: InputDecoration(
+        labelText: 'Blood Group',
+        labelStyle: const TextStyle(color: EColors.textColorPrimary1),
+      ),
+      onChanged: (String? newValue) {
+        profileController.bloodGroup.value =
+        newValue!; // Update the selected blood group
+      },
+      items: [
+        DropdownMenuItem<String>(
+          value: 'Select Your Blood Group', // Set value for default prompt
+          child: Text('Select Your Blood Group'), // Set text for default prompt
+        ),
+        ...bloodGroups.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  Future<void> _pickImage(BuildContext context) async {
+    final picker = ImagePicker();
+    final pickedFile = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Image Source'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context)
+                      .pop(await picker.pickImage(source: ImageSource.gallery));
+                },
+                child: const Text('Gallery'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context)
+                      .pop(await picker.pickImage(source: ImageSource.camera));
+                },
+                child: const Text('Camera'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (pickedFile != null) {
+      // Update the image path in the controller
+      profileController.imagePath.value = pickedFile.path;
+    }
+  }
+
+  // void _saveProfile() {
+  //   // Perform save logic here
+  // }
+
+  void _showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Profile'),
+          content: const Text('Do you really want to update your profile?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Get.back();
+                _updateProfileAndShowSnackbar();
+              },
+              child: const Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                // Get.back(); // Pop back to EditProfile
+              },
+              child: const Text('No'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // void _updateProfileAndShowSnackbar() {
+  //   // Perform update logic here
+  //   _saveProfile(); // Assuming this should save the profile
+  //
+  //   // Show Snackbar
+  //   Get.snackbar('Profile Updated', 'Your profile has been updated.');
+  //
+  //   // Navigate back to the SettingsScreen
+  //   Get.back(); // Assumes that you have a GetMaterialController associated with SettingsScreen
+  // }
+
+  void _updateProfileAndShowSnackbar() async {
+    // Perform update logic here
+    // _saveProfile(); // Assuming this should save the profile
+
+    // Show Snackbar
+    Get.snackbar('Profile Updated', 'Your profile has been updated.');
+
+    // Call the API service to update the profile
+    await ApiService.updateProfile(
+      contactNumber: profileController.contactNumber.value,
+      email: profileController.email.value,
+      samagraId: profileController.samaraId.value,
+      laptop: profileController.laptopBrand.value,
+      bloodGroup: profileController.bloodGroup.value,
+      laptopBrand: profileController.laptopBrand.value,
+      laptopRam: profileController.laptopRam.value,
+      laptopProcessor: profileController.laptopProcessor.value,
+      laptopConfig: profileController.laptopConfig.value,
+      imagePath: profileController.imagePath.value,
+    );
+
+    // Navigate back
+    Get.back(); // This will go back to the previous screen
+  }
+
+}
+
+class CircularAvatar extends StatelessWidget {
+  final String imagePath;
+  final Function onTap;
+  final Widget uploadIcon;
+
+  const CircularAvatar({
+    Key? key,
+    required this.imagePath,
+    required this.onTap,
+    required this.uploadIcon,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        GestureDetector(
+          onTap: () => onTap(),
+          child: Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[300],
+            ),
+            child: _buildAvatarContent(),
+          ),
+        ),
+        uploadIcon,
+      ],
+    );
+  }
+
+  Widget _buildAvatarContent() {
+    if (imagePath.isNotEmpty) {
+      if (imagePath.startsWith('http')) {
+        // Display network image
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: NetworkImage(imagePath),
+              fit: BoxFit.fill,
+            ),
+          ),
+        );
+      } else {
+        // Display local file image
+        File file = File(imagePath);
+        if (file.existsSync()) {
+          return Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: FileImage(file),
+                fit: BoxFit.fill,
+              ),
+            ),
+          );
+        }
+      }
+    }
+
+    // Display default icon if imagePath is empty or invalid
+    return const Icon(Icons.person, size: 50, color: Colors.white);
+  }
+
+}
+
+
+
+/*
+  Future<void> _pickImage(BuildContext context) async {
+    final picker = ImagePicker();
+    final pickedFile = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Image Source'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context).pop(await picker.pickImage(source: ImageSource.gallery));
+                },
+                child: const Text('Gallery'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context).pop(await picker.pickImage(source: ImageSource.camera));
+                },
+                child: const Text('Camera'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (pickedFile != null) {
+      profileController.imagePath.value = pickedFile.path;
+    }
+  }
+
+  void _saveProfile() {
+    // Perform save logic here
+  }
+
+  void _showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Profile'),
+          content: const Text('Do you really want to update your profile?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _updateProfileAndShowSnackbar();
+              },
+              child: const Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                Get.back(); // Pop back to EditProfile
+              },
+              child: const Text('No'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _updateProfileAndShowSnackbar() {
+    // Perform update logic here
+    _saveProfile(); // Assuming this should save the profile
+
+    // Show Snackbar
+    Get.snackbar('Profile Updated', 'Your profile has been updated.');
+
+    // Navigate back to the SettingsScreen
+    Get.back(); // Assumes that you have a GetMaterialController associated with SettingsScreen
+  }
+}
+
+class CircularAvatar extends StatelessWidget {
+  final String imagePath;
+  final VoidCallback onTap;
+
+  const CircularAvatar({super.key, required this.imagePath, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: CircleAvatar(
+        radius: 40,
+        backgroundImage: imagePath.isNotEmpty ? FileImage(File(imagePath)) : null,
+        child: imagePath.isEmpty ? const Icon(Icons.camera_alt) : null,
+      ),
+    );
+  }
+}
+
+
+ */
+
 // import 'dart:io';
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
@@ -757,451 +1247,6 @@ class EditProfile extends StatelessWidget {
   }
 }
  */
-
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
-import 'package:globalcollegeapp/utils/constants/colors.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shimmer/shimmer.dart';
-import '../../../../../data/api/api_services.dart';
-import '../controllers/profile_controller.dart';
-
-class EditProfile extends StatelessWidget {
-  final ProfileController profileController = Get.put(ProfileController());
-  final String profilePhoto;
-  final String contactNo;
-  final String email;
-  final String samagraId;
-  final String laptop;
-  final String bloodGroup;
-  final String laptopBrand;
-  final String laptopRam;
-  final String laptopProcessor;
-  final String laptopConfig;
-
-  EditProfile({
-    Key? key,
-    required this.profilePhoto,
-    required this.contactNo,
-    required this.email,
-    required this.samagraId,
-    required this.laptop,
-    required this.bloodGroup,
-    required this.laptopBrand,
-    required this.laptopRam,
-    required this.laptopProcessor,
-    required this.laptopConfig,
-  }) : super(key: key) {
-    // Initialize values in the controller when the widget is created
-    profileController.imagePath.value = profilePhoto;
-    profileController.contactNumber.value = contactNo;
-    profileController.email.value = email;
-    profileController.samaraId.value = samagraId;
-    profileController.bloodGroup.value = bloodGroup;
-    profileController.laptopBrand.value = laptopBrand;
-    profileController.laptopRam.value = laptopRam;
-    profileController.laptopProcessor.value = laptopProcessor;
-    profileController.laptopConfig.value = laptopConfig;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: EColors.backgroundColor,
-      appBar: const GAppBar(
-        backgroundColor: Colors.transparent,
-        title: Text(
-          'Edit Profile',
-          style: TextStyle(color: EColors.textColorPrimary1),
-        ),
-        centerTitle: false,
-        showBackArrow: true,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Hero(
-              tag: 'avatarHero',
-              child: Obx(() => CircularAvatar(
-                imagePath: profileController.imagePath.value,
-                onTap: () => _pickImage(context),
-                uploadIcon: IconButton(
-                  icon: const Icon(
-                    Icons.upload,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => _pickImage(context),
-                ),
-              )),
-            ),
-            const SizedBox(height: 16),
-            _buildTextField1('Contact Number', profileController.contactNumber.value),
-            _buildTextField1('Email', profileController.email.value),
-
-            /// Blood Groups Dropdown--->>>
-            FutureBuilder<List<String>>(
-              future: ApiService.fetchBloodGroups(), // Fetch blood groups
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // Show shimmer loading effect while fetching
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      width: double.infinity,
-                      height: 50, // Adjust height as needed
-                      color: Colors.white,
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  // If data is fetched successfully
-                  return _buildBloodGroupDropdown(snapshot.data!);
-                }
-              },
-            ),
-
-            _buildTextField1('Samagra ID', profileController.samaraId.value),
-            const SizedBox(height: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text('Your Laptop Details Here!!!'),
-                  ],
-                ),
-                // Show laptop details fields only if the switch is toggled on
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildTextField('Laptop Brand', profileController.laptopBrand.value, (value) {
-                      profileController.laptopBrand.value = value;
-                    }),
-                    _buildTextField('Laptop RAM', profileController.laptopRam.value, (value) {
-                      profileController.laptopRam.value = value;
-                    }),
-                    _buildTextField('Laptop Processor', profileController.laptopProcessor.value, (value) {
-                      profileController.laptopProcessor.value = value;
-                    }),
-                    _buildTextField('Laptop Configuration', profileController.laptopConfig.value, (value) {
-                      profileController.laptopConfig.value = value;
-                    }),
-                  ],
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                _showConfirmationDialog(context);
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(String label, String text, void Function(String) onChanged) {
-    TextEditingController controller = TextEditingController(text: text);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: TextField(
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: const TextStyle(color: EColors.textColorPrimary1),
-        ),
-        controller: controller,
-        onChanged: onChanged,
-      ),
-    );
-  }
-
-  Widget _buildTextField1(String label, String text) {
-    RxString controller = RxString(text);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: TextField(
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: const TextStyle(color: EColors.textColorPrimary1),
-        ),
-        controller: TextEditingController(text: controller.value),
-        onChanged: (value) => controller.value = value,
-      ),
-    );
-  }
-
-  Widget _buildBloodGroupDropdown(List<String> bloodGroups) {
-    String initialValue = profileController.bloodGroup.value ?? '';
-
-    if (initialValue.isEmpty) {
-      initialValue = 'Select Your Blood Group'; // Set default prompt
-    }
-
-    return DropdownButtonFormField<String>(
-      value: initialValue, // Set initial value here
-      decoration: InputDecoration(
-        labelText: 'Blood Group',
-        labelStyle: const TextStyle(color: EColors.textColorPrimary1),
-      ),
-      onChanged: (String? newValue) {
-        profileController.bloodGroup.value =
-        newValue!; // Update the selected blood group
-      },
-      items: [
-        DropdownMenuItem<String>(
-          value: 'Select Your Blood Group', // Set value for default prompt
-          child: Text('Select Your Blood Group'), // Set text for default prompt
-        ),
-        ...bloodGroups.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-      ],
-    );
-  }
-
-  Future<void> _pickImage(BuildContext context) async {
-    final picker = ImagePicker();
-    final pickedFile = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Select Image Source'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.of(context)
-                      .pop(await picker.pickImage(source: ImageSource.gallery));
-                },
-                child: const Text('Gallery'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.of(context)
-                      .pop(await picker.pickImage(source: ImageSource.camera));
-                },
-                child: const Text('Camera'),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-
-    if (pickedFile != null) {
-      // Check if the image is picked from the device's gallery or captured using the camera
-      // If so, update the image path
-      if (!(profileController.imagePath.value.startsWith('http') ||
-          profileController.imagePath.value.startsWith('https'))) {
-        profileController.imagePath.value = pickedFile.path;
-      }
-    }
-  }
-
-  void _showConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Confirmation'),
-        content: Text('Are you sure you want to save changes?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _saveProfile();
-            },
-            child: Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _saveProfile() async {
-    // Retrieve userId and userType from local storage
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString('user_id') ?? ''; // Use the actual key used for user ID
-    String userType = prefs.getString('user_type') ?? ''; // Use the actual key used for user type
-
-    // Prepare the data to send
-    Map<String, String> data = {
-      'APIKEY': 'GNCS0225',
-      'USER_ID': userId,
-      'USER_TYPE': userType,
-      'contact_no': profileController.contactNumber.value,
-      'stud_email': profileController.email.value,
-      'samagra_id': profileController.samaraId.value,
-      'stud_bgroup': profileController.bloodGroup.value,
-      'laptop': profileController.laptopBrand.value.isNotEmpty ? '1' : '0',
-      'lap_brand': profileController.laptopBrand.value,
-      'lap_ram': profileController.laptopRam.value,
-      'lap_processor': profileController.laptopProcessor.value,
-      'lap_config': profileController.laptopConfig.value,
-    };
-
-    // Print the data being sent to the API
-    print('Profile data: $data');
-
-    String imagePath = profileController.imagePath.value;
-
-    if (imagePath.isNotEmpty && imagePath.startsWith('http')) {
-      // Call the API to update profile without image
-      try {
-        await ApiService.updateProfile(data, '');
-        // Show a snackbar to inform the user about the status of the update request
-        Get.snackbar(
-          'Update Request Sent',
-          'Your profile has been updated.',
-          snackPosition: SnackPosition.TOP,
-          duration: const Duration(seconds: 2),
-        );
-      } catch (error) {
-        // Handle errors
-        print('Error updating profile: $error');
-        Get.snackbar(
-          'Error',
-          'Failed to update profile. Please try again later.',
-          snackPosition: SnackPosition.TOP,
-          duration: const Duration(seconds: 2),
-        );
-      }
-    } else if (imagePath.isNotEmpty) {
-      // Call the API to update profile with image
-      try {
-        await ApiService.updateProfile(data, imagePath);
-        // Show a snackbar to inform the user about the status of the update request
-        Get.snackbar(
-          'Update Request Sent',
-          'Your profile has been updated.',
-          snackPosition: SnackPosition.TOP,
-          duration: const Duration(seconds: 2),
-        );
-      } catch (error) {
-        // Handle errors
-        print('Error updating profile: $error');
-        Get.snackbar(
-          'Error',
-          'Failed to update profile. Please try again later.',
-          snackPosition: SnackPosition.TOP,
-          duration: const Duration(seconds: 2),
-        );
-      }
-    } else {
-      // No image path provided
-      // Call the API to update profile without image
-      try {
-        await ApiService.updateProfile(data, '');
-        // Show a snackbar to inform the user about the status of the update request
-        Get.snackbar(
-          'Update Request Sent',
-          'Your profile has been updated.',
-          snackPosition: SnackPosition.TOP,
-          duration: const Duration(seconds: 2),
-        );
-      } catch (error) {
-        // Handle errors
-        print('Error updating profile: $error');
-        Get.snackbar(
-          'Error',
-          'Failed to update profile. Please try again later.',
-          snackPosition: SnackPosition.TOP,
-          duration: const Duration(seconds: 2),
-        );
-      }
-    }
-  }
-}
-
-class CircularAvatar extends StatelessWidget {
-  final String imagePath;
-  final Function onTap;
-  final Widget uploadIcon;
-
-  const CircularAvatar({
-    Key? key,
-    required this.imagePath,
-    required this.onTap,
-    required this.uploadIcon,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomRight,
-      children: [
-        GestureDetector(
-          onTap: () => onTap(),
-          child: Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey[300],
-            ),
-            child: _buildAvatarContent(),
-          ),
-        ),
-        uploadIcon,
-      ],
-    );
-  }
-
-  Widget _buildAvatarContent() {
-    if (imagePath.isNotEmpty && imagePath.startsWith('http')) {
-      return Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-            image: NetworkImage(imagePath),
-            fit: BoxFit.fill,
-          ),
-        ),
-      );
-    } else if (imagePath.isNotEmpty) {
-      // Check if imagePath is a file path
-      File file = File(imagePath);
-      if (file.existsSync()) {
-        return Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: FileImage(file),
-              fit: BoxFit.fill,
-            ),
-          ),
-        );
-      } else {
-        // Image path is not a valid file path, show default icon
-        return const Icon(Icons.person, size: 50, color: Colors.white);
-      }
-    } else {
-      return const Icon(Icons.person, size: 50, color: Colors.white);
-    }
-  }
-}
-
-
 
 /*
 import 'dart:io';
@@ -2050,184 +2095,6 @@ class CircularAvatar extends StatelessWidget {
       ),
     );
   }
-}
-
-
- */
-
-
-/*
-/// ChatGpt
-can u integrate the API  for   Edit Profile --->>>>
-i give u snippit code
-this is snippit code
-var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/update_profile'));
-request.fields.addAll({
-  'APIKEY': 'GNCS0225',
-  'USER_ID': ' ',
-  'USER_TYPE': ' ',
-  'contact_no': ' ',
-  'stud_email': '',
-  'samagra_id': ' ',
-  'laptop': ' ',
-  'stud_bgroup': ' ',
-  'lap_brand': ' ',
-  'lap_ram': ' ',
-  'lap_processor': ' ',
-  'lap_config': ' '
-});
-request.files.add(await http.MultipartFile.fromPath('form_file', '/path/to/file'));
-
-http.StreamedResponse response = await request.send();
-
-if (response.statusCode == 200) {
-  print(await response.stream.bytesToString());
-}
-else {
-  print(response.reasonPhrase);
-}
-
-
-on this dart file
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../utils/constants/api_constants.dart';
-
-class ApiService {
-
-  /// User Login --->>>
-  static Future<Map<String, dynamic>> loginUser(String username, String password) async {
-    try {
-      var headers = {
-        'Cookie': 'ci_session=trb1cdm1k01ka4jrt6t55nrstv6frt8p; remember_code=529f1face76aad1813e947055101a76386950be0.e599f6271f11ddc484b1e8288df76ed79742de7399f1cd73f46f29113b68db349035fc15cdae996a5df0a4faec0d53c40d3b666f6336fc9ea236da0428f702c6'
-      };
-
-      var request = http.MultipartRequest('POST', Uri.parse(APIConstants.getFullUrl(APIConstants.loginEndpoint)));
-      request.fields.addAll({
-        'APIKEY': 'GNCS0225',
-        'USERNAME': username,
-        'PASSWORD': password,
-      });
-
-      request.headers.addAll(headers);
-
-      http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(await response.stream.bytesToString());
-        return data;
-      } else {
-        throw Exception('Failed to login. Status Code: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('An error occurred: $e');
-    }
-  }
-
-  /// Get Profile Data --->>>
-  static Future<Map<String, dynamic>?> getProfileData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString('user_id') ?? '';
-    String userType = prefs.getString('user_type') ?? '';
-
-    var request = http.MultipartRequest(
-      'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getProfileEndpoint)),
-    );
-    request.fields.addAll({
-      'APIKEY': 'GNCS0225',
-      'USER_ID': userId,
-      'USER_TYPE': userType,
-    });
-
-    request.headers.addAll(APIConstants.headers);
-
-    try {
-      http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200) {
-        var responseData = json.decode(await response.stream.bytesToString());
-
-        // Check if 'response' key is present and not null
-        if (responseData.containsKey('response') && responseData['response'] != null) {
-          return responseData;
-        } else {
-          print('Error: Missing or null "response" key in the API response.');
-          return null;
-        }
-      } else {
-        print('API error: ${response.reasonPhrase}');
-        return null;
-      }
-    } catch (e) {
-      print('Error in API call: $e');
-      return null;
-    }
-  }
-
-  /// Get Rank Attendance -->>>
-  static Future<Map<String, dynamic>?> getRankAndAttendanceData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString('user_id') ?? '';
-    String userType = prefs.getString('user_type') ?? '';
-
-    var request = http.MultipartRequest(
-        'POST', Uri.parse(APIConstants.getFullUrl('get_rankattend')));
-    request.fields.addAll({
-      'APIKEY': 'GNCS0225',
-      'USER_ID': userId,
-      'USER_TYPE': userType,
-    });
-
-    request.headers.addAll(APIConstants.headers);
-
-    try {
-      http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200) {
-        var responseData = json.decode(await response.stream.bytesToString());
-        return responseData;
-      } else {
-        print('API error: ${response.reasonPhrase}');
-        return null;
-      }
-    } catch (e) {
-      print('Error in API call: $e');
-      return null;
-    }
-  }
-
-  /// Get Blood Group --->>>
-  static Future<List<String>> fetchBloodGroups() async {
-    try {
-      final response = await http.post(
-        Uri.parse(APIConstants.getFullUrl(APIConstants.getBloodGroup)), // Modify this line
-        headers: APIConstants.headers,
-        body: {'APIKEY': 'GNCS0225'},
-      );
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        if (data['status'] == "1") {
-          List<dynamic> bloodGroupData = data['response'];
-          List<String> bloodGroups = bloodGroupData
-              .map((bloodGroup) => bloodGroup['bloodg'].toString())
-              .toList();
-          return bloodGroups;
-        } else {
-          throw Exception(data['message']);
-        }
-      } else {
-        throw Exception('Failed to load blood groups: ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      throw Exception('Exception while fetching blood groups: $e');
-    }
-  }
-
-  /// Edit Profile --->>>>
-
-
 }
 
 
