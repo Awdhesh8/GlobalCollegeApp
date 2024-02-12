@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../features/personalization/screens/settings/edit_profile/edit_Profile.dart';
 import '../../utils/constants/api_constants.dart';
 
 class ApiService {
@@ -109,10 +110,37 @@ class ApiService {
   }
 
   /// Get Blood Group --->>>
-  static Future<List<String>> fetchBloodGroups() async {
+  // static Future<List<String>> fetchBloodGroups() async {
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(APIConstants.getFullUrl(APIConstants.getBloodGroup)), // Modify this line
+  //       headers: APIConstants.headers,
+  //       body: {'APIKEY': 'GNCS0225'},
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> data = json.decode(response.body);
+  //       if (data['status'] == "1") {
+  //         List<dynamic> bloodGroupData = data['response'];
+  //         List<String> bloodGroups = bloodGroupData
+  //             .map((bloodGroup) => bloodGroup['bloodg'].toString())
+  //             .toList();
+  //         return bloodGroups;
+  //       } else {
+  //         throw Exception(data['message']);
+  //       }
+  //     } else {
+  //       throw Exception('Failed to load blood groups: ${response.reasonPhrase}');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Exception while fetching blood groups: $e');
+  //   }
+  // }
+
+  static Future<List<BloodGroup>> fetchBloodGroups() async {
     try {
       final response = await http.post(
-        Uri.parse(APIConstants.getFullUrl(APIConstants.getBloodGroup)), // Modify this line
+        Uri.parse(APIConstants.getFullUrl(APIConstants.getBloodGroup)),
         headers: APIConstants.headers,
         body: {'APIKEY': 'GNCS0225'},
       );
@@ -121,8 +149,8 @@ class ApiService {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data['status'] == "1") {
           List<dynamic> bloodGroupData = data['response'];
-          List<String> bloodGroups = bloodGroupData
-              .map((bloodGroup) => bloodGroup['bloodg'].toString())
+          List<BloodGroup> bloodGroups = bloodGroupData
+              .map((bloodGroupJson) => BloodGroup.fromJson(bloodGroupJson))
               .toList();
           return bloodGroups;
         } else {
@@ -260,6 +288,8 @@ class ApiService {
       print('Error: $error');
     }
   }
+
+  /// Get Educational Info --->>>
 
 
 

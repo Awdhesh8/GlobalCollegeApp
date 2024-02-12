@@ -41,7 +41,7 @@ class EditProfile extends StatelessWidget {
     profileController.email.value = email;
     profileController.samaraId.value = samagraId;
     profileController.bloodGroup.value = bloodGroup;
-    profileController.selectedBloodGroupId.value;
+    // profileController.selectedBloodGroupId.value;
     profileController.laptopBrand.value = laptopBrand;
     profileController.laptopRam.value = laptopRam;
     profileController.laptopProcessor.value = laptopProcessor;
@@ -94,7 +94,8 @@ class EditProfile extends StatelessWidget {
             }),
 
             /// Blood Groups Dropdown--->>>
-            FutureBuilder<List<String>>(
+            /// Blood Groups Dropdown--->>>
+            FutureBuilder<List<BloodGroup>>(
               future: ApiService.fetchBloodGroups(), // Fetch blood groups
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -110,12 +111,37 @@ class EditProfile extends StatelessWidget {
                   );
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
-                } else {
+                } else if (snapshot.hasData) {
                   // If data is fetched successfully
                   return _buildBloodGroupDropdown(snapshot.data!);
+                } else {
+                  return Text('No data available'); // Handle the case when there is no data
                 }
               },
             ),
+
+            // FutureBuilder<List<String>>(
+            //   future: ApiService.fetchBloodGroups(), // Fetch blood groups
+            //   builder: (context, snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       // Show shimmer loading effect while fetching
+            //       return Shimmer.fromColors(
+            //         baseColor: Colors.grey[300]!,
+            //         highlightColor: Colors.grey[100]!,
+            //         child: Container(
+            //           width: double.infinity,
+            //           height: 60, // Adjust height as needed
+            //           color: Colors.white,
+            //         ),
+            //       );
+            //     } else if (snapshot.hasError) {
+            //       return Text('Error: ${snapshot.error}');
+            //     } else {
+            //       // If data is fetched successfully
+            //       return _buildBloodGroupDropdown(snapshot.data!);
+            //     }
+            //   },
+            // ),
 
 
             // _buildTextField1('Samagra ID', profileController.samaraId.value),
@@ -188,6 +214,40 @@ class EditProfile extends StatelessWidget {
     );
   }
 
+  Widget _buildBloodGroupDropdown(List<BloodGroup> bloodGroups) {
+    String initialValue = profileController.selectedBloodGroup.value?.id ?? '';
+
+    if (initialValue.isEmpty) {
+      initialValue = 'Select Your Blood Group'; // Set default prompt
+    }
+
+    return DropdownButtonFormField<String>(
+      value: initialValue, // Set initial value here
+      decoration: const InputDecoration(
+        labelText: 'Blood Group',
+        labelStyle: TextStyle(color: EColors.textColorPrimary1),
+      ),
+      onChanged: (String? newValue) {
+        profileController.selectedBloodGroup.value =
+            bloodGroups.firstWhere((group) => group.id == newValue);
+      },
+      items: [
+        const DropdownMenuItem<String>(
+          value: 'Select Your Blood Group',
+          child: Text('Select Your Blood Group'),
+        ),
+        ...bloodGroups.map<DropdownMenuItem<String>>((BloodGroup group) {
+          return DropdownMenuItem<String>(
+            value: group.id,
+            child: Text(group.name),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+
+/*
   Widget _buildBloodGroupDropdown(List<String> bloodGroups) {
     String initialValue = profileController.bloodGroup.value ?? '';
 
@@ -201,6 +261,7 @@ class EditProfile extends StatelessWidget {
         labelText: 'Blood Group',
         labelStyle: TextStyle(color: EColors.textColorPrimary1),
       ),
+
       onChanged: (String? newValue) {
         profileController.selectedBloodGroupId.value  =
             newValue!; // Update the selected blood group
@@ -222,6 +283,7 @@ class EditProfile extends StatelessWidget {
     );
   }
 
+ */
   Future<void> _pickImage(BuildContext context) async {
     final picker = ImagePicker();
     final pickedFile = await showDialog(
@@ -308,7 +370,7 @@ class EditProfile extends StatelessWidget {
 
     // Print bloodGroup value before calling the API
     print(profileController.bloodGroup.value);
-    print(profileController.selectedBloodGroupId.value);
+    print(profileController.selectedBloodGroup.value);
 
     // Show Snackbar
     Get.snackbar('Profile Updated', 'Your profile has been updated.');
@@ -319,7 +381,9 @@ class EditProfile extends StatelessWidget {
       email: profileController.email.value,
       samagraId: profileController.samaraId.value,
       laptop: profileController.laptop.value,
-      bloodGroup: profileController.selectedBloodGroupId.value,
+      // bloodGroup: profileController.selectedBloodGroup.value,
+      bloodGroup: profileController.selectedBloodGroup.value?.id ?? '',
+
       // bloodGroup: profileController.bloodGroup.value,
       laptopBrand: profileController.laptopBrand.value,
       laptopRam: profileController.laptopRam.value,
@@ -328,7 +392,7 @@ class EditProfile extends StatelessWidget {
       imagePath: profileController.imagePath.value,
     );
     print(profileController.bloodGroup.value);
-    print(profileController.selectedBloodGroupId.value);
+    print(profileController.selectedBloodGroup.value);
 
     // Navigate back
     Get.back(); // This will go back to the previous screen
@@ -448,6 +512,22 @@ class CircularAvatar extends StatelessWidget {
     return const Icon(Icons.person, size: 50, color: Colors.white);
   }
 }
+
+
+class BloodGroup {
+  final String id;
+  final String name;
+
+  BloodGroup({required this.id, required this.name});
+
+  factory BloodGroup.fromJson(Map<String, dynamic> json) {
+    return BloodGroup(
+      id: json['id'] ?? '',
+      name: json['bloodg'] ?? '',
+    );
+  }
+}
+
 
 /// ---- Correct code----->>>
 /*

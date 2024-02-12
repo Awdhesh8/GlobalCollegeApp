@@ -8,6 +8,7 @@ class APIConstants {
   static const String getRankattend = 'get_rankattend';
   static const String getBloodGroup = 'get_bloodg';
   static const String updateProfile = 'update_profile';
+  static const String getEducationalProfile = 'profile_educational';
 
 
   // Add more endpoints as needed
