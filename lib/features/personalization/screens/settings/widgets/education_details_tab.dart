@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart'; // Make sure you have imported the Iconsax package
 import 'package:shimmer/shimmer.dart'; // Import the Shimmer package
@@ -194,6 +195,204 @@ class ShimmerEducationDetails extends StatelessWidget {
   }
 }
 
+
+ */
+
+import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart'; // Make sure you have imported the Iconsax package
+import 'package:shimmer/shimmer.dart'; // Import the Shimmer package
+import '../../../../../data/api/api_services.dart';
+import '../../../../../utils/constants/colors.dart'; // Assuming you have your colors defined in this file
+
+class EducationDetailsPanel extends StatefulWidget {
+  @override
+  _EducationDetailsPanelState createState() => _EducationDetailsPanelState();
+}
+//
+class _EducationDetailsPanelState extends State<EducationDetailsPanel> {
+  late Future<Map<String, dynamic>> _educationalDetailsFuture;
+  final ApiService _apiService = ApiService(); // Creating an instance of ApiService
+
+  @override
+  void initState() {
+    super.initState();
+    _educationalDetailsFuture = _apiService.fetchEducationalDetails(); // Calling the method using the instance
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Map<String, dynamic>>(
+      future: _educationalDetailsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return ShimmerEducationDetails(); // Display shimmer effect while data is loading
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData && snapshot.data!['success']) {
+          List<dynamic> educationalDetailsResponse = snapshot.data!['data']['response'];
+          List<Map<String, dynamic>> educationalDetails = educationalDetailsResponse.map((entry) {
+            return {
+              'type': entry['type'],
+              'details': (entry['details'] as List).isNotEmpty ? entry['details'][0] : {}, // Check if 'details' list is not empty before accessing the first element
+            };
+          }).toList();
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Container(
+              decoration: ShapeDecoration(
+                color: EColors.lightContainer1,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Column(
+                children: educationalDetails.map((entry) {
+                  return ListTile(
+                    trailing: const Icon(
+                      Iconsax.folder_open4,
+                      color: EColors.primary,
+                    ),
+                    title: Text(entry['type']),
+                    onTap: () {
+                      _showEducationalDetailsDialog(context, entry);
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+          );
+        } else {
+          return Center(child: Text('Failed to fetch data'));
+        }
+      },
+    );
+  }
+
+  void _showEducationalDetailsDialog(BuildContext context, Map<String, dynamic> details) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        details['type'],
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: EColors.primary, // Customize the color
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      for (var key in details['details'].keys)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  key,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: EColors.textColorPrimary1,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  details['details'][key].toString(),
+                                  style: const TextStyle(
+                                    color: EColors.primarySecond,
+                                  ),
+                                  maxLines: 2, // Adjust the number of lines
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      const SizedBox(height: 16),
+                      Align(
+                        alignment: Alignment.center,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Close'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class ShimmerEducationDetails extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Container(
+        decoration: ShapeDecoration(
+          color: EColors.lightContainer1,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        child: Column(
+          children: List.generate(
+            5, // Generate 5 shimmering list tiles
+                (index) => ListTile(
+              title: Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 16,
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              trailing: Icon(
+                Iconsax.folder_open4,
+                color: EColors.primary,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 /// ------
 /*
