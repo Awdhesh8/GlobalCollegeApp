@@ -132,7 +132,6 @@ class SettingsScreen extends StatelessWidget {
                   return Obx(() => controller.showPersonalDetails.value
                       ? UserDetails(data: snapshot.data!['response'][0], dataList: dataList)
                       : EducationDetailsPanel(
-                    educationalDetails: educationalDetails,
                   ));
                 } else {
                   return Center(child: Text('No data available'));

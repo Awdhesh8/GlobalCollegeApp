@@ -513,7 +513,6 @@ class CircularAvatar extends StatelessWidget {
   }
 }
 
-
 class BloodGroup {
   final String id;
   final String name;
