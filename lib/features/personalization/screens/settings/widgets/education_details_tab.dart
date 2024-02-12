@@ -8,7 +8,7 @@ class EducationDetailsPanel extends StatefulWidget {
   @override
   _EducationDetailsPanelState createState() => _EducationDetailsPanelState();
 }
-
+//
 class _EducationDetailsPanelState extends State<EducationDetailsPanel> {
   late Future<Map<String, dynamic>> _educationalDetailsFuture;
   final ApiService _apiService = ApiService(); // Creating an instance of ApiService
