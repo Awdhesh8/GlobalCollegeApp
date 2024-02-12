@@ -41,6 +41,459 @@ class EditProfile extends StatelessWidget {
     profileController.email.value = email;
     profileController.samaraId.value = samagraId;
     profileController.bloodGroup.value = bloodGroup;
+    profileController.selectedBloodGroupId.value;
+    profileController.laptopBrand.value = laptopBrand;
+    profileController.laptopRam.value = laptopRam;
+    profileController.laptopProcessor.value = laptopProcessor;
+    profileController.laptopConfig.value = laptopConfig;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: const GAppBar(
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Edit Profile',
+          style: TextStyle(color: EColors.textColorPrimary1),
+        ),
+        centerTitle: false,
+        showBackArrow: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Hero(
+              tag: 'avatarHero',
+              child: Obx(() => CircularAvatar(
+                    imagePath: profileController.imagePath.value,
+                    onTap: () => _pickImage(context),
+                    uploadIcon: IconButton(
+                      icon: const Icon(
+                        Icons.upload,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => _pickImage(context),
+                    ),
+                  )),
+            ),
+            const SizedBox(height: 16),
+            // _buildTextField1('Contact Number', profileController.contactNumber.value),
+            _buildTextField(
+                'Contact Number', profileController.contactNumber.value,
+                (value) {
+              profileController.contactNumber.value = value;
+            }),
+            // _buildTextField1('Contact Number', profileController.contactNumber.value),
+            // _buildTextField1('Email', profileController.email.value),
+            _buildTextField('Email', profileController.email.value, (value) {
+              profileController.email.value = value;
+            }),
+
+            /// Blood Groups Dropdown--->>>
+            FutureBuilder<List<String>>(
+              future: ApiService.fetchBloodGroups(), // Fetch blood groups
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Show shimmer loading effect while fetching
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      width: double.infinity,
+                      height: 60, // Adjust height as needed
+                      color: Colors.white,
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  // If data is fetched successfully
+                  return _buildBloodGroupDropdown(snapshot.data!);
+                }
+              },
+            ),
+
+
+            // _buildTextField1('Samagra ID', profileController.samaraId.value),
+            _buildTextField('Samagra ID', profileController.samaraId.value,
+                (value) {
+              profileController.samaraId.value = value;
+            }),
+            const SizedBox(height: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  children: [
+                    Text('Your Laptop Details Here!!!'),
+                  ],
+                ),
+                // Show laptop details fields only if the switch is toggled on
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTextField(
+                        'Laptop Brand', profileController.laptopBrand.value,
+                        (value) {
+                      profileController.laptopBrand.value = value;
+                    }),
+                    _buildTextField(
+                        'Laptop RAM', profileController.laptopRam.value,
+                        (value) {
+                      profileController.laptopRam.value = value;
+                    }),
+                    _buildTextField('Laptop Processor',
+                        profileController.laptopProcessor.value, (value) {
+                      profileController.laptopProcessor.value = value;
+                    }),
+                    _buildTextField('Laptop Configuration',
+                        profileController.laptopConfig.value, (value) {
+                      profileController.laptopConfig.value = value;
+                    }),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                _showConfirmationDialog(context);
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+      String label, String text, void Function(String) onChanged) {
+    TextEditingController controller = TextEditingController(text: text);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: TextField(
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: EColors.textColorPrimary1),
+        ),
+        controller: controller,
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  Widget _buildBloodGroupDropdown(List<String> bloodGroups) {
+    String initialValue = profileController.bloodGroup.value ?? '';
+
+    if (initialValue.isEmpty) {
+      initialValue = 'Select Your Blood Group'; // Set default prompt
+    }
+
+    return DropdownButtonFormField<String>(
+      value: initialValue, // Set initial value here
+      decoration: const InputDecoration(
+        labelText: 'Blood Group',
+        labelStyle: TextStyle(color: EColors.textColorPrimary1),
+      ),
+      onChanged: (String? newValue) {
+        profileController.selectedBloodGroupId.value  =
+            newValue!; // Update the selected blood group
+        // profileController.bloodGroup.value =
+        //     newValue!; // Update the selected blood group
+      },
+      items: [
+        const DropdownMenuItem<String>(
+          value: 'Select Your Blood Group', // Set value for default prompt
+          child: Text('Select Your Blood Group'), // Set text for default prompt
+        ),
+        ...bloodGroups.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  Future<void> _pickImage(BuildContext context) async {
+    final picker = ImagePicker();
+    final pickedFile = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Image Source'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context)
+                      .pop(await picker.pickImage(source: ImageSource.gallery));
+                },
+                child: const Text('Gallery'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context)
+                      .pop(await picker.pickImage(source: ImageSource.camera));
+                },
+                child: const Text('Camera'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (pickedFile != null) {
+      // Update the image path in the controller
+      profileController.imagePath.value = pickedFile.path;
+    }
+  }
+
+  void _showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Profile'),
+          content: const Text('Do you really want to update your profile?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Get.back();
+                _updateProfileAndShowSnackbar();
+              },
+              child: const Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                // Get.back(); // Pop back to EditProfile
+              },
+              child: const Text('No'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _updateProfileAndShowSnackbar() async {
+    // Check if any of the laptop details is entered
+    bool laptopDetailsEntered =
+        profileController.laptopBrand.value.isNotEmpty ||
+            profileController.laptopRam.value.isNotEmpty ||
+            profileController.laptopProcessor.value.isNotEmpty ||
+            profileController.laptopConfig.value.isNotEmpty;
+
+    // Update the laptop value based on the condition
+    profileController.laptopBrand.value.isEmpty &&
+            profileController.laptopRam.value.isEmpty &&
+            profileController.laptopProcessor.value.isEmpty &&
+            profileController.laptopConfig.value.isEmpty
+        ? profileController.laptop.value = '0'
+        : profileController.laptop.value = '1';
+
+    // Perform update logic here
+    // _saveProfile(); // Assuming this should save the profile
+
+    // Print bloodGroup value before calling the API
+    print(profileController.bloodGroup.value);
+    print(profileController.selectedBloodGroupId.value);
+
+    // Show Snackbar
+    Get.snackbar('Profile Updated', 'Your profile has been updated.');
+
+    // Call the API service to update the profile
+    await ApiService.updateProfile(
+      contactNumber: profileController.contactNumber.value,
+      email: profileController.email.value,
+      samagraId: profileController.samaraId.value,
+      laptop: profileController.laptop.value,
+      bloodGroup: profileController.selectedBloodGroupId.value,
+      // bloodGroup: profileController.bloodGroup.value,
+      laptopBrand: profileController.laptopBrand.value,
+      laptopRam: profileController.laptopRam.value,
+      laptopProcessor: profileController.laptopProcessor.value,
+      laptopConfig: profileController.laptopConfig.value,
+      imagePath: profileController.imagePath.value,
+    );
+    print(profileController.bloodGroup.value);
+    print(profileController.selectedBloodGroupId.value);
+
+    // Navigate back
+    Get.back(); // This will go back to the previous screen
+  }
+}
+
+class CircularAvatar extends StatelessWidget {
+  final String imagePath;
+  final Function onTap;
+  final Widget uploadIcon;
+
+  const CircularAvatar({
+    Key? key,
+    required this.imagePath,
+    required this.onTap,
+    required this.uploadIcon,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        GestureDetector(
+          onTap: () => onTap(),
+          child: Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[300],
+            ),
+            child: _buildAvatarContent(),
+          ),
+        ),
+        uploadIcon,
+      ],
+    );
+  }
+
+  // Widget _buildAvatarContent() {
+  //   if (imagePath.isNotEmpty) {
+  //     if (imagePath.startsWith('http')) {
+  //       // Display network image
+  //       return Container(
+  //         decoration: BoxDecoration(
+  //           shape: BoxShape.circle,
+  //           image: DecorationImage(
+  //             image: NetworkImage(imagePath),
+  //             fit: BoxFit.fill,
+  //           ),
+  //         ),
+  //       );
+  //     } else {
+  //       // Display local file image
+  //       File file = File(imagePath);
+  //       if (file.existsSync()) {
+  //         return Container(
+  //           decoration: BoxDecoration(
+  //             shape: BoxShape.circle,
+  //             image: DecorationImage(
+  //               image: FileImage(file),
+  //               fit: BoxFit.fill,
+  //             ),
+  //           ),
+  //         );
+  //       }
+  //     }
+  //   }
+  //
+  //   // Display default icon if imagePath is empty or invalid
+  //   return const Icon(Icons.person, size: 50, color: Colors.white);
+  // }
+
+  Widget _buildAvatarContent() {
+    if (imagePath.isNotEmpty) {
+      if (imagePath.startsWith('http')) {
+        // Display network image directly
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: NetworkImage(imagePath),
+              fit: BoxFit.fill,
+            ),
+          ),
+        );
+      } else if (imagePath.startsWith('assets')) {
+        // Display asset image
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.fill,
+            ),
+          ),
+        );
+      } else {
+        // Assume local file image
+        File file = File(imagePath);
+        if (file.existsSync()) {
+          return Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: FileImage(file),
+                fit: BoxFit.fill,
+              ),
+            ),
+          );
+        }
+      }
+    }
+
+    // Display default icon if imagePath is empty or invalid
+    return const Icon(Icons.person, size: 50, color: Colors.white);
+  }
+}
+
+/// ---- Correct code----->>>
+/*
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../../../data/api/api_services.dart';
+import '../controllers/profile_controller.dart';
+
+class EditProfile extends StatelessWidget {
+  final ProfileController profileController = Get.put(ProfileController());
+  final String profilePhoto;
+  final String contactNo;
+  final String email;
+  final String samagraId;
+  final String laptop;
+  final String bloodGroup;
+  final String laptopBrand;
+  final String laptopRam;
+  final String laptopProcessor;
+  final String laptopConfig;
+
+  EditProfile({
+    Key? key,
+    required this.profilePhoto,
+    required this.contactNo,
+    required this.email,
+    required this.samagraId,
+    required this.laptop,
+    required this.bloodGroup,
+    required this.laptopBrand,
+    required this.laptopRam,
+    required this.laptopProcessor,
+    required this.laptopConfig,
+  }) : super(key: key) {
+    // Initialize values in the controller when the widget is created
+    profileController.imagePath.value = profilePhoto;
+    profileController.contactNumber.value = contactNo;
+    profileController.email.value = email;
+    profileController.samaraId.value = samagraId;
+    profileController.bloodGroup.value = bloodGroup;
     profileController.laptopBrand.value = laptopBrand;
     profileController.laptopRam.value = laptopRam;
     profileController.laptopProcessor.value = laptopProcessor;
@@ -289,7 +742,47 @@ class EditProfile extends StatelessWidget {
   //   Get.back(); // Assumes that you have a GetMaterialController associated with SettingsScreen
   // }
 
+  // void _updateProfileAndShowSnackbar() async {
+  //   // Perform update logic here
+  //   // _saveProfile(); // Assuming this should save the profile
+  //
+  //   // Show Snackbar
+  //   Get.snackbar('Profile Updated', 'Your profile has been updated.');
+  //
+  //   // Call the API service to update the profile
+  //   await ApiService.updateProfile(
+  //     contactNumber: profileController.contactNumber.value,
+  //     email: profileController.email.value,
+  //     samagraId: profileController.samaraId.value,
+  //     laptop: profileController.laptopBrand.value,
+  //     bloodGroup: profileController.bloodGroup.value,
+  //     laptopBrand: profileController.laptopBrand.value,
+  //     laptopRam: profileController.laptopRam.value,
+  //     laptopProcessor: profileController.laptopProcessor.value,
+  //     laptopConfig: profileController.laptopConfig.value,
+  //     imagePath: profileController.imagePath.value,
+  //   );
+  //
+  //   // Navigate back
+  //   Get.back(); // This will go back to the previous screen
+  // }
+
   void _updateProfileAndShowSnackbar() async {
+    // Check if any of the laptop details is entered
+    bool laptopDetailsEntered =
+        profileController.laptopBrand.value.isNotEmpty ||
+            profileController.laptopRam.value.isNotEmpty ||
+            profileController.laptopProcessor.value.isNotEmpty ||
+            profileController.laptopConfig.value.isNotEmpty;
+
+    // Update the laptop value based on the condition
+    profileController.laptopBrand.value.isEmpty &&
+        profileController.laptopRam.value.isEmpty &&
+        profileController.laptopProcessor.value.isEmpty &&
+        profileController.laptopConfig.value.isEmpty
+        ? profileController.laptop.value = '0'
+        : profileController.laptop.value = '1';
+
     // Perform update logic here
     // _saveProfile(); // Assuming this should save the profile
 
@@ -301,7 +794,7 @@ class EditProfile extends StatelessWidget {
       contactNumber: profileController.contactNumber.value,
       email: profileController.email.value,
       samagraId: profileController.samaraId.value,
-      laptop: profileController.laptopBrand.value,
+      laptop: profileController.laptop.value,
       bloodGroup: profileController.bloodGroup.value,
       laptopBrand: profileController.laptopBrand.value,
       laptopRam: profileController.laptopRam.value,
@@ -313,6 +806,7 @@ class EditProfile extends StatelessWidget {
     // Navigate back
     Get.back(); // This will go back to the previous screen
   }
+
 
 }
 
@@ -350,10 +844,44 @@ class CircularAvatar extends StatelessWidget {
     );
   }
 
+  // Widget _buildAvatarContent() {
+  //   if (imagePath.isNotEmpty) {
+  //     if (imagePath.startsWith('http')) {
+  //       // Display network image
+  //       return Container(
+  //         decoration: BoxDecoration(
+  //           shape: BoxShape.circle,
+  //           image: DecorationImage(
+  //             image: NetworkImage(imagePath),
+  //             fit: BoxFit.fill,
+  //           ),
+  //         ),
+  //       );
+  //     } else {
+  //       // Display local file image
+  //       File file = File(imagePath);
+  //       if (file.existsSync()) {
+  //         return Container(
+  //           decoration: BoxDecoration(
+  //             shape: BoxShape.circle,
+  //             image: DecorationImage(
+  //               image: FileImage(file),
+  //               fit: BoxFit.fill,
+  //             ),
+  //           ),
+  //         );
+  //       }
+  //     }
+  //   }
+  //
+  //   // Display default icon if imagePath is empty or invalid
+  //   return const Icon(Icons.person, size: 50, color: Colors.white);
+  // }
+
   Widget _buildAvatarContent() {
     if (imagePath.isNotEmpty) {
       if (imagePath.startsWith('http')) {
-        // Display network image
+        // Display network image directly
         return Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -363,8 +891,19 @@ class CircularAvatar extends StatelessWidget {
             ),
           ),
         );
+      } else if (imagePath.startsWith('assets')) {
+        // Display asset image
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.fill,
+            ),
+          ),
+        );
       } else {
-        // Display local file image
+        // Assume local file image
         File file = File(imagePath);
         if (file.existsSync()) {
           return Container(
@@ -384,9 +923,11 @@ class CircularAvatar extends StatelessWidget {
     return const Icon(Icons.person, size: 50, color: Colors.white);
   }
 
+
 }
+ */
 
-
+/// 0000000000
 
 /*
   Future<void> _pickImage(BuildContext context) async {
@@ -1588,7 +2129,6 @@ class CircularAvatar extends StatelessWidget {
 
 
  */
-
 
 /// Laptop Switch widget
 /*

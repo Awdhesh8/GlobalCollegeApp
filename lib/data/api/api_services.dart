@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/constants/api_constants.dart';
@@ -134,7 +136,63 @@ class ApiService {
     }
   }
 
+
   /// Edit Profile --->>>>
+
+  // static Future<void> updateProfile({
+  //   required String contactNumber,
+  //   required String email,
+  //   required String samagraId,
+  //   required String laptop,
+  //   required String bloodGroup,
+  //   required String laptopBrand,
+  //   required String laptopRam,
+  //   required String laptopProcessor,
+  //   required String laptopConfig,
+  //   required String imagePath,
+  // }) async {
+  //   try {
+  //     SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     String userId = prefs.getString('user_id') ?? '';
+  //     String userType = prefs.getString('user_type') ?? '';
+  //
+  //     var headers = APIConstants.headers;
+  //     var request = http.MultipartRequest(
+  //       'POST',
+  //       Uri.parse(APIConstants.getFullUrl(APIConstants.updateProfile)),
+  //     );
+  //
+  //     request.fields.addAll({
+  //       'APIKEY': 'GNCS0225',
+  //       'USER_ID': userId, // Ensure this is not an empty string
+  //       'USER_TYPE': userType,
+  //       'contact_no': contactNumber,
+  //       'stud_email': email,
+  //       'samagra_id': samagraId,
+  //       'laptop': laptop,
+  //       'stud_bgroup': bloodGroup,
+  //       'lap_brand': laptopBrand,
+  //       'lap_ram': laptopRam,
+  //       'lap_processor': laptopProcessor,
+  //       'lap_config': laptopConfig,
+  //     });
+  //
+  //     var imageFile = await http.MultipartFile.fromPath('form_file', imagePath);
+  //     request.files.add(imageFile);
+  //
+  //     request.headers.addAll(headers);
+  //
+  //     http.StreamedResponse response = await request.send();
+  //
+  //     if (response.statusCode == 200) {
+  //       print(await response.stream.bytesToString());
+  //     } else {
+  //       print(response.reasonPhrase);
+  //     }
+  //   } catch (error) {
+  //     print('Error: $error');
+  //   }
+  // }
   static Future<void> updateProfile({
     required String contactNumber,
     required String email,
@@ -173,8 +231,21 @@ class ApiService {
         'lap_config': laptopConfig,
       });
 
-      var imageFile = await http.MultipartFile.fromPath('form_file', imagePath);
-      request.files.add(imageFile);
+      // Check if imagePath is a network URL starting with 'http' or 'https'
+      if (imagePath.startsWith('http')) {
+        // Add the image URL directly to the request
+        request.fields['form_file'] = imagePath;
+      } else if (imagePath.startsWith('assets')) {
+        // Load the asset image and add it to the request
+        ByteData byteData = await rootBundle.load(imagePath);
+        List<int> imageData = byteData.buffer.asUint8List();
+        http.MultipartFile multipartFile = http.MultipartFile.fromBytes('form_file', imageData, filename: imagePath);
+        request.files.add(multipartFile);
+      } else {
+        // Assume local file image
+        var imageFile = await http.MultipartFile.fromPath('form_file', imagePath);
+        request.files.add(imageFile);
+      }
 
       request.headers.addAll(headers);
 
@@ -189,6 +260,7 @@ class ApiService {
       print('Error: $error');
     }
   }
+
 
 
 }
