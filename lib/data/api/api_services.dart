@@ -372,6 +372,50 @@ class ApiService {
 
  */
 
+ // Future<Map<String, dynamic>> fetchEducationalDetails() async { // Removed static keyword
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     var userId = prefs.getString('user_id') ?? '';
+//     var userType = prefs.getString('user_type') ?? '';
+//
+//     var headers = {
+//       'Cookie': 'ci_session=s63p3q25pe1l70smdpptatqmg0j2vb8p'
+//     };
+//
+//     var request = http.MultipartRequest(
+//       'POST',
+//       Uri.parse('http://myglobalapp.in/global/API005/profile_educational'),
+//     );
+//     request.fields.addAll({
+//       'APIKEY': 'GNCS0225',
+//       'USER_ID': userId,
+//       'USER_TYPE': userType,
+//     });
+//
+//     request.headers.addAll(headers);
+//
+//     print('Sending request to API...');
+//     http.StreamedResponse response = await request.send();
+//
+//     if (response.statusCode == 200) {
+//       var responseBody = await response.stream.bytesToString();
+//       print('Response received from API: $responseBody');
+//       var parsedResponse = json.decode(responseBody);
+//
+//       if (parsedResponse['status'] == "1") {
+//         print('API call successful');
+//         return {'success': true, 'data': parsedResponse};
+//       } else {
+//         print('API call failed. Error message: ${parsedResponse['message']}');
+//         return {'success': false, 'error': parsedResponse['message']};
+//       }
+//     } else {
+//       print('API request failed with status: ${response.statusCode}');
+//       return {
+//         'success': false,
+//         'error': 'Request failed with status: ${response.statusCode}'
+//       };
+//     }
+//   }
   Future<Map<String, dynamic>> fetchEducationalDetails() async { // Removed static keyword
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
@@ -416,6 +460,7 @@ class ApiService {
       };
     }
   }
+
 
 }
 
