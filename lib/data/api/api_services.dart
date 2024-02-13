@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/personalization/screens/settings/edit_profile/edit_Profile.dart';
+import '../../features/time_table/time_table.dart';
 import '../../utils/constants/api_constants.dart';
 
 class ApiService {
@@ -253,7 +253,80 @@ class ApiService {
     }
   }
 
+  /// Get Time Table
+  // Future<void> getTimeTable() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String userId = prefs.getString('user_id') ?? '';
+  //   String userType = prefs.getString('user_type') ?? '';
+  //
+  //   var headers = {
+  //     'Cookie': 'ci_session=6gjg0tq01dbip85b2vf43227hqij0c46'
+  //   };
+  //
+  //   var request = http.MultipartRequest('POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getProfileEndpoint)));
+  //   request.fields.addAll({
+  //     'APIKEY': 'GNCS0225',
+  //     'USER_ID': userId,
+  //     'USER_TYPE': userType,
+  //   });
+  //
+  //   request.headers.addAll(headers);
+  //
+  //   try {
+  //     http.StreamedResponse response = await request.send();
+  //
+  //     if (response.statusCode == 200) {
+  //       print(await response.stream.bytesToString());
+  //     } else {
+  //       print(response.reasonPhrase);
+  //     }
+  //   } catch (error) {
+  //     print('Error: $error');
+  //   }
+  // }
 
+  static Future<Timetable> getTimetable() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString('user_id') ?? '';
+    String userType = prefs.getString('user_type') ?? '';
+
+    print('User ID: $userId');
+    print('User Type: $userType');
+
+    var headers = {
+      'Cookie': 'ci_session=6gjg0tq01dbip85b2vf43227hqij0c46'
+    };
+
+    var request = http.MultipartRequest('POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getTimeTable)));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'USER_TYPE': userType,
+    });
+
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(await response.stream.bytesToString());
+
+        if (responseData['status'] == "1") {
+          return Timetable.fromJson(responseData);
+        } else {
+          // Handle API error
+          throw Exception('API Error: ${responseData['message']}');
+        }
+      } else {
+        // Handle HTTP error
+        throw Exception('HTTP Error: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      // Handle other errors
+      throw Exception('Error: $error');
+    }
+  }
 }
 
 /// Get Educational Info --->>>

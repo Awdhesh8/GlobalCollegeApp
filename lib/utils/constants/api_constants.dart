@@ -9,6 +9,7 @@ class APIConstants {
   static const String getBloodGroup = 'get_bloodg';
   static const String updateProfile = 'update_profile';
   static const String getEducationalProfile = 'profile_educational';
+  static const String getTimeTable = 'student_timetable';
 
 
   // Add more endpoints as needed
