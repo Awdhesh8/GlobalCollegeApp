@@ -254,16 +254,20 @@ class ApiService {
   }
 
   /// Get Time Table
-  // Future<void> getTimeTable() async {
+  // static Future<void> getTimeTable() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //   String userId = prefs.getString('user_id') ?? '';
   //   String userType = prefs.getString('user_type') ?? '';
   //
   //   var headers = {
-  //     'Cookie': 'ci_session=6gjg0tq01dbip85b2vf43227hqij0c46'
+  //     'Cookie': 'ci_session=pmhmf9h9ej3u5oo1d7b6l4ofbhl9v5j2',
   //   };
   //
-  //   var request = http.MultipartRequest('POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getProfileEndpoint)));
+  //   var request = http.MultipartRequest(
+  //     'POST',
+  //     Uri.parse(APIConstants.getFullUrl(APIConstants.getTimeTable)),
+  //   );
+  //
   //   request.fields.addAll({
   //     'APIKEY': 'GNCS0225',
   //     'USER_ID': userId,
@@ -277,82 +281,54 @@ class ApiService {
   //
   //     if (response.statusCode == 200) {
   //       print(await response.stream.bytesToString());
+  //       // Handle the response data as needed
   //     } else {
   //       print(response.reasonPhrase);
+  //       // Handle error
   //     }
-  //   } catch (error) {
-  //     print('Error: $error');
+  //   } catch (e) {
+  //     print('Error: $e');
+  //     // Handle exception
   //   }
   // }
 
-/*
-  /// Get Time Table
   static Future<Map<String, dynamic>> fetchTimetable() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString('user_id') ?? '';
-    String userType = prefs.getString('user_type') ?? '';
-
-    final response = await http.post(
-      Uri.parse('http://myglobalapp.in/global/API005/student_timetable'),
-      headers: {'Cookie': 'ci_session=9ra9jatp0nme44evvun9oqb0tm703fur'},
-      body: {
-        'APIKEY': 'GNCS0225',
-        'USER_ID': userId,
-        'USER_TYPE': userType,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Error: ${response.reasonPhrase}');
-    }
-  }
-
- */
-
-  static Future<Timetable> getTimetable() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString('user_id') ?? '';
-    String userType = prefs.getString('user_type') ?? '';
-
-    print('User ID: $userId');
-    print('User Type: $userType');
-
-    var headers = {
-      'Cookie': 'ci_session=6gjg0tq01dbip85b2vf43227hqij0c46'
-    };
-
-    var request = http.MultipartRequest('POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getTimeTable)));
-    request.fields.addAll({
-      'APIKEY': 'GNCS0225',
-      'USER_ID': userId,
-      'USER_TYPE': userType,
-    });
-
-    request.headers.addAll(headers);
-
     try {
+      // Retrieve user_id and user_type from local storage
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String user_id = prefs.getString('user_id') ?? '';
+      String user_type = prefs.getString('user_type') ?? '';
+
+      var headers = {
+        'Cookie': 'ci_session=ofmkjs7j9v66paef1l5428hhmti32c1s',
+      };
+
+      var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/student_timetable'));
+
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'USER_ID': user_id,
+        'USER_TYPE': user_type,
+      });
+
+      request.headers.addAll(headers);
+
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = json.decode(await response.stream.bytesToString());
-
-        if (responseData['status'] == "1") {
-          return Timetable.fromJson(responseData);
-        } else {
-          // Handle API error
-          throw Exception('API Error: ${responseData['message']}');
-        }
+        return responseData;
       } else {
-        // Handle HTTP error
-        throw Exception('HTTP Error: ${response.reasonPhrase}');
+        print(response.reasonPhrase);
+        return {'error': response.reasonPhrase};
       }
     } catch (error) {
-      // Handle other errors
-      throw Exception('Error: $error');
+      print('Error: $error');
+      return {'error': 'Error occurred during API request'};
     }
   }
+
+
 }
 
 /// Get Educational Info --->>>
