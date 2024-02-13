@@ -285,6 +285,32 @@ class ApiService {
   //   }
   // }
 
+/*
+  /// Get Time Table
+  static Future<Map<String, dynamic>> fetchTimetable() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString('user_id') ?? '';
+    String userType = prefs.getString('user_type') ?? '';
+
+    final response = await http.post(
+      Uri.parse('http://myglobalapp.in/global/API005/student_timetable'),
+      headers: {'Cookie': 'ci_session=9ra9jatp0nme44evvun9oqb0tm703fur'},
+      body: {
+        'APIKEY': 'GNCS0225',
+        'USER_ID': userId,
+        'USER_TYPE': userType,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Error: ${response.reasonPhrase}');
+    }
+  }
+
+ */
+
   static Future<Timetable> getTimetable() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('user_id') ?? '';

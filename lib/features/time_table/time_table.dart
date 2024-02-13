@@ -1,4 +1,3 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import '../../common/widgets/appbar/appbar.dart';
@@ -385,38 +384,81 @@ class PeriodData {
     );
   }
 }
-*/
 
 
+
+///
+/*
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../data/api/api_services.dart';
+
+// class Timetable {
+//   final String day;
+//   final List<Map<String, String>> periodData;
+//
+//   Timetable({required this.day, required this.periodData});
+//
+//   factory Timetable.fromJson(Map<String, dynamic> json) {
+//     return Timetable(
+//       day: json['day'],
+//       periodData: (json['perioddata'] as List)
+//           .map((period) => {
+//         'period': period['period'].toString(),
+//         'time': period['time'].toString(),
+//         'subject': period['subject'].toString(),
+//         'teacher': period['teacher'].toString(),
+//       })
+//           .toList(),
+//     );
+//   }
+//
+// }
+
+class TimeTable extends StatefulWidget {
+  @override
+  _TimeTableState createState() => _TimeTableState();
+}
+
 class Timetable {
   final String day;
-  final List<Map<String, String>> periodData;
+  final List<PeriodData> periodData;
 
   Timetable({required this.day, required this.periodData});
 
   factory Timetable.fromJson(Map<String, dynamic> json) {
     return Timetable(
       day: json['day'],
-      periodData: List<Map<String, String>>.from(
-        json['perioddata'].map((period) => {
-          'period': period['period'],
-          'time': period['time'],
-          'subject': period['subject'],
-          'teacher': period['teacher'],
-        }),
-      ),
+      periodData: (json['perioddata'] as List)
+          .map((period) => PeriodData.fromJson(period))
+          .toList(),
     );
   }
 }
 
+class PeriodData {
+  final String period;
+  final String time;
+  final String subject;
+  final String teacher;
 
-class TimeTable extends StatefulWidget {
-  @override
-  _TimeTableState createState() => _TimeTableState();
+  PeriodData({
+    required this.period,
+    required this.time,
+    required this.subject,
+    required this.teacher,
+  });
+
+  factory PeriodData.fromJson(Map<String, dynamic> json) {
+    return PeriodData(
+      period: json['period'],
+      time: json['time'],
+      subject: json['subject'],
+      teacher: json['teacher'],
+    );
+  }
 }
 
 class _TimeTableState extends State<TimeTable> {
@@ -429,28 +471,30 @@ class _TimeTableState extends State<TimeTable> {
   }
 
   Future<void> fetchData() async {
-    // Replace the API URL with your actual API URL
-    final response = await http.post(
-      Uri.parse('http://myglobalapp.in/global/API005/student_timetable'),
-      headers: {'Cookie': 'ci_session=9ra9jatp0nme44evvun9oqb0tm703fur'},
-      body: {
-        'APIKEY': 'GNCS0225',
-        'USER_ID': '1069',
-        'USER_TYPE': '2',
-      },
-    );
+    try {
+      final responseData = await ApiService.fetchTimetable();
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = json.decode(response.body);
       if (responseData['status'] == '1') {
         List<dynamic> responseList = responseData['response'];
-        timetableList = responseList.map((item) => Timetable.fromJson(item)).toList();
+        timetableList =
+            responseList.map((item) => Timetable.fromJson(item)).toList();
+
+        // Debug prints
+        print('Timetable List Length: ${timetableList.length}');
+        for (var timetable in timetableList) {
+          print('Day: ${timetable.day}');
+          for (var period in timetable.periodData) {
+            print(
+                'Period: ${period.period}, Time: ${period.time}, Subject: ${period.subject}, Teacher: ${period.teacher}');
+          }
+        }
+
         setState(() {});
       } else {
         print(responseData['message']);
       }
-    } else {
-      print('Error: ${response.reasonPhrase}');
+    } catch (error) {
+      print('Error: $error');
     }
   }
 
@@ -463,47 +507,51 @@ class _TimeTableState extends State<TimeTable> {
       body: timetableList.isEmpty
           ? Center(child: CircularProgressIndicator())
           : DefaultTabController(
-        length: timetableList.length,
-        child: Column(
-          children: [
-            TabBar(
-              tabs: timetableList
-                  .map((timetable) => Tab(text: timetable.day))
-                  .toList(),
-            ),
-            Expanded(
-              child: TabBarView(
-                children: timetableList.map((timetable) {
-                  return ListView.builder(
-                    itemCount: timetable.periodData.length,
-                    itemBuilder: (context, index) {
-                      final period = timetable.periodData[index];
-                      return ListTile(
-                        title: Text('Period: ${period['period']}'),
-                        subtitle: Text('Time: ${period['time']}'),
-                        trailing: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text('Subject: ${period['subject']}'),
-                            Text('Teacher: ${period['teacher']}'),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                }).toList(),
+              length: timetableList.length,
+              child: Column(
+                children: [
+                  TabBar(
+                    tabs: timetableList
+                        .map((timetable) => Tab(text: timetable.day))
+                        .toList(),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: timetableList.map((timetable) {
+                        return ListView.builder(
+                          itemCount: timetable.periodData.length,
+                          itemBuilder: (context, index) {
+                            final period = timetable.periodData[
+                                index]; // Accessing PeriodData object
+
+                            return ListTile(
+                              title: Text(
+                                  'Period: ${period.period}'), // Using period property
+                              subtitle: Text(
+                                  'Time: ${period.time}'), // Using time property
+                              trailing: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                      'Subject: ${period.subject}'), // Using subject property
+                                  Text(
+                                      'Teacher: ${period.teacher}'), // Using teacher property
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }
 
-
-
-
+ */
 
 /*
 import 'package:flutter/material.dart';
