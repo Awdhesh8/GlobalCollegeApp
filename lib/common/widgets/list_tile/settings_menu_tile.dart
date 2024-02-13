@@ -22,31 +22,42 @@ class ESettingsMenuTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(width: 2, color: Colors.white),
-          color: EColors.backgroundColor,
-          // color: Colors.white70,
-          // color: const Color(0xFFFFE0E5),
-          borderRadius: BorderRadius.circular(14),
-          // color: const Color(0xFFFFE0E5),
-          // boxShadow: const [
-          //   BoxShadow(
-          //     color: Colors.white,
-          //     // color: Color(0xFFFFC1C5),
-          //     offset: Offset(-2, -2),
-          //     // offset: Offset(-2, -2),
-          //     blurRadius: .5,
-          //     spreadRadius: 0,
-          //   ),
-          //   BoxShadow(
-          //     color: Color(0xFFFFC1C5),
-          //     // color: Colors.white,
-          //     offset: Offset(2, 2),
-          //     // offset: Offset(4, 4),
-          //     blurRadius: 2,
-          //     spreadRadius: 0,
-          //   ),
-          // ],
+            boxShadow: [
+              BoxShadow(
+                  blurRadius: 0,
+                  offset: Offset(-2, -2),
+                  color: Colors.white
+              )
+            ],
+            color: EColors.lightContainer1,
+            borderRadius: BorderRadius.circular(14)
         ),
+        // decoration: BoxDecoration(
+        //   border: Border.all(width: 2, color: Colors.white),
+        //   color: EColors.backgroundColor,
+        //   // color: Colors.white70,
+        //   // color: const Color(0xFFFFE0E5),
+        //   borderRadius: BorderRadius.circular(14),
+        //   // color: const Color(0xFFFFE0E5),
+        //   // boxShadow: const [
+        //   //   BoxShadow(
+        //   //     color: Colors.white,
+        //   //     // color: Color(0xFFFFC1C5),
+        //   //     offset: Offset(-2, -2),
+        //   //     // offset: Offset(-2, -2),
+        //   //     blurRadius: .5,
+        //   //     spreadRadius: 0,
+        //   //   ),
+        //   //   BoxShadow(
+        //   //     color: Color(0xFFFFC1C5),
+        //   //     // color: Colors.white,
+        //   //     offset: Offset(2, 2),
+        //   //     // offset: Offset(4, 4),
+        //   //     blurRadius: 2,
+        //   //     spreadRadius: 0,
+        //   //   ),
+        //   // ],
+        // ),
         child: ListTile(
           dense: true,
           leading: Icon(icon, size: 24, color: EColors.primary,),

@@ -199,16 +199,15 @@ class ShimmerEducationDetails extends StatelessWidget {
  */
 
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart'; // Make sure you have imported the Iconsax package
-import 'package:shimmer/shimmer.dart'; // Import the Shimmer package
+import 'package:iconsax/iconsax.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../../data/api/api_services.dart';
-import '../../../../../utils/constants/colors.dart'; // Assuming you have your colors defined in this file
+import '../../../../../utils/constants/colors.dart';
 
 class EducationDetailsPanel extends StatefulWidget {
   @override
   _EducationDetailsPanelState createState() => _EducationDetailsPanelState();
 }
-//
 class _EducationDetailsPanelState extends State<EducationDetailsPanel> {
   late Future<Map<String, dynamic>> _educationalDetailsFuture;
   final ApiService _apiService = ApiService(); // Creating an instance of ApiService
@@ -221,6 +220,8 @@ class _EducationDetailsPanelState extends State<EducationDetailsPanel> {
 
   @override
   Widget build(BuildContext context) {
+    double containerHeight = MediaQuery.of(context).size.height * 0.40;
+
     return FutureBuilder<Map<String, dynamic>>(
       future: _educationalDetailsFuture,
       builder: (context, snapshot) {
@@ -236,28 +237,55 @@ class _EducationDetailsPanelState extends State<EducationDetailsPanel> {
               'details': (entry['details'] as List).isNotEmpty ? entry['details'][0] : {}, // Check if 'details' list is not empty before accessing the first element
             };
           }).toList();
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Container(
-              decoration: ShapeDecoration(
-                color: EColors.lightContainer1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Container(
+                // height: containerHeight,
+                decoration: ShapeDecoration(
+                  color: EColors.lightContainer1,
+                  // color: EColors.lightContainer1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+
+                  ),
                 ),
-              ),
-              child: Column(
-                children: educationalDetails.map((entry) {
-                  return ListTile(
-                    trailing: const Icon(
-                      Iconsax.folder_open4,
-                      color: EColors.primary,
-                    ),
-                    title: Text(entry['type']),
-                    onTap: () {
-                      _showEducationalDetailsDialog(context, entry);
-                    },
-                  );
-                }).toList(),
+                child: Column(
+                  children: educationalDetails.map((entry) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 0,
+                              offset: Offset(-2, -2),
+                              color: Colors.white
+                            )
+                          ],
+                            color: EColors.lightContainer1,
+                          borderRadius: BorderRadius.circular(14)
+                        ),
+                        child: ListTile(
+                          dense: true,
+                          trailing: const Icon(
+                            Iconsax.folder_open4,
+                            color: EColors.primary,
+                          ),
+                          // trailing: const Icon(
+                          //   Iconsax.folder_open4,
+                          //   color: EColors.primary,
+                          // ),
+                          title: Text(entry['type']),
+                          onTap: () {
+                            _showEducationalDetailsDialog(context, entry);
+                          },
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
           );
@@ -357,34 +385,54 @@ class _EducationDetailsPanelState extends State<EducationDetailsPanel> {
 class ShimmerEducationDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Container(
-        decoration: ShapeDecoration(
-          color: EColors.lightContainer1,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Container(
+          decoration: ShapeDecoration(
+            color: EColors.lightContainer1,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
           ),
-        ),
-        child: Column(
-          children: List.generate(
-            5, // Generate 5 shimmering list tiles
-                (index) => ListTile(
-              title: Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
-                highlightColor: Colors.grey[100]!,
-                child: Container(
-                  height: 16,
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
+          child: Column(
+            children: List.generate(
+              5, // Generate 5 shimmering list tiles
+                  (index) => ListTile(
+                title: Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 0,
+                                  offset: Offset(-2, -2),
+                                  color: Colors.white
+                              )
+                            ],
+                            color: EColors.lightContainer1,
+                            borderRadius: BorderRadius.circular(14)
+                        ),
+                      ),
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: Colors.white
+                        ),
+                      ),
+                    ],
                   ),
+
                 ),
-              ),
-              trailing: Icon(
-                Iconsax.folder_open4,
-                color: EColors.primary,
               ),
             ),
           ),
@@ -393,6 +441,10 @@ class ShimmerEducationDetails extends StatelessWidget {
     );
   }
 }
+
+
+
+
 
 /// ------
 /*

@@ -92,7 +92,7 @@ class UserDetails extends StatelessWidget {
       child: Container(
         height: containerHeight,
         decoration: BoxDecoration(
-          color: Colors.white70,
+          color: EColors.lightContainer1,
           borderRadius: BorderRadius.circular(14),
           // boxShadow: const [
           //   BoxShadow(
