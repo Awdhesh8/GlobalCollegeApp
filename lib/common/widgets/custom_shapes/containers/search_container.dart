@@ -83,16 +83,12 @@ class CustomSearchContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double containerWidth = screenWidth * 0.82; // Adjust the percentage as needed
-
     return BlurredGlassContainer(
       blurSigma: 10.0, // You can adjust the blur intensity
       child: Padding(
         padding: padding,
         child: Container(
-          width: containerWidth,
-          // width: EDeviceUtils.getScreenWidth(context),
+          width: EDeviceUtils.getScreenWidth(context),
           // padding: const EdgeInsets.all(ESizes.md),
           decoration: BoxDecoration(
             color: showBackground
