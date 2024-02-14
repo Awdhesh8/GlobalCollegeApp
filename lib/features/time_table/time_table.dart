@@ -395,6 +395,7 @@ class _TimeTableState extends State<TimeTable> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: EColors.backgroundColor,
+      // backgroundColor: EColors.backgroundColor,
       appBar: const GAppBar(
         title: Text(
           'Time Table',
