@@ -7,7 +7,6 @@ import 'package:globalcollegeapp/utils/constants/sizes.dart';
 import '../../../../../common/widgets/book_contanier/book_contanier.dart';
 import '../../../../../common/widgets/custom_container_button/custom_container_button.dart';
 import '../../../../../common/widgets/texts/top_first_heading.dart';
-import '../../../../../device/device_utility.dart';
 import '../../../../../utils/constants/colors.dart';
 import 'e_library/e_library.dart';
 import 'history/book_history.dart';
@@ -33,73 +32,112 @@ class LibraryScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                /// Title Heading for Books
-                const Row(
-                  children: [
-                    Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 22),
-                        child: TopHeading(
-                          text:
-                              'Unveiling Our Newest\nArrivals: Dive into\nFresh Reads',
-                        )),
-                  ],
-                ),
-                const SizedBox(
-                  height: ESizes.spaceBtwItems,
-                ),
+      body: Column(
+        children: [
+          /// Search bar
+          const ESearchContainer(
+            text: 'Search Books',
+          ),
+          // CustomSearchContainer(
+          //             showBackground: true,
+          //             dark: false,
+          //             showBorder: true,
+          //           ),
 
-                /// Showcase Library Books
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomContainer(
-                      imageUrl: bookImages.first,
-                    ),
-                    CustomContainer(
-                      imageUrl: bookImages.elementAt(1),
-                    ),
-                  ],
+          const SizedBox(
+            height: ESizes.spaceBtwItems,
+          ),
+
+          /// Three Buttons eLibrary | Issued Book | History
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                CustomContainerButton(
+                  buttonText: 'eLibrary',
+                  onTap: () {
+                    Get.to(() => const ELibraryScreen(),curve: Curves.easeInOut, transition: Transition.cupertino);
+                  },
                 ),
-                const SizedBox(
-                  height: ESizes.spaceBtwItems,
+                CustomContainerButton(
+                  buttonText: 'Issued Books',
+                  onTap: () {
+                    Get.to(() => const IssuedBooksScreen(),curve: Curves.easeInOut, transition: Transition.cupertino);
+                  },
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomContainer(
-                      imageUrl: bookImages.elementAt(2),
-                    ),
-                    CustomContainer(
-                      imageUrl: bookImages.elementAt(3),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: ESizes.spaceBtwItems,
+                CustomContainerButton(
+                  buttonText: 'History',
+                  onTap: () {
+                    Get.to(() => const BookHistoryScreen(),curve: Curves.easeInOut, transition: Transition.cupertino);
+                  },
                 ),
               ],
             ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
-      floatingActionButton: const Padding(
-        padding: EdgeInsets.only(top: 66),
-        child: Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6),
-              child: CustomSearchContainer(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                showBackground: true,
-                dark: false,
-                showBorder: true,
+          ),
+
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Divider(),
+          ),
+          const SizedBox(
+            height: ESizes.spaceBtwItems1,
+          ),
+
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  /// Title Heading for Books
+                  const Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 22),
+                          child: TopHeading(
+                            text:
+                                'Unveiling Our Newest\nArrivals: Dive into\nFresh Reads',
+                          )),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: ESizes.spaceBtwItems,
+                  ),
+
+                  /// Showcase Library Books
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      CustomContainer(
+                        imageUrl: bookImages.first,
+                      ),
+                      CustomContainer(
+                        imageUrl: bookImages.elementAt(1),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: ESizes.spaceBtwItems,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      CustomContainer(
+                        imageUrl: bookImages.elementAt(2),
+                      ),
+                      CustomContainer(
+                        imageUrl: bookImages.elementAt(3),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: ESizes.spaceBtwItems,
+                  ),
+                ],
               ),
             ),
-          ],
-        )
+          ),
+        ],
       ),
     );
   }
@@ -117,6 +155,10 @@ final List<String> bookImages = [
   'assets/books/4book.jpg',
   // Add more image URLs as needed
 ];
+
+
+
+
 
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
