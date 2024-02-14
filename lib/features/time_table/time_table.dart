@@ -381,7 +381,6 @@ class PeriodData {
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/features/time_table/widgets/decoration/contanier_decoration.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
-
 import '../../common/widgets/appbar/appbar.dart';
 import '../../data/api/api_services.dart';
 import '../../utils/constants/sizes.dart';
@@ -456,10 +455,7 @@ class _TimeTableState extends State<TimeTable> {
                       child: TabBarView(
                         children: timetableData
                             .map((dayData) {
-                          String day = dayData.keys.first;
-                          List<Map<String, dynamic>> timetableForDay =
-                              (dayData[day] as List?)?.cast<Map<String, dynamic>>() ?? [];
-                          return buildDayTimetable(day, timetableForDay);
+                          return buildDayTimetable(dayData);
                         })
                             .cast<Widget>()
                             .toList(),
@@ -477,7 +473,10 @@ class _TimeTableState extends State<TimeTable> {
     );
   }
 
-  Widget buildDayTimetable(String day, List<Map<String, dynamic>> timetableForDay) {
+  Widget buildDayTimetable(Map<String, dynamic> dayData) {
+    String day = dayData.keys.first;
+    List<Map<String, dynamic>> timetableForDay =
+        (dayData[day] as List?)?.cast<Map<String, dynamic>>() ?? [];
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -487,14 +486,16 @@ class _TimeTableState extends State<TimeTable> {
             Text(
               'Timetable for $day',
               style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF3C4043),
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+                color: EColors.textColorPrimary1,
+                fontFamily: 'Inter'
               ),
             ),
             const SizedBox(height: 20),
             for (var entry in timetableForDay)
-              buildTimetableCard(entry),
+              buildPeriodCard(entry),
+              // buildPeriodCard(entry),
             // ... Additional UI elements
           ],
         ),
@@ -502,51 +503,98 @@ class _TimeTableState extends State<TimeTable> {
     );
   }
 
-  Widget buildTimetableCard(Map<String, dynamic> entry) {
-    return Card(
+  Widget buildPeriodCard(Map<String, dynamic> period) {
+    return Container(
+      width: double.infinity,
       margin: const EdgeInsets.only(bottom: 16),
-      child: ListTile(
-        title: Text(
-          'Period ${entry['period'] ?? ''}',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF3C4043),
-            fontSize: 16,
+      padding: const EdgeInsets.all(16),
+      decoration: customDecoration(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Lecture ${period['period'] ?? ''}',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF3C4043),
+              fontSize: 16,
+            ),
           ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              entry['time'] ?? '',
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 12,
-              ),
+          const SizedBox(height: 8),
+          Text(
+            period['time'] ?? '',
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
             ),
+          ),
+          Text(
+            period['subject'] ?? '',
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              // color: Color(0xFF9C27B0),
+              color: EColors.primary,
+            ),
+          ),
+          if (period['teacher'] != null)
             Text(
-              entry['subject'] ?? '',
+              'Lecturer: ${period['teacher']}',
               style: const TextStyle(
+                color: Color(0xFF3C4043),
                 fontSize: 13,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF9C27B0),
               ),
             ),
-            if (entry['teacher'] != null)
-              Text(
-                'Teacher: ${entry['teacher']}',
-                style: const TextStyle(
-                  color: Color(0xFF3C4043),
-                  fontSize: 13,
-                ),
-              ),
-          ],
-        ),
+        ],
       ),
     );
+    // return Card(
+    //   margin: const EdgeInsets.only(bottom: 16),
+    //   child: ListTile(
+    //     title: Text(
+    //       'Lecturer ${period['period'] ?? ''}',
+    //       style: const TextStyle(
+    //         fontWeight: FontWeight.bold,
+    //         color: Color(0xFF3C4043),
+    //         fontSize: 18,
+    //       ),
+    //     ),
+    //     subtitle: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         Text(
+    //           period['time'] ?? '',
+    //           // period['time'] ?? '',
+    //           style: const TextStyle(
+    //             color: Colors.grey,
+    //             fontSize: 12,
+    //           ),
+    //         ),
+    //         Text(
+    //           ' ${period['subject'] ?? ''}',
+    //           // period['subject'] ?? '',
+    //           style: const TextStyle(
+    //             fontSize: 13,
+    //             fontWeight: FontWeight.bold,
+    //             color: EColors.primary,
+    //           ),
+    //         ),
+    //         if (period['teacher'] != null)
+    //           Text(
+    //             'Teacher: ${period['teacher']}',
+    //             style: const TextStyle(
+    //               color: Color(0xFF3C4043),
+    //               fontSize: 13,
+    //             ),
+    //           ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
-}
 
+
+}
 
 class AnimatedTimetableEntry extends StatelessWidget {
   final Map<String, dynamic> entry;
@@ -603,272 +651,865 @@ class AnimatedTimetableEntry extends StatelessWidget {
   }
 }
 
-//var headers = {
-//   'Cookie': 'ci_session=3obslvn95emuo6635jurbm9blaoil578'
-// };
-// var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/student_timetable'));
-// request.fields.addAll({
-//   'APIKEY': 'GNCS0225',
-//   'USER_ID': '',
-//   'USER_TYPE': ''
-// });
-//
-// request.headers.addAll(headers);
-//
-// http.StreamedResponse response = await request.send();
-//
-// if (response.statusCode == 200) {
-//   print(await response.stream.bytesToString());
-// }
-// else {
-//   print(response.reasonPhrase);
-// }
-// integrate this API
-// and take the user_id and user_type form the local storage and
-// this is the response Body of the
-// api
-// {
-//     "response": [
-//         {
-//             "Monday": [
-//                 {
-//                     "period": "I",
-//                     "time": "9:40 -10:40",
-//                     "subject": "AWP",
-//                     "teacher": "POORNANAND  DUBEY"
-//                 },
-//                 {
-//                     "period": "II",
-//                     "time": "10:40 -11:40",
-//                     "subject": "AWP",
-//                     "teacher": "POORNANAND  DUBEY"
-//                 },
-//                 {
-//                     "period": "III",
-//                     "time": "12:10 - 1:10",
-//                     "subject": "D COM",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 },
-//                 {
-//                     "period": "IV",
-//                     "time": "1:10 - 2:10",
-//                     "subject": "DCL",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 },
-//                 {
-//                     "period": "V",
-//                     "time": "2:20 - 3:15",
-//                     "subject": "DCL",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 },
-//                 {
-//                     "period": "VI",
-//                     "time": "3:15 - 4:10",
-//                     "subject": "DCL",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 }
-//             ]
-//         },
-//         {
-//             "Tuesday": [
-//                 {
-//                     "period": "I",
-//                     "time": "9:40 -10:40",
-//                     "subject": "DSP",
-//                     "teacher": "NIRDESH   JAIN"
-//                 },
-//                 {
-//                     "period": "II",
-//                     "time": "10:40 -11:40",
-//                     "subject": "MES",
-//                     "teacher": "PRATEEK  MISHRA"
-//                 },
-//                 {
-//                     "period": "III",
-//                     "time": "12:10 - 1:10",
-//                     "subject": "D COM",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 },
-//                 {
-//                     "period": "IV",
-//                     "time": "1:10 - 2:10",
-//                     "subject": "MES",
-//                     "teacher": "PRATEEK  MISHRA"
-//                 },
-//                 {
-//                     "period": "V",
-//                     "time": "2:20 - 3:15",
-//                     "subject": "MES",
-//                     "teacher": "PRATEEK  MISHRA"
-//                 },
-//                 {
-//                     "period": "VI",
-//                     "time": "3:15 - 4:10",
-//                     "subject": "D COM",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 }
-//             ]
-//         },
-//         {
-//             "Wednesday": [
-//                 {
-//                     "period": "I",
-//                     "time": "9:40 -10:40",
-//                     "subject": "AWP",
-//                     "teacher": "POORNANAND  DUBEY"
-//                 },
-//                 {
-//                     "period": "II",
-//                     "time": "10:40 -11:40",
-//                     "subject": "D COM",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 },
-//                 {
-//                     "period": "III",
-//                     "time": "12:10 - 1:10",
-//                     "subject": "DCL",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 },
-//                 {
-//                     "period": "IV",
-//                     "time": "1:10 - 2:10",
-//                     "subject": "DSP",
-//                     "teacher": "NIRDESH   JAIN"
-//                 },
-//                 {
-//                     "period": "V",
-//                     "time": "2:20 - 3:15",
-//                     "subject": "DSP",
-//                     "teacher": "NIRDESH   JAIN"
-//                 },
-//                 {
-//                     "period": "VI",
-//                     "time": "3:15 - 4:10",
-//                     "subject": "MES",
-//                     "teacher": "PRATEEK  MISHRA"
-//                 }
-//             ]
-//         },
-//         {
-//             "Thursday": [
-//                 {
-//                     "period": "I",
-//                     "time": "9:40 -10:40",
-//                     "subject": "MES",
-//                     "teacher": "PRATEEK  MISHRA"
-//                 },
-//                 {
-//                     "period": "II",
-//                     "time": "10:40 -11:40",
-//                     "subject": "MES Lab",
-//                     "teacher": "PRATEEK  MISHRA"
-//                 },
-//                 {
-//                     "period": "III",
-//                     "time": "12:10 - 1:10",
-//                     "subject": "MES Lab",
-//                     "teacher": "PRATEEK  MISHRA"
-//                 },
-//                 {
-//                     "period": "IV",
-//                     "time": "1:10 - 2:10",
-//                     "subject": "DCL",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 },
-//                 {
-//                     "period": "V",
-//                     "time": "2:20 - 3:15",
-//                     "subject": "D COM",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 },
-//                 {
-//                     "period": "VI",
-//                     "time": "3:15 - 4:10",
-//                     "subject": "D COM",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 }
-//             ]
-//         },
-//         {
-//             "Friday": [
-//                 {
-//                     "period": "I",
-//                     "time": "9:40 -10:40",
-//                     "subject": "AWP",
-//                     "teacher": "POORNANAND  DUBEY"
-//                 },
-//                 {
-//                     "period": "II",
-//                     "time": "10:40 -11:40",
-//                     "subject": "D COM",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 },
-//                 {
-//                     "period": "III",
-//                     "time": "12:10 - 1:10",
-//                     "subject": "AWP",
-//                     "teacher": "POORNANAND  DUBEY"
-//                 },
-//                 {
-//                     "period": "IV",
-//                     "time": "1:10 - 2:10",
-//                     "subject": "AWP",
-//                     "teacher": "POORNANAND  DUBEY"
-//                 },
-//                 {
-//                     "period": "V",
-//                     "time": "2:20 - 3:15",
-//                     "subject": "D COM",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 },
-//                 {
-//                     "period": "VI",
-//                     "time": "3:15 - 4:10",
-//                     "subject": "D COM",
-//                     "teacher": "Rajendra  Singh  Yadav "
-//                 }
-//             ]
-//         }
-//     ],
-//     "message": "Successfully",
-//     "status": "1"
-// }
-//
-// use this widget
-// show this details on the tab bar
-// import 'package:flutter/material.dart';
-// import 'package:globalcollegeapp/features/time_table/widgets/decoration/contanier_decoration.dart';
-// import 'package:globalcollegeapp/utils/constants/colors.dart';
-//
-// import '../../common/widgets/appbar/appbar.dart';
-// import '../../data/api/api_services.dart';
-// import '../../utils/constants/sizes.dart';
-//
-// class TimeTable extends StatefulWidget {
-//   @override
-//   State<TimeTable> createState() => _TimeTableState();
-// }
-//
-// class _TimeTableState extends State<TimeTable> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: EColors.backgroundColor,
-//       appBar: const GAppBar(
-//         title: Text(
-//           'Time Table',
-//           style: TextStyle(
-//             fontSize: ESizes.appTitle,
-//             color: EColors.textPrimaryHeading,
-//             fontWeight: FontWeight.w600,
-//           ),
-//         ),
-//         backgroundColor: Colors.transparent,
-//         centerTitle: false,
-//       ),
-//       body:
 
 
+
+
+/*
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class TimeTable extends StatefulWidget {
+  const TimeTable({Key? key}) : super(key: key);
+
+  @override
+  _TimeTableState createState() => _TimeTableState();
+}
+
+class _TimeTableState extends State<TimeTable> {
+  Map<String, List<Map<String, dynamic>>>? _timetable; // Updated data type
+  bool _isLoading = true;
+  String _errorMessage = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTimetable();
+  }
+
+  Future<void> _fetchTimetable() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    const headers = {
+      'Cookie': 'ci_session=3obslvn95emuo6635jurbm9blaoil578',
+    };
+    const requestUrl = 'http://myglobalapp.in/global/API005/student_timetable';
+    const apiKey = 'GNCS0225';
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString('user_id') ?? '';
+    String userType = prefs.getString('user_type') ?? '';
+
+    // Handle potential null values from SharedPreferences
+    if (userId.isEmpty || userType.isEmpty) {
+      _errorMessage = 'Please store user ID and type in SharedPreferences';
+      return;
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse(requestUrl),
+        headers: headers,
+        body: {
+          'APIKEY': apiKey,
+          'USER_ID': userId,
+          'USER_TYPE': userType,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        if (jsonData['status'] == '1') {
+          if (jsonData['response'] is List<dynamic>) {
+            _timetable = {};
+            for (final dayData in jsonData['response']) {
+              final dayName = dayData.keys.first; // Get the first key (day name)
+              _timetable![dayName] = dayData[dayName].cast<List<Map<String, dynamic>>>();
+            }
+          } else {
+            print(response.body);
+            print(response.body);
+            _errorMessage = 'Unexpected response format';
+          }
+        } else {
+          print(response.reasonPhrase);
+          print(response.bodyBytes);
+          _errorMessage = jsonData['message'] ?? 'Unknown error';
+        }
+      } else {
+        _errorMessage = response.reasonPhrase ?? 'Network error';
+      }
+    } catch (error) {
+      print(requestUrl);
+      print(_timetable);
+      print(_errorMessage);
+      print(prefs);
+      print(error);
+      _errorMessage = 'Error fetching timetable: $error';
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_errorMessage.isNotEmpty) {
+      return Center(
+        child: Text(_errorMessage),
+      );
+    }
+
+    return DefaultTabController(
+      length: _timetable!.keys.length,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('My Timetable'),
+          bottom: TabBar(
+            isScrollable: true,
+            tabs: _timetable!.keys.map((day) => Tab(text: day)).toList(),
+          ),
+        ),
+        body: TabBarView(
+          children: _timetable!.keys.map((day) {
+            final dayTimetable = _timetable![day]!; // Access using the day key
+            return _buildDayTimetable(dayTimetable);
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  // Updated _buildDayTimetable method
+  Widget _buildDayTimetable(List<Map<String, dynamic>> dayTimetable) {
+    return ListView.builder(
+      itemCount: dayTimetable.length,
+      itemBuilder: (context, index) {
+        final slot = dayTimetable[index];
+        return ListTile(
+          title: Text(slot['subject']),
+          subtitle: Text('${slot['period']} - ${slot['time']}'),
+          trailing: Text(slot['teacher']),
+        );
+      },
+    );
+  }
+}
+
+
+ */
+
+
+
+
+
+
+///
+/*
+/// Correct UI Code ->>>>
+import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+
+import '../../common/widgets/appbar/appbar.dart';
+import '../../utils/constants/sizes.dart';
+
+class TimeTable extends StatefulWidget {
+  @override
+  State<TimeTable> createState() => _TimeTableState();
+}
+
+class _TimeTableState extends State<TimeTable> {
+  final Map<String, List<Map<String, dynamic>>> timetableData = {
+    'Monday': [
+      {
+        'Lecturer': '1',
+        'subject': 'Orbital Mechanics',
+        'professor': 'Prof. Amelia Bennett',
+        'time': '9:00 AM',
+      },
+      {
+        'Lecturer': '2',
+        'subject': 'Spacecraft Design & Systems Engineering',
+        'professor': 'Prof. Marcus Rodriguez',
+        'time': '9:45 AM',
+      },
+      {
+        'Lecturer': '3',
+        'subject': 'Aerodynamics',
+        'professor': 'Prof. Elena Chang',
+        'time': '10:30 AM',
+      },
+    ],
+    'Tuesday': [
+      {
+        'Lecturer': '1',
+        'subject': 'Orbital Mechanics',
+        'professor': 'Prof. Amelia Bennett',
+        'time': '9:00 AM',
+      },
+      {
+        'Lecturer': '2',
+        'subject':
+        'Spacecraft Design & Systems Engineering & Systems Engineering',
+        'professor': 'Prof. Marcus Rodriguez',
+        'time': '9:45 AM',
+      },
+      {
+        'Lecturer': '3',
+        'subject': 'Aerodynamics',
+        'professor': 'Prof. Elena Chang',
+        'time': '10:30 AM',
+      },
+    ],
+    'Wednesday': [
+      {
+        'Lecturer': '1',
+        'subject': 'Orbital Mechanics',
+        'professor': 'Prof. Amelia Bennett',
+        'time': '9:00 AM',
+      },
+      {
+        'Lecturer': '2',
+        'subject':
+        'Spacecraft Design & Systems Engineering & Systems Engineering',
+        'professor': 'Prof. Marcus Rodriguez',
+        'time': '9:45 AM',
+      },
+      {
+        'Lecturer': '3',
+        'subject': 'Aerodynamics',
+        'professor': 'Prof. Elena Chang',
+        'time': '10:30 AM',
+      },
+    ],
+    'Thursday': [
+      {
+        'Lecturer': '1',
+        'subject': 'Orbital Mechanics',
+        'professor': 'Prof. Amelia Bennett',
+        'time': '9:00 AM',
+      },
+      {
+        'Lecturer': '2',
+        'subject':
+        'Spacecraft Design & Systems Engineering & Systems Engineering',
+        'professor': 'Prof. Marcus Rodriguez',
+        'time': '9:45 AM',
+      },
+      {
+        'Lecturer': '3',
+        'subject': 'Aerodynamics',
+        'professor': 'Prof. Elena Chang',
+        'time': '10:30 AM',
+      },
+    ],
+    'Friday': [
+      {
+        'Lecturer': '1',
+        'subject': 'Orbital Mechanics',
+        'professor': 'Prof. Amelia Bennett',
+        'time': '9:00 AM',
+      },
+      {
+        'Lecturer': '2',
+        'subject':
+        'Spacecraft Design & Systems Engineering & Systems Engineering',
+        'professor': 'Prof. Marcus Rodriguez',
+        'time': '9:45 AM',
+      },
+      {
+        'Lecturer': '3',
+        'subject': 'Aerodynamics',
+        'professor': 'Prof. Elena Chang',
+        'time': '10:30 AM',
+      },
+    ],
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: const GAppBar(
+        title: Text(
+          'Time Table',
+          style: TextStyle(
+            fontSize: ESizes.appTitle,
+            color: EColors.textPrimaryHeading,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        centerTitle: false,
+      ),
+      body: DefaultTabController(
+        length: timetableData.length,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Container(
+                constraints: const BoxConstraints.expand(height: 60),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFE0E5),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0xFFFFC1C5),
+                      offset: Offset(-2, -2),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                    ),
+                    BoxShadow(
+                      color: Colors.white,
+                      offset: Offset(5, 5),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: TabBar(
+                  padding: const EdgeInsets.all(8),
+                  isScrollable: true,
+                  physics: const BouncingScrollPhysics(),
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(13),
+                    color: const Color(0xFFFFE0E5),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xFFFFC1C5),
+                        offset: Offset(-2, -2),
+                        blurRadius: 2,
+                        spreadRadius: 1,
+                      ),
+                      BoxShadow(
+                        color: Colors.white,
+                        offset: Offset(5, 5),
+                        blurRadius: 2,
+                        spreadRadius: 1,
+                      ),
+                    ],
+                  ),
+                  labelColor: const Color(0xFF3C4043),
+                  tabs: timetableData.keys
+                      .map((day) => Tab(
+                    text: day,
+                    iconMargin:
+                    const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  ))
+                      .toList(),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: TabBarView(
+                  children: timetableData.keys
+                      .map((day) => buildDayTimetable(context, day))
+                      .toList(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildDayTimetable(BuildContext context, String day) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Timetable for $day',
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF3C4043),
+              ),
+            ),
+            const SizedBox(height: 20),
+            for (var entry in timetableData[day]!)
+              AnimatedTimetableEntry(entry: entry),
+            // Lunch Container
+            GestureDetector(
+              onTap: () {
+                // Handle lunch container tap
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+                margin: const EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFE0E5),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0xFFFFC1C5),
+                      offset: Offset(-2, -2),
+                      blurRadius: 5,
+                      spreadRadius: 1,
+                    ),
+                    BoxShadow(
+                      color: Color(0xFFFFE0E5),
+                      offset: Offset(5, 5),
+                      blurRadius: 5,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Lunch Break',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF3C4043),
+                        fontSize: 20,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      '12:00 PM - 1:00 PM',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class AnimatedTimetableEntry extends StatelessWidget {
+  final Map<String, dynamic> entry;
+
+  AnimatedTimetableEntry({required this.entry});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFE0E5),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0xFFFFC1C5),
+            offset: Offset(-2, -2),
+            blurRadius: 5,
+            spreadRadius: 1,
+          ),
+          BoxShadow(
+            color: Colors.white,
+            offset: Offset(5, 5),
+            blurRadius: 5,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Lecturer ${entry['period'] ?? ''}',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF3C4043),
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            entry['time'] ?? '',
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
+            ),
+          ),
+          Text(
+            entry['subject'] ?? '',
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF9C27B0),
+            ),
+          ),
+          if (entry['professor'] != null)
+            Text(
+              'Prof. ${entry['professor']}',
+              style: const TextStyle(
+                color: Color(0xFF3C4043),
+                fontSize: 13,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Correct UI Code ->>>>
+ */
+
+
+
+/// --------
+
+
+
+/// +++++++++
+/*
+import 'package:flutter/material.dart';
+
+import '../../data/api/api_services.dart';
+
+class TimeTable extends StatefulWidget {
+  @override
+  _TimeTableState createState() => _TimeTableState();
+}
+
+class _TimeTableState extends State<TimeTable> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  Map<String, dynamic>? timetableData;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 5, vsync: this); // Assuming 5 days for Monday to Friday
+    fetchData();
+  }
+
+  void fetchData() async {
+    try {
+      // String userId = ''; // Get user_id from local storage
+      // String userType = ''; // Get user_type from local storage
+
+      Map<String, dynamic> data = await ApiService.fetchTimetable();
+
+      setState(() {
+        timetableData = data;
+      });
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Time Table'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            for (var day in timetableData?['response'] ?? [])
+              Tab(text: day.keys.first), // Assuming each day is a tab
+          ],
+        ),
+      ),
+      body: timetableData != null
+          ? TabBarView(
+        controller: _tabController,
+        children: [
+          for (var day in timetableData!['response'])
+            DayTimetableWidget(day: day),
+        ],
+      )
+          : Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
+class DayTimetableWidget extends StatelessWidget {
+  final Map<String, dynamic> day;
+
+  DayTimetableWidget({required this.day});
+
+  @override
+  Widget build(BuildContext context) {
+    print("Day data: $day");
+
+    // Extract the list of periods for the day
+    List<dynamic> periods = day[day.keys.first] ?? [];
+
+    if (periods.isEmpty) {
+      return Center(
+        child: Text('No timetable available for ${day.keys.first}'),
+      );
+    }
+
+    return ListView.builder(
+      itemCount: periods.length,
+      itemBuilder: (context, index) {
+        var period = periods[index]['period'];
+        var time = periods[index]['time'];
+        var subject = periods[index]['subject'];
+        var teacher = periods[index]['teacher'];
+
+        print("Period: $period, Time: $time, Subject: $subject, Teacher: $teacher");
+
+        return ListTile(
+          title: Text('Period $period - $subject'),
+          subtitle: Text('$time | Teacher: $teacher'),
+        );
+      },
+    );
+  }
+}
+
+
+ */
+//// ---- ++++
+
+
+/*
+
+import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/features/time_table/widgets/decoration/contanier_decoration.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import '../../common/widgets/appbar/appbar.dart';
+import '../../data/api/api_services.dart';
+import '../../utils/constants/sizes.dart';
+
+class TimeTable extends StatefulWidget {
+  @override
+  State<TimeTable> createState() => _TimeTableState();
+}
+
+class _TimeTableState extends State<TimeTable> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: const GAppBar(
+        title: Text(
+          'Time Table',
+          style: TextStyle(
+            fontSize: ESizes.appTitle,
+            color: EColors.textPrimaryHeading,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        centerTitle: false,
+      ),
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: ApiService.fetchTimetable(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData) {
+            Map<String, dynamic> responseData = snapshot.data!;
+            List<dynamic> timetableData = responseData['response'] ?? [];
+
+            return DefaultTabController(
+              length: timetableData.length,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Container(
+                      constraints: const BoxConstraints.expand(height: 60),
+                      decoration: customDecoration(),
+                      child: TabBar(
+                        padding: const EdgeInsets.all(8),
+                        isScrollable: true,
+                        physics: const BouncingScrollPhysics(),
+                        indicator: customDecoration(),
+                        labelColor: const Color(0xFF3C4043),
+                        tabs: timetableData
+                            .map((dayData) {
+                          String day = dayData.keys.first;
+                          return Tab(
+                            text: day,
+                            iconMargin: const EdgeInsets.symmetric(
+                              horizontal: 5,
+                              vertical: 5,
+                            ),
+                          );
+                        })
+                            .cast<Widget>()
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: TabBarView(
+                        children: timetableData
+                            .map((dayData) {
+                          return buildDayTimetable(dayData);
+                        })
+                            .cast<Widget>()
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Center(child: Text('Invalid API response format.'));
+          }
+        },
+      ),
+    );
+  }
+
+  Widget buildDayTimetable(Map<String, dynamic> dayData) {
+    String day = dayData.keys.first;
+    List<Map<String, dynamic>> timetableForDay =
+        (dayData[day] as List?)?.cast<Map<String, dynamic>>() ?? [];
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Timetable for $day',
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF3C4043),
+              ),
+            ),
+            const SizedBox(height: 20),
+            for (var entry in timetableForDay)
+              buildPeriodCard(entry),
+            // ... Additional UI elements
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildPeriodCard(Map<String, dynamic> period) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: ListTile(
+        title: Text(
+          'Period ${period['period'] ?? ''}',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF3C4043),
+            fontSize: 16,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              period['time'] ?? '',
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+              ),
+            ),
+            Text(
+              period['subject'] ?? '',
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF9C27B0),
+              ),
+            ),
+            if (period['teacher'] != null)
+              Text(
+                'Teacher: ${period['teacher']}',
+                style: const TextStyle(
+                  color: Color(0xFF3C4043),
+                  fontSize: 13,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+}
+
+class AnimatedTimetableEntry extends StatelessWidget {
+  final Map<String, dynamic> entry;
+
+  AnimatedTimetableEntry({required this.entry});
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: customDecoration(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Period ${entry['period'] ?? ''}',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF3C4043),
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            entry['time'] ?? '',
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
+            ),
+          ),
+          Text(
+            entry['subject'] ?? '',
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF9C27B0),
+            ),
+          ),
+          if (entry['teacher'] != null)
+            Text(
+              'Teacher: ${entry['teacher']}',
+              style: const TextStyle(
+                color: Color(0xFF3C4043),
+                fontSize: 13,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+
+ */
 
 ///
 

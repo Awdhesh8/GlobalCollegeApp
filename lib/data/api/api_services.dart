@@ -291,13 +291,96 @@ class ApiService {
   //     // Handle exception
   //   }
   // }
+///--------
 
+
+  static Future<Map<String, dynamic>> fetchTimetable() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+    var userType = prefs.getString('user_type') ?? '';
+
+    print(userId);
+    print(userType);
+
+    var headers = {
+      'Cookie': 'ci_session=ga2gv43kdoaqr8bs0f91tqof0rss55r4',
+    };
+
+    var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/student_timetable'));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'USER_TYPE': userType,
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(await response.stream.bytesToString());
+      return data;
+    } else {
+      throw Exception('Failed to load timetable');
+    }
+  }
+
+
+
+
+  /*
+  static Future<Map<String, dynamic>> getTimeTable() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString('user_id') ?? '';
+    String userType = prefs.getString('user_type') ?? '';
+
+    var headers = {
+      'Cookie': 'ci_session=ga2gv43kdoaqr8bs0f91tqof0rss55r4',
+    };
+
+    var request = http.MultipartRequest(
+        'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getTimeTable)));
+
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'USER_TYPE': userType,
+    });
+
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        String responseBody = await response.stream.bytesToString();
+        Map<String, dynamic> decodedResponse = json.decode(responseBody);
+        return decodedResponse;
+      } else {
+        return {
+          'status': '0',
+          'message': 'Failed to fetch time table',
+        };
+      }
+    } catch (e) {
+      return {
+        'status': '0',
+        'message': 'Error: $e',
+      };
+    }
+  }
+
+
+   */
+
+/// -----
+  /*
   static Future<Map<String, dynamic>> fetchTimetable() async {
     try {
       // Retrieve user_id and user_type from local storage
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String user_id = prefs.getString('user_id') ?? '';
-      String user_type = prefs.getString('user_type') ?? '';
+      String userId = prefs.getString('user_id') ?? '';
+      String userType = prefs.getString('user_type') ?? '';
 
       var headers = {
         'Cookie': 'ci_session=ofmkjs7j9v66paef1l5428hhmti32c1s',
@@ -307,8 +390,8 @@ class ApiService {
 
       request.fields.addAll({
         'APIKEY': 'GNCS0225',
-        'USER_ID': user_id,
-        'USER_TYPE': user_type,
+        'USER_ID': userId,
+        'USER_TYPE': userType,
       });
 
       request.headers.addAll(headers);
@@ -327,7 +410,7 @@ class ApiService {
       return {'error': 'Error occurred during API request'};
     }
   }
-
+   */
 
 }
 

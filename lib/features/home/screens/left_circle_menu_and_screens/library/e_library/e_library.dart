@@ -73,7 +73,6 @@ class ELibraryScreen extends StatelessWidget {
         'downloadLink':
             'https://web.pdx.edu/~pmoeck/books/Tipler_Llewellyn.pdf',
       },
-
       // Add more books here...
     ];
 
