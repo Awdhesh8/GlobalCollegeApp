@@ -10,6 +10,7 @@ class APIConstants {
   static const String updateProfile = 'update_profile';
   static const String getEducationalProfile = 'profile_educational';
   static const String getTimeTable = 'student_timetable';
+  static const String getBooks = 'book_search';
 
 
   // Add more endpoints as needed
