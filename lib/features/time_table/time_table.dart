@@ -381,6 +381,7 @@ class PeriodData {
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/features/time_table/widgets/decoration/contanier_decoration.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../common/widgets/appbar/appbar.dart';
 import '../../data/api/api_services.dart';
 import '../../utils/constants/sizes.dart';
@@ -412,7 +413,7 @@ class _TimeTableState extends State<TimeTable> {
         future: ApiService.fetchTimetable(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return ShimmerLoading();
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
@@ -549,108 +550,98 @@ class _TimeTableState extends State<TimeTable> {
         ],
       ),
     );
-    // return Card(
-    //   margin: const EdgeInsets.only(bottom: 16),
-    //   child: ListTile(
-    //     title: Text(
-    //       'Lecturer ${period['period'] ?? ''}',
-    //       style: const TextStyle(
-    //         fontWeight: FontWeight.bold,
-    //         color: Color(0xFF3C4043),
-    //         fontSize: 18,
-    //       ),
-    //     ),
-    //     subtitle: Column(
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         Text(
-    //           period['time'] ?? '',
-    //           // period['time'] ?? '',
-    //           style: const TextStyle(
-    //             color: Colors.grey,
-    //             fontSize: 12,
-    //           ),
-    //         ),
-    //         Text(
-    //           ' ${period['subject'] ?? ''}',
-    //           // period['subject'] ?? '',
-    //           style: const TextStyle(
-    //             fontSize: 13,
-    //             fontWeight: FontWeight.bold,
-    //             color: EColors.primary,
-    //           ),
-    //         ),
-    //         if (period['teacher'] != null)
-    //           Text(
-    //             'Teacher: ${period['teacher']}',
-    //             style: const TextStyle(
-    //               color: Color(0xFF3C4043),
-    //               fontSize: 13,
-    //             ),
-    //           ),
-    //       ],
-    //     ),
-    //   ),
-    // );
+
   }
-
-
-}
-
-class AnimatedTimetableEntry extends StatelessWidget {
-  final Map<String, dynamic> entry;
-
-  AnimatedTimetableEntry({required this.entry});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: customDecoration(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Period ${entry['period'] ?? ''}',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF3C4043),
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            entry['time'] ?? '',
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 12,
-            ),
-          ),
-          Text(
-            entry['subject'] ?? '',
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF9C27B0),
-            ),
-          ),
-          if (entry['teacher'] != null)
-            Text(
-              'Teacher: ${entry['teacher']}',
-              style: const TextStyle(
-                color: Color(0xFF3C4043),
-                fontSize: 13,
+  Widget ShimmerLoading() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[200]!,
+      highlightColor: Colors.white,
+      // highlightColor: Colors.grey[50]!,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                height:50,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(14))
+                ),
               ),
-            ),
-        ],
+              SizedBox(height: 20,),
+              Container(
+                width: double.infinity,
+                height:500,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(14))
+                  )
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
+
 }
+
+// class AnimatedTimetableEntry extends StatelessWidget {
+//   final Map<String, dynamic> entry;
+//
+//   AnimatedTimetableEntry({required this.entry});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return AnimatedContainer(
+//       duration: const Duration(milliseconds: 500),
+//       curve: Curves.easeInOut,
+//       width: double.infinity,
+//       margin: const EdgeInsets.only(bottom: 16),
+//       padding: const EdgeInsets.all(16),
+//       decoration: customDecoration(),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Text(
+//             'Period ${entry['period'] ?? ''}',
+//             style: const TextStyle(
+//               fontWeight: FontWeight.bold,
+//               color: Color(0xFF3C4043),
+//               fontSize: 16,
+//             ),
+//           ),
+//           const SizedBox(height: 8),
+//           Text(
+//             entry['time'] ?? '',
+//             style: const TextStyle(
+//               color: Colors.grey,
+//               fontSize: 12,
+//             ),
+//           ),
+//           Text(
+//             entry['subject'] ?? '',
+//             style: const TextStyle(
+//               fontSize: 13,
+//               fontWeight: FontWeight.bold,
+//               color: Color(0xFF9C27B0),
+//             ),
+//           ),
+//           if (entry['teacher'] != null)
+//             Text(
+//               'Teacher: ${entry['teacher']}',
+//               style: const TextStyle(
+//                 color: Color(0xFF3C4043),
+//                 fontSize: 13,
+//               ),
+//             ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 /*
 import 'package:flutter/material.dart';
