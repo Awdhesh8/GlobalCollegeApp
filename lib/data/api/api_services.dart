@@ -290,17 +290,20 @@ class ApiService {
   /// <<<---- Library --->>>
 
   /// eLibrary Search --->
-  Future<void> bookSearch(String searchKeyword) async {
+  static Future<List<Map<String, dynamic>>> bookSearch(String searchKeyword) async {
     try {
       var headers = {
-        'Cookie': 'ci_session=sa8mcpj64kero3hpjg1uvt0ai3p9f685',
+        'Cookie': 'ci_session=1t3b502csempj6ti9mak02q48j6h2k1g',
       };
 
-       var request = http.MultipartRequest(
-           'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getBooks)));
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(APIConstants.getFullUrl(APIConstants.getBooks)),
+      );
+
       request.fields.addAll({
         'APIKEY': 'GNCS0225',
-        'srch_keyword': searchKeyword, // take this from the controller
+        'srch_keyword': searchKeyword,
       });
 
       request.headers.addAll(headers);
@@ -308,14 +311,17 @@ class ApiService {
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        print(await response.stream.bytesToString());
-        // You can process the response data further if needed
+        String responseBody = await response.stream.bytesToString();
+        var jsonResponse = json.decode(responseBody);
+
+        return List<Map<String, dynamic>>.from(jsonResponse['response']);
       } else {
         print(response.reasonPhrase);
+        return []; // Return an empty list in case of an error
       }
     } catch (error) {
       print('Error: $error');
-      // Handle errors appropriately
+      return []; // Return an empty list in case of an error
     }
   }
 

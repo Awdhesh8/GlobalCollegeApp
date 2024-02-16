@@ -183,7 +183,7 @@ class _LeftSideCircularScrollingBoxesState
 
       case 1:
       case 11:
-        screen = () => const LibraryScreen();
+        screen = () =>  LibraryScreen();
         break;
         case 2:
           case 12:

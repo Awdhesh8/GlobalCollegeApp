@@ -71,6 +71,7 @@ class CustomSearchContainer extends StatelessWidget {
   final bool dark;
   final bool showBorder;
   final EdgeInsetsGeometry padding;
+  final void Function(String)? onChanged;
 
   const CustomSearchContainer({
     Key? key,
@@ -79,6 +80,7 @@ class CustomSearchContainer extends StatelessWidget {
     required this.dark,
     required this.showBorder,
     this.padding = const EdgeInsets.symmetric(horizontal: ESizes.defaultSpace),
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -109,6 +111,7 @@ class CustomSearchContainer extends StatelessWidget {
               hintText: 'Search',
               border: InputBorder.none,
             ),
+            onChanged: onChanged,
           ),
         ),
       ),

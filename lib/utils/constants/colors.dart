@@ -13,6 +13,14 @@ class EColors {
   static const Color circleCardColor = Color.fromRGBO(255, 226, 226, 1);
   static const Color calenderBoxColor = Color.fromRGBO(251, 251, 252, 1);
 
+  static const kBlackColor = Color(0xFF393939);
+  static const kLightBlackColor = Color(0xFF8F8F8F);
+  static const kIconColor = Color(0xFFF48A37);
+  static const kProgressIndicator = Color(0xFFBE7066);
+
+  static  Color kShadowColor = Color(0xFFD3D3D3).withOpacity(.84);
+  // final kShadowColor = const Color(0xFFD3D3D3).withOpacity(.84);
+
   // Gradient Colors
   static const Gradient linerGradient = LinearGradient(
       begin: Alignment(0.0, 0.0),

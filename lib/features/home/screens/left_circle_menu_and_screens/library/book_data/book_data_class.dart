@@ -56,7 +56,7 @@ class BookData {
     // Add more books here...
   ];
 
-  /// eBook Model --->>
+  /// Book data Model --->>
 
   final List<BookItem> response;
   final String message;

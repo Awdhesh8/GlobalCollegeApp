@@ -21,7 +21,7 @@ class AppRoutes {
     
     /// These are sub screens
     GetPage(name: fees, page: () => const FeesScreen()),
-    GetPage(name: library, page: () => const LibraryScreen()),
+    GetPage(name: library, page: () =>  LibraryScreen()),
     GetPage(name: cvResume, page: () => const CVResumeScreen()),
     GetPage(name: assessment, page: () => const AssessmentTestScreen()),
 

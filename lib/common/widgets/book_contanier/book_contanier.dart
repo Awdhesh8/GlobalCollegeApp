@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
 
+
+/// Original UI code
 class CustomContainer extends StatelessWidget {
   final String imageUrl;
   final double width;
