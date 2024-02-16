@@ -37,19 +37,22 @@ class ReadingListCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(29),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 10),
-                    blurRadius: 33,
-                    color: EColors.kShadowColor,
-                  ),
-                ],
+                // boxShadow: [
+                //   BoxShadow(
+                //     offset: Offset(0, 10),
+                //     blurRadius: 33,
+                //     color: EColors.kShadowColor,
+                //   ),
+                // ],
               ),
             ),
           ),
-          Image.network(
-            imageUrl,
-            width: 150,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: Image.network(
+              imageUrl,
+              width: 100,
+            ),
           ),
           // Positioned(
           //   top: 35,

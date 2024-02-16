@@ -79,7 +79,312 @@ class _LibraryScreenState extends State<LibraryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: EColors.backgroundColor,
-      appBar: const GAppBar(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(210.0),
+        child: AppBar(
+          backgroundColor: Colors.transparent,
+          centerTitle: true,
+          title: const Text(
+            'Library',
+            style: TextStyle(
+              color: EColors.textColorPrimary1,
+              fontWeight: FontWeight.bold,
+              fontSize: 28,
+            ),
+          ),
+          flexibleSpace: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CustomSearchContainer(
+                showBackground: true,
+                dark: false,
+                showBorder: true,
+                onChanged: (value) {
+                  // Call bookSearch function whenever the search text changes
+                  bookSearch(value);
+                },
+                controller: searchController,
+              ),
+              const SizedBox(
+                height: ESizes.spaceBtwItems,
+              ),
+
+              /// Three Buttons eLibrary | Issued Book | History
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomContainerButton(
+                      buttonText: 'eLibrary',
+                      onTap: () {
+                        Get.to(() => const ELibraryScreen(),
+                            curve: Curves.easeInOut,
+                            transition: Transition.cupertino);
+                      },
+                    ),
+                    CustomContainerButton(
+                      buttonText: 'Issued Books',
+                      onTap: () {
+                        Get.to(() => const IssuedBooksScreen(),
+                            curve: Curves.easeInOut,
+                            transition: Transition.cupertino);
+                      },
+                    ),
+                    CustomContainerButton(
+                      buttonText: 'History',
+                      onTap: () {
+                        Get.to(() => const BookHistoryScreen(),
+                            curve: Curves.easeInOut,
+                            transition: Transition.cupertino);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Divider(),
+              ),
+              const SizedBox(
+                height: ESizes.spaceBtwItems1,
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        child: Column(
+          children: [
+            /// Title Heading for Books
+            const Row(
+              children: [
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 22),
+                    child: TopHeading(
+                      text:
+                      'Unveiling Our Newest\nArrivals: Dive into\nFresh Reads',
+                    )),
+              ],
+            ),
+            isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                      shrinkWrap: true, // Set shrinkWrap to true
+                      physics:
+                          const NeverScrollableScrollPhysics(), // Disable scrolling
+                      itemCount: books.length,
+                      itemBuilder: (context, index) {
+                        var book = books[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: BookContainer(
+                            imageUrl: book['covor_image'],
+                            title: book['book_title'],
+                            author: book['author'],
+                            availableQty: book['available_qty'],
+                            lockStatus: book['lock_status'],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+            const SizedBox(
+              height: ESizes.spaceBtwItems1,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: _showScrollToTopButton
+          ? FloatingActionButton(
+              onPressed: _scrollToTop,
+              tooltip: 'Scroll to Top',
+              child: const Icon(Icons.arrow_upward),
+            )
+          : null,
+    );
+  }
+}
+
+/*
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:globalcollegeapp/common/widgets/custom_shapes/containers/search_container.dart';
+import '../../../../../common/layouts/grid_layout.dart';
+import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../common/widgets/custom_container_button/custom_container_button.dart';
+import '../../../../../common/widgets/texts/top_first_heading.dart';
+import '../../../../../data/api/api_services.dart';
+import '../../../../../utils/constants/colors.dart';
+import '../../../../../utils/constants/sizes.dart';
+import 'book_contaner/book_contanier.dart';
+import 'book_contaner/book_contanier_new.dart';
+import 'e_library/e_library.dart';
+import 'history/book_history.dart';
+import 'issued_books/issued_books.dart';
+
+class LibraryScreen extends StatefulWidget {
+  @override
+  _LibraryScreenState createState() => _LibraryScreenState();
+}
+
+class _LibraryScreenState extends State<LibraryScreen> {
+  List<Map<String, dynamic>> books = [];
+  TextEditingController searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  bool isLoading = false;
+  bool _showScrollToTopButton = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Call the bookSearch function when the screen initializes
+    bookSearch('');
+
+    _scrollController.addListener(() {
+      // Check if the user has scrolled down to show the FloatingActionButton
+      if (_scrollController.offset >= 300) {
+        // Assuming you want to show the button when scrolled down 300 pixels
+        setState(() {
+          _showScrollToTopButton = true;
+        });
+      } else {
+        setState(() {
+          _showScrollToTopButton = false;
+        });
+      }
+    });
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(0.0,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+  }
+
+  Future<void> bookSearch(String searchKeyword) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      List<Map<String, dynamic>> result =
+          await ApiService.bookSearch(searchKeyword);
+
+      setState(() {
+        books = result;
+        isLoading = false;
+      });
+    } catch (error) {
+      print('Error: $error');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(320.0),
+        child: AppBar(
+          backgroundColor: Colors.transparent,
+          centerTitle: true,
+          title: Text(
+            'Library',
+          style: TextStyle(
+            color: EColors.textColorPrimary1,
+            fontWeight: FontWeight.bold,
+            fontSize: 28,
+          ),
+          ),
+          flexibleSpace: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CustomSearchContainer(
+                showBackground: true,
+                dark: false,
+                showBorder: true,
+                onChanged: (value) {
+                  // Call bookSearch function whenever the search text changes
+                  bookSearch(value);
+                },
+                controller: searchController,
+              ),
+              const SizedBox(
+                height: ESizes.spaceBtwItems,
+              ),
+
+              /// Three Buttons eLibrary | Issued Book | History
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomContainerButton(
+                      buttonText: 'eLibrary',
+                      onTap: () {
+                        Get.to(() => const ELibraryScreen(),
+                            curve: Curves.easeInOut,
+                            transition: Transition.cupertino);
+                      },
+                    ),
+                    CustomContainerButton(
+                      buttonText: 'Issued Books',
+                      onTap: () {
+                        Get.to(() => const IssuedBooksScreen(),
+                            curve: Curves.easeInOut,
+                            transition: Transition.cupertino);
+                      },
+                    ),
+                    CustomContainerButton(
+                      buttonText: 'History',
+                      onTap: () {
+                        Get.to(() => const BookHistoryScreen(),
+                            curve: Curves.easeInOut,
+                            transition: Transition.cupertino);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Divider(),
+              ),
+              const SizedBox(
+                height: ESizes.spaceBtwItems1,
+              ),
+              /// Title Heading for Books
+              const Row(
+                children: [
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 22),
+                      child: TopHeading(
+                        text:
+                        'Unveiling Our Newest\nArrivals: Dive into\nFresh Reads',
+                      )),
+                ],
+              ),
+              const SizedBox(
+                height: ESizes.spaceBtwItems,
+              ),
+            ],
+          ),
+        ),
+      ),
+          /*
+      const GAppBar(
         backgroundColor: Colors.transparent,
         showBackArrow: true,
         centerTitle: true,
@@ -91,11 +396,15 @@ class _LibraryScreenState extends State<LibraryScreen> {
             fontSize: 28,
           ),
         ),
+
       ),
+      */
+
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Column(
           children: [
+            /*
             CustomSearchContainer(
               showBackground: true,
               dark: false,
@@ -148,6 +457,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Divider(),
             ),
+
             const SizedBox(
               height: ESizes.spaceBtwItems1,
             ),
@@ -165,34 +475,69 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   const SizedBox(
                     height: ESizes.spaceBtwItems,
                   ),
+            */
             isLoading
                 ? const Center(
                     child: CircularProgressIndicator(),
                   )
                 : Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: EGridLayout(
-              itemCount: books.length,
-              mainAxisExtent: 268,
-              itemBuilder: (context, index) {
-                var book = books[index];
-               return ReadingListCard(
-                    imageUrl: book['covor_image'],
-                    title: book['book_title'],
-                    author: book['author'],
-                    availableQty: book['available_qty'],
-                    lockStatus: book['lock_status'],
-                );
-                  // var book = books[index];
-                  // return BookContainer(
-                  //   imageUrl: book['covor_image'],
-                  //   title: book['book_title'],
-                  //   author: book['author'],
-                  //   availableQty: book['available_qty'],
-                  //   lockStatus: book['lock_status'],
-                  // );
+                  child:SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: SizedBox(
+                      height: 380,
+                      child: ListView.builder(
+                        itemCount: books.length,
+                        itemBuilder: (context, index) {
+                          var book = books[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: BookContainer(
+                              imageUrl: book['covor_image'],
+                              title: book['book_title'],
+                              author: book['author'],
+                              availableQty: book['available_qty'],
+                              lockStatus: book['lock_status'],
+                            ),
+                          );
+  // : Padding(
+  //                 padding: const EdgeInsets.all(8.0),
+  //                 child: EGridLayout(
+  //             itemCount: books.length,
+  //             mainAxisExtent: 268,
+  //             itemBuilder: (context, index) {
+  //               var book = books[index];
+  //               return BookContainer(
+  //                 imageUrl: book['covor_image'],
+  //                 title: book['book_title'],
+  //                 author: book['author'],
+  //                 availableQty: book['available_qty'],
+  //                 lockStatus: book['lock_status'],
+  //               );
+
+
+               //  var book = books[index];
+               // return ReadingListCard(
+               //      imageUrl: book['covor_image'],
+               //      title: book['book_title'],
+               //      author: book['author'],
+               //      availableQty: book['available_qty'],
+               //      lockStatus: book['lock_status'],
+               //  );
+
+
+                      // var book = books[index];
+                      // return BookContainer(
+                      //   imageUrl: book['covor_image'],
+                      //   title: book['book_title'],
+                      //   author: book['author'],
+                      //   availableQty: book['available_qty'],
+                      //   lockStatus: book['lock_status'],
+                      // );
               },
             ),
+                    ),
+                  ),
                 ),
             const SizedBox(
               height: ESizes.spaceBtwItems1,
@@ -210,7 +555,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
     );
   }
 }
-
+*/
 class BookTile extends StatelessWidget {
   final Map<String, dynamic> book;
 
