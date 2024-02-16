@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../../../../utils/constants/colors.dart';
 import '../wdgets/two_side_rounded_button.dart';
 
@@ -7,7 +6,7 @@ class ReadingListCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String author;
-  final double rating;
+  final double? rating;
   final Function? pressDetails;
   final Function? pressRead;
 
@@ -16,16 +15,16 @@ class ReadingListCard extends StatelessWidget {
     required this.imageUrl,
     required this.title,
     required this.author,
-    required this.rating,
+    this.rating,
     this.pressDetails,
-    this.pressRead,
+    this.pressRead, required availableQty, required lockStatus,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 24, bottom: 40),
-      height: 245,
+      margin: EdgeInsets.only(left: 10, bottom: 10, right: 10),
+      height: 285,
       width: 202,
       child: Stack(
         children: <Widget>[
