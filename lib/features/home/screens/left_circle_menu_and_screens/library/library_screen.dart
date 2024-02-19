@@ -149,7 +149,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
           print('Lock Status Updated Successfully');
 
           // Show a SnackBar with the success message
-          Get.snackbar('Lock Status Updated Successfully: $message', 'You can now take the book from the college library.');
+          Get.snackbar('Lock Status : ', '$message',colorText: EColors.textColorPrimary1,);
+           // Get.snackbar('Lock Status : $message', 'You can now take the book from the college library.');
+
           // ScaffoldMessenger.of(context).showSnackBar(
           //   SnackBar(
           //     content: Text('Lock Status Updated Successfully. You can now take the book from the college library.'),
@@ -167,7 +169,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
           //     duration: Duration(seconds: 2),
           //   ),
           // );
-          Get.snackbar('Lock Status Update Failed: $message', 'Your profile has been updated.');
+          Get.snackbar('Lock Status Update Failed: ', '$message');
         }
       } else {
         // Print the reason phrase in case of non-200 status code
