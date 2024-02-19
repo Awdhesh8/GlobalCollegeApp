@@ -48,8 +48,11 @@ class _CustomBookContainerState extends State<CustomBookContainer> {
               CustomPaint(
                 painter: MyPainter(),
                 child: Container(
-                   width: 290.0, // Adjust the width as needed
+                  width : MediaQuery.of(context).size.width * 0.82,
                    height: 200.0, // Adjust the height as needed
+                   //  width: 290.0, // Adjust the width as needed
+                   // height: 200.0, // Adjust the height as needed
+                   //
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
