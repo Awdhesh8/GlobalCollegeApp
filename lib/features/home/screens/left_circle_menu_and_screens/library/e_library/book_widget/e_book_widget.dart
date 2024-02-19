@@ -14,16 +14,18 @@ class BookTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w500,
+        Expanded(
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
+            ),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
           ),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

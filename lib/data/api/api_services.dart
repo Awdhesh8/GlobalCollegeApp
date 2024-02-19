@@ -427,5 +427,42 @@ class ApiService {
     }
   }
 
+  /// eLibrary
+  static Future<List<Map<String, dynamic>>> getEBooks(String searchKeyword) async {
+
+    try {
+      var headers = {
+        'Cookie': 'ci_session=7am93kpc7ut7avqqauh42l8t8pk9a1u8',
+      };
+
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(APIConstants.getFullUrl(APIConstants.getEBooks)),
+      );
+
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'srch_keyword': searchKeyword,
+
+      });
+      print(request);
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        String responseBody = await response.stream.bytesToString();
+        var jsonResponse = json.decode(responseBody);
+
+        return List<Map<String, dynamic>>.from(jsonResponse['response']);
+      } else {
+        print(response.reasonPhrase);
+        return []; // Return an empty list in case of an error
+      }
+    } catch (error) {
+      print('Error: $error');
+      return []; // Return an empty list in case of an error
+    }
+  }
 
 }

@@ -11,6 +11,7 @@ class APIConstants {
   static const String getEducationalProfile = 'profile_educational';
   static const String getTimeTable = 'student_timetable';
   static const String getBooks = 'book_search';
+  static const String getEBooks = 'Ebook_search';
   static const String lockOrUnlockBooks = 'lock_book';
 
 

@@ -20,7 +20,7 @@ class CustomContainer extends StatelessWidget {
       height: height,
       decoration: ShapeDecoration(
         image: DecorationImage(
-          image: AssetImage(imageUrl),
+          image: NetworkImage(imageUrl),
           fit: BoxFit.fill,
         ),
         shape: RoundedRectangleBorder(
