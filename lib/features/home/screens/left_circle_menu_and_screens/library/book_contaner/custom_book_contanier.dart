@@ -48,7 +48,7 @@ class _CustomBookContainerState extends State<CustomBookContainer> {
               CustomPaint(
                 painter: MyPainter(),
                 child: Container(
-                  // width: 290.0, // Adjust the width as needed
+                   width: 290.0, // Adjust the width as needed
                    height: 200.0, // Adjust the height as needed
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -117,8 +117,11 @@ class _CustomBookContainerState extends State<CustomBookContainer> {
                 ),
               ),
               Positioned(
-                right: 1,
-                top: 55,
+                right: MediaQuery.of(context).size.width * 0.03, // Adjust the value as needed
+                top: MediaQuery.of(context).size.height * 0.08, // Adjust the value as needed
+                // right: 10,
+                // top: 55,
+                //
                 child: Container(
                   height: 130,
                   width: 122,
@@ -129,8 +132,11 @@ class _CustomBookContainerState extends State<CustomBookContainer> {
                 ),
               ),
               Positioned(
-                right: 12,
-                top: 25,
+                right: MediaQuery.of(context).size.width * 0.06, // Adjust the value as needed
+                top: MediaQuery.of(context).size.height * 0.02, // Adjust the value as needed
+                //   right: 20,
+                // top: 25,
+
                 child: Container(
                   height: 145,
                   width: 100,
