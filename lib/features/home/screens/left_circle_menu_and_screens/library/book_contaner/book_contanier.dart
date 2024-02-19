@@ -101,30 +101,32 @@ class _BookContainerState extends State<BookContainer> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // Toggle the lock status
-                          bool newLockStatus = widget.lockStatus == 'True' ? false : true;
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Toggle the lock status
+                            bool newLockStatus = widget.lockStatus == 'True' ? false : true;
 
-                          // Call the onTapLockButton function with the new lock status
-                          widget.onTapLockButton(newLockStatus);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(80, 25),
-                          backgroundColor:
-                          widget.lockStatus == 'True' ? Colors.redAccent.shade100 : Colors.grey.shade200,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
+                            // Call the onTapLockButton function with the new lock status
+                            widget.onTapLockButton(newLockStatus);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(80, 25),
+                            backgroundColor:
+                            widget.lockStatus == 'True' ? Colors.redAccent.shade100 : Colors.grey.shade200,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+
+                             // backgroundColor: widget.lockStatus == 'True' ? Colors.red : Colors.green,
                           ),
-
-                           // backgroundColor: widget.lockStatus == 'True' ? Colors.red : Colors.green,
-                        ),
-                        child: Text(
-                          widget.lockStatus == 'True' ? 'Locked' : 'Unlocked',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 12,
-                            color: Colors.white,
+                          child: Text(
+                            widget.lockStatus == 'True' ? 'Locked' : 'Unlocked',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
