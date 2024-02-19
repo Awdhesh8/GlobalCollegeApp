@@ -13,6 +13,7 @@ import '../../../../../data/api/api_services.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
 import 'book_contaner/book_contanier.dart';
+import 'book_contaner/custom_book_contanier.dart';
 import 'e_library/e_library.dart';
 import 'history/book_history.dart';
 import 'issued_books/issued_books.dart';
@@ -309,7 +310,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                         var book = books[index];
                         return Padding(
                           padding: EdgeInsets.all(8.0),
-                          child: BookContainer(
+                          child: CustomBookContainer(
                             imageUrl: book['covor_image'],
                             title: book['book_title'],
                             author: book['author'],

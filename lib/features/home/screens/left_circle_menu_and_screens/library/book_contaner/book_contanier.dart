@@ -81,7 +81,7 @@ class _BookContainerState extends State<BookContainer> {
                   ),
                   SizedBox(height: 6),
                   Text(
-                    'By ${widget.author}',
+                    'By: ${widget.author}',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 11,
