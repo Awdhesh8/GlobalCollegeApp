@@ -49,7 +49,7 @@ class _CustomBookContainerState extends State<CustomBookContainer> {
                 painter: MyPainter(),
                 child: Container(
                   width : MediaQuery.of(context).size.width * 0.82,
-                   height: MediaQuery.of(context).size.width * 0.6,
+                   height: MediaQuery.of(context).size.width * 0.55,
                    //  width: 290.0, // Adjust the width as needed
                    // height: 200.0, // Adjust the height as needed
                    //
