@@ -32,7 +32,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
     super.initState();
     // Call the bookSearch function when the screen initializes
     bookSearch('');
-
   }
 
   Future<void> bookSearch(String searchKeyword) async {
@@ -58,9 +57,65 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   // Function to update lock status
+  // Function to update lock status
+  /*
   Future<void> updateLockStatus(String bookId, bool newLockStatus) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
+
+    try {
+      var headers = {'Cookie': 'ci_session=41u6ft1qdlm59a6h30cuc0or6p46ot2m'};
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://myglobalapp.in/global/API005/lock_book'),
+      );
+
+      // Set request fields
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'USER_ID': userId,
+        'book_id': bookId,
+        'lock_status': newLockStatus.toString(), // Use newLockStatus here
+      });
+
+      request.headers.addAll(headers);
+      print('Request Body: ${request.fields}');
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(
+            await response.stream.bytesToString());
+        // Print the response data
+        print('Response Data: $responseData');
+
+        // Handle the response data as needed
+        // For example, check the status and message
+        var status = responseData['status'];
+        var message = responseData['message'];
+
+        if (status == '1') {
+          // Update was successful, handle accordingly
+          print('Lock Status Updated Successfully');
+        } else {
+          // Update failed, handle accordingly
+          print('Lock Status Update Failed: $message');
+        }
+      } else {
+        // Print the reason phrase in case of non-200 status code
+        print('Error: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      // Handle any other errors that might occur during the request
+      print('Error updating lock status: $error');
+    }
+  }
+   */
+
+  Future<void> updateLockStatus(String bookId, bool newLockStatus, BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+
     try {
       var headers = {'Cookie': 'ci_session=41u6ft1qdlm59a6h30cuc0or6p46ot2m'};
       var request = http.MultipartRequest(
@@ -86,24 +141,57 @@ class _LibraryScreenState extends State<LibraryScreen> {
         print('Response Data: $responseData');
 
         // Handle the response data as needed
-        // For example, check the status and message
         var status = responseData['status'];
         var message = responseData['message'];
 
         if (status == '1') {
           // Update was successful, handle accordingly
           print('Lock Status Updated Successfully');
+
+          // Show a SnackBar with the success message
+          Get.snackbar('Lock Status Updated Successfully: $message', 'You can now take the book from the college library.');
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('Lock Status Updated Successfully. You can now take the book from the college library.'),
+          //     duration: Duration(seconds: 4),
+          //   ),
+          // );
         } else {
           // Update failed, handle accordingly
           print('Lock Status Update Failed: $message');
+
+          // Show a SnackBar with the failure message
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('Lock Status Update Failed: $message'),
+          //     duration: Duration(seconds: 2),
+          //   ),
+          // );
+          Get.snackbar('Lock Status Update Failed: $message', 'Your profile has been updated.');
         }
       } else {
         // Print the reason phrase in case of non-200 status code
         print('Error: ${response.reasonPhrase}');
+
+        // Show a SnackBar with the error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${response.reasonPhrase}'),
+            duration: Duration(seconds: 2),
+          ),
+        );
       }
     } catch (error) {
-      // Print any other errors that might occur
+      // Handle any other errors that might occur during the request
       print('Error updating lock status: $error');
+
+      // Show a SnackBar with the error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating lock status: $error'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -114,7 +202,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(210.0),
         child: GAppBar(
-         showBackArrow: true,
+          showBackArrow: true,
           surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.transparent,
           centerTitle: true,
@@ -205,20 +293,20 @@ class _LibraryScreenState extends State<LibraryScreen> {
               ],
             ),
             isLoading
-                ?  Center(
+                ? Center(
                     child: ShimmerLoadingWidget(),
                   )
                 : Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8.0),
                     child: ListView.builder(
                       shrinkWrap: true, // Set shrinkWrap to true
                       physics:
-                          const NeverScrollableScrollPhysics(), // Disable scrolling
+                          NeverScrollableScrollPhysics(), // Disable scrolling
                       itemCount: books.length,
                       itemBuilder: (context, index) {
                         var book = books[index];
                         return Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: BookContainer(
                             imageUrl: book['covor_image'],
                             title: book['book_title'],
@@ -226,10 +314,15 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             availableQty: book['available_qty'],
                             lockStatus: book['lock_status'],
                             bookId: book['title_id'],
-                            onTapLockButton: () {
-                              // Handle lock button tap
-                              updateLockStatus(book['book_id'], !book['lock_status'] ?? false);
+                            onTapLockButton: (bool newLockStatus) async {
+                              // Handle lock or unlock the book Button
+                              // Call the updateLockStatus function
+                              await updateLockStatus(book['title_id'], newLockStatus, context);
 
+                              // After updating the lock status, refresh the UI if needed
+                              setState(() {
+                                book['lock_status'] = newLockStatus ? 'True' : 'False';
+                              });
                             },
                           ),
                         );
@@ -258,7 +351,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
-              child: BookContainerShimmer(), // Create a BookContainerShimmer widget for shimmer effect
+              child:
+                  BookContainerShimmer(), // Create a BookContainerShimmer widget for shimmer effect
             );
           },
         ),
@@ -312,8 +406,6 @@ class BookContainerShimmer extends StatelessWidget {
     );
   }
 }
-
-
 
 /*
 import 'package:flutter/material.dart';

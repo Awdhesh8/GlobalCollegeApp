@@ -8,7 +8,7 @@ class BookContainer extends StatefulWidget {
   final String availableQty;
   final String lockStatus;
   final String bookId;
-  final VoidCallback onTapLockButton;
+  final Function(bool newLockStatus) onTapLockButton;
   const BookContainer({
     Key? key,
     required this.imageUrl,
@@ -25,16 +25,11 @@ class BookContainer extends StatefulWidget {
 }
 
 class _BookContainerState extends State<BookContainer> {
-  bool isLocked = false; // State variable for the Switch
 
   @override
   void initState() {
     super.initState();
-    // Set the initial state of the Switch based on the provided lock status
-    isLocked = widget.lockStatus.toLowerCase() == 'true' ?? false;
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -106,38 +101,31 @@ class _BookContainerState extends State<BookContainer> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: TweenAnimationBuilder(
-                          tween: Tween<double>(begin: 1, end: 0.9),
-                          duration: Duration(milliseconds: 200),
-                          builder: (context, scaleValue, child) {
-                            return Transform.scale(
-                              scale: scaleValue,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  widget.onTapLockButton(); // Call the onTapLockButton callback
-                                  setState(() {
-                                    isLocked = widget.lockStatus.toLowerCase() == 'true' ? true : false;
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(80, 30),
-                                  backgroundColor: isLocked ? Colors.redAccent.shade100 : Colors.grey.shade200,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                ),
-                                child: Text(
-                                  isLocked ? 'Locked' : 'Unlocked',
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 12,
-                                    color: isLocked ? Colors.white : Colors.black,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
+                      ElevatedButton(
+                        onPressed: () {
+                          // Toggle the lock status
+                          bool newLockStatus = widget.lockStatus == 'True' ? false : true;
+
+                          // Call the onTapLockButton function with the new lock status
+                          widget.onTapLockButton(newLockStatus);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(80, 25),
+                          backgroundColor:
+                          widget.lockStatus == 'True' ? Colors.redAccent.shade100 : Colors.grey.shade200,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+
+                           // backgroundColor: widget.lockStatus == 'True' ? Colors.red : Colors.green,
+                        ),
+                        child: Text(
+                          widget.lockStatus == 'True' ? 'Locked' : 'Unlocked',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
