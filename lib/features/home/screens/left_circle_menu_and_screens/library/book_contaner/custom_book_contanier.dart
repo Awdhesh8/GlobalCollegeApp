@@ -121,13 +121,16 @@ class _CustomBookContainerState extends State<CustomBookContainer> {
               ),
               Positioned(
                 right: MediaQuery.of(context).size.width * 0.03, // Adjust the value as needed
-                top: MediaQuery.of(context).size.height * 0.08, // Adjust the value as needed
+                top: MediaQuery.of(context).size.height * 0.06, // Adjust the value as needed
                 // right: 10,
                 // top: 55,
                 //
                 child: Container(
-                  height: 130,
-                  width: 122,
+                  height: MediaQuery.of(context).size.width * 0.4,
+                  width: MediaQuery.of(context).size.width * 0.34,
+                  // height: 130,
+                  // width: 122,
+                  //
                   decoration: BoxDecoration(
                     color: Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(15),
@@ -136,13 +139,16 @@ class _CustomBookContainerState extends State<CustomBookContainer> {
               ),
               Positioned(
                 right: MediaQuery.of(context).size.width * 0.06, // Adjust the value as needed
-                top: MediaQuery.of(context).size.height * 0.02, // Adjust the value as needed
+                top: MediaQuery.of(context).size.height * 0.025, // Adjust the value as needed
                 //   right: 20,
                 // top: 25,
 
                 child: Container(
-                  height: 145,
-                  width: 100,
+                  height: MediaQuery.of(context).size.width * 0.4,
+                  width: MediaQuery.of(context).size.width * 0.28,
+                  //  height: 145,
+                  // width: 100,
+                  //
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     image: DecorationImage(
