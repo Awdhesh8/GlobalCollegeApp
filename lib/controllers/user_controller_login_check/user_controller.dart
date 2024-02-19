@@ -18,6 +18,7 @@ class UserController extends GetxController {
     prefs.setBool('isLoggedIn', true);
     prefs.setString('user_id', userData['user_id']);
     prefs.setString('user_type', userData['user_type']);
+    prefs.setString('emp_id', userData['emp_id']);
   }
 
 

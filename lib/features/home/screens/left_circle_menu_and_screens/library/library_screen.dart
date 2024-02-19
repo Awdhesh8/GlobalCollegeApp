@@ -1,7 +1,326 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:globalcollegeapp/common/widgets/custom_shapes/containers/search_container.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../common/widgets/custom_container_button/custom_container_button.dart';
+import '../../../../../common/widgets/texts/top_first_heading.dart';
+import '../../../../../data/api/api_services.dart';
+import '../../../../../utils/constants/colors.dart';
+import '../../../../../utils/constants/sizes.dart';
+import 'book_contaner/book_contanier.dart';
+import 'e_library/e_library.dart';
+import 'history/book_history.dart';
+import 'issued_books/issued_books.dart';
+
+class LibraryScreen extends StatefulWidget {
+  @override
+  _LibraryScreenState createState() => _LibraryScreenState();
+}
+
+class _LibraryScreenState extends State<LibraryScreen> {
+  List<Map<String, dynamic>> books = [];
+  TextEditingController searchController = TextEditingController();
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Call the bookSearch function when the screen initializes
+    bookSearch('');
+
+  }
+
+  Future<void> bookSearch(String searchKeyword) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      List<Map<String, dynamic>> result =
+          await ApiService.bookSearch(searchKeyword);
+      print(result);
+
+      setState(() {
+        books = result;
+        isLoading = false;
+      });
+    } catch (error) {
+      print('Error: $error');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  // Function to update lock status
+  Future<void> updateLockStatus(String bookId, bool newLockStatus) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+    try {
+      var headers = {'Cookie': 'ci_session=41u6ft1qdlm59a6h30cuc0or6p46ot2m'};
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://myglobalapp.in/global/API005/lock_book'),
+      );
+
+      // Set request fields
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'USER_ID': userId,
+        'book_id': bookId,
+        'lock_status': newLockStatus.toString(),
+      });
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(await response.stream.bytesToString());
+        // Print the response data
+        print('Response Data: $responseData');
+
+        // Handle the response data as needed
+        // For example, check the status and message
+        var status = responseData['status'];
+        var message = responseData['message'];
+
+        if (status == '1') {
+          // Update was successful, handle accordingly
+          print('Lock Status Updated Successfully');
+        } else {
+          // Update failed, handle accordingly
+          print('Lock Status Update Failed: $message');
+        }
+      } else {
+        // Print the reason phrase in case of non-200 status code
+        print('Error: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      // Print any other errors that might occur
+      print('Error updating lock status: $error');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(210.0),
+        child: GAppBar(
+         showBackArrow: true,
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          centerTitle: true,
+          title: const Text(
+            'Library',
+            style: TextStyle(
+              color: EColors.textColorPrimary1,
+              fontWeight: FontWeight.bold,
+              fontSize: 28,
+            ),
+          ),
+          flexibleSpace: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CustomSearchContainer(
+                showBackground: true,
+                dark: false,
+                showBorder: true,
+                onChanged: (value) {
+                  // Call bookSearch function whenever the search text changes
+                  bookSearch(value);
+                },
+                controller: searchController,
+              ),
+              const SizedBox(
+                height: ESizes.spaceBtwItems,
+              ),
+
+              /// Three Buttons eLibrary | Issued Book | History
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomContainerButton(
+                      buttonText: 'eLibrary',
+                      onTap: () {
+                        Get.to(() => const ELibraryScreen(),
+                            curve: Curves.easeInOut,
+                            transition: Transition.cupertino);
+                      },
+                    ),
+                    CustomContainerButton(
+                      buttonText: 'Issued Books',
+                      onTap: () {
+                        Get.to(() => const IssuedBooksScreen(),
+                            curve: Curves.easeInOut,
+                            transition: Transition.cupertino);
+                      },
+                    ),
+                    CustomContainerButton(
+                      buttonText: 'History',
+                      onTap: () {
+                        Get.to(() => const BookHistoryScreen(),
+                            curve: Curves.easeInOut,
+                            transition: Transition.cupertino);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Divider(),
+              ),
+              const SizedBox(
+                height: ESizes.spaceBtwItems1,
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        // controller: Get.find<ScrollController>(),
+        // controller: _scrollController,
+        child: Column(
+          children: [
+            /// Title Heading for Books
+            const Row(
+              children: [
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 22),
+                    child: TopHeading(
+                      text:
+                          'Unveiling Our Newest\nArrivals: Dive into\nFresh Reads',
+                    )),
+              ],
+            ),
+            isLoading
+                ?  Center(
+                    child: ShimmerLoadingWidget(),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                      shrinkWrap: true, // Set shrinkWrap to true
+                      physics:
+                          const NeverScrollableScrollPhysics(), // Disable scrolling
+                      itemCount: books.length,
+                      itemBuilder: (context, index) {
+                        var book = books[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: BookContainer(
+                            imageUrl: book['covor_image'],
+                            title: book['book_title'],
+                            author: book['author'],
+                            availableQty: book['available_qty'],
+                            lockStatus: book['lock_status'],
+                            bookId: book['title_id'],
+                            onTapLockButton: () {
+                              // Handle lock button tap
+                              updateLockStatus(book['book_id'], !book['lock_status'] ?? false);
+
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+            const SizedBox(
+              height: ESizes.spaceBtwItems1,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget ShimmerLoadingWidget() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: 5, // Adjust the number of shimmer items as needed
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: BookContainerShimmer(), // Create a BookContainerShimmer widget for shimmer effect
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+/// Shimmer
+class BookContainerShimmer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              height: 150.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+/*
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:globalcollegeapp/common/widgets/custom_shapes/containers/search_container.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../../../../common/layouts/grid_layout.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/custom_container_button/custom_container_button.dart';
@@ -82,6 +401,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(210.0),
         child: AppBar(
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.transparent,
           centerTitle: true,
           title: const Text(
@@ -203,15 +524,21 @@ class _LibraryScreenState extends State<LibraryScreen> {
       ),
       floatingActionButton: _showScrollToTopButton
           ? FloatingActionButton(
+              backgroundColor: Colors.white,
               onPressed: _scrollToTop,
               tooltip: 'Scroll to Top',
-              child: const Icon(Icons.arrow_upward),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 25),
+                child: const Icon(Iconsax.arrow_up_15),
+              ),
             )
           : null,
     );
   }
 }
+*/
 
+///
 /*
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

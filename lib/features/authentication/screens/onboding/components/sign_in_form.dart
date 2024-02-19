@@ -340,11 +340,13 @@ class _SignInFormState extends State<SignInForm> {
         // Print user data
         print('User ID: ${userData['user_id']}');
         print('User Type: ${userData['user_type']}');
+        print('emp_id: ${userData['emp_id']}');
 
         // Store necessary user information in local storage
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('user_id', userData['user_id']);
         prefs.setString('user_type', userData['user_type']);
+        prefs.setString('emp_id', userData['emp_id']);
 
         success.fire();
 

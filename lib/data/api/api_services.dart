@@ -289,8 +289,13 @@ class ApiService {
 
   /// <<<---- Library --->>>
 
-  /// eLibrary Search --->
+  /// Library Search --->
   static Future<List<Map<String, dynamic>>> bookSearch(String searchKeyword) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+    var userType = prefs.getString('user_type') ?? '';
+    var employerId = prefs.getString('emp_id') ?? '';
+
     try {
       var headers = {
         'Cookie': 'ci_session=1t3b502csempj6ti9mak02q48j6h2k1g',
@@ -304,8 +309,9 @@ class ApiService {
       request.fields.addAll({
         'APIKEY': 'GNCS0225',
         'srch_keyword': searchKeyword,
+        'USER_ID': userId,
       });
-
+      print(request);
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
@@ -324,5 +330,102 @@ class ApiService {
       return []; // Return an empty list in case of an error
     }
   }
+
+  /// Lock Books
+  // static Future<void> lockUnlockBook(String userId, String bookId, bool isLocked) async {
+  //   var headers = {
+  //     'Cookie': 'ci_session=1fg7qtrjhkdjsirg0hjaccu8f35u7s8m; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+  //   };
+  //
+  //   var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/lock_book'));
+  //   request.fields.addAll({
+  //     'APIKEY': 'GNCS0225',
+  //     'USER_ID': userId,
+  //     'book_id': bookId,
+  //     'lock_status': '0'
+  //   });
+  //
+  //   // Set the lock status in the request based on the isLocked parameter
+  //   request.fields['lock_status'] = isLocked ? 'true' : 'false';
+  //
+  //   request.headers.addAll(headers);
+  //
+  //   http.StreamedResponse response = await request.send();
+  //
+  //   if (response.statusCode == 200) {
+  //     print(await response.stream.bytesToString());
+  //   } else {
+  //     print(response.reasonPhrase);
+  //   }
+  // }
+  /*
+  /// Lock Books
+  static Future<void> lockUnlockBook(String bookId, bool isLocked) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+
+    var headers = {
+      'Cookie': 'ci_session=1fg7qtrjhkdjsirg0hjaccu8f35u7s8m; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+    };
+
+    var request = http.MultipartRequest('POST', Uri.parse(APIConstants.getFullUrl(APIConstants.lockOrUnlockBooks)),);
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'book_id': bookId,
+      'lock_status': isLocked.toString(),
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+   */
+
+  /// Lock Books
+  static Future<void> lockUnlockBook(String userId, String bookId, bool isLocked) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+    var headers = {
+      'Cookie': 'ci_session=1fg7qtrjhkdjsirg0hjaccu8f35u7s8m; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+    };
+
+    var request = http.MultipartRequest('POST', Uri.parse(APIConstants.getFullUrl(APIConstants.lockOrUnlockBooks)));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'book_id': bookId,
+      'lock_status': isLocked.toString(),
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      // Parse the response JSON
+      Map<String, dynamic> responseData = json.decode(await response.stream.bytesToString());
+
+      // Assuming lock_status is returned as a string
+      String updatedLockStatusString = responseData['response'][0]['lock_status'];
+
+      // Convert the lock_status to a boolean
+      bool updatedLockStatus = (updatedLockStatusString.toLowerCase() == 'true');
+
+      print('Updated Lock Status: $updatedLockStatus');
+
+      // Do something with the updated lock status if needed
+
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
 
 }

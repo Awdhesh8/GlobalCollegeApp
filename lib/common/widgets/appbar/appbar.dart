@@ -16,6 +16,8 @@ class GAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.backgroundColor,
     this.centerTitle,
     this.bottom,
+    this.flexibleSpace,
+    this.surfaceTintColor,
   });
 
   final Widget? title;
@@ -26,6 +28,9 @@ class GAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color? backgroundColor;
   final bool? centerTitle;
   final TabBar? bottom;
+  final Widget? flexibleSpace;
+  final Color? surfaceTintColor;
+
 
 
   @override
@@ -43,6 +48,8 @@ class GAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: backgroundColor,
       centerTitle: centerTitle,
       actions: actions,
+        flexibleSpace: flexibleSpace,
+        surfaceTintColor: surfaceTintColor,
     );
   }
 

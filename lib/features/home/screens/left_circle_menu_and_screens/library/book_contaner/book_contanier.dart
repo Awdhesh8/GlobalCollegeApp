@@ -6,8 +6,9 @@ class BookContainer extends StatefulWidget {
   final String title;
   final String author;
   final String availableQty;
-  final String lockStatus; // It's not a boolean, but it will be used to set the initial state of the Switch
-
+  final String lockStatus;
+  final String bookId;
+  final VoidCallback onTapLockButton;
   const BookContainer({
     Key? key,
     required this.imageUrl,
@@ -15,6 +16,8 @@ class BookContainer extends StatefulWidget {
     required this.author,
     required this.availableQty,
     required this.lockStatus,
+    required this.bookId,
+    required this.onTapLockButton,
   }) : super(key: key);
 
   @override
@@ -28,13 +31,15 @@ class _BookContainerState extends State<BookContainer> {
   void initState() {
     super.initState();
     // Set the initial state of the Switch based on the provided lock status
-    isLocked = widget.lockStatus.toLowerCase() == 'true';
+    isLocked = widget.lockStatus.toLowerCase() == 'true' ?? false;
+
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -46,89 +51,99 @@ class _BookContainerState extends State<BookContainer> {
             offset: Offset(0, 3),
           ),
         ],
-        gradient: LinearGradient(
-          colors: [Colors.grey.shade200, Colors.grey.shade100],
-          // colors: [Color(0xFFE0E0E0), Colors.white],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
       ),
       child: Row(
         children: [
           // Book Image with shadow
           Container(
-            width: 80,
+            width: 120,
             height: 120,
-            margin: EdgeInsets.only(right: 16),
+            margin: EdgeInsets.only(right: 8),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0x33000000),
-                  blurRadius: 8.0,
-                  offset: Offset(0, 2),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(4),
               image: DecorationImage(
                 image: NetworkImage(widget.imageUrl),
                 fit: BoxFit.cover,
               ),
             ),
           ),
+
           // Book Details
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.title,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'By ${widget.author}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Available: ${widget.availableQty} copies',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.green,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Text(
-                      'Lock Status:',
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: EColors.textColorPrimary1
                     ),
-                    SizedBox(width: 5),
-                    Transform.scale(
-                      scale: .8,
-                      child: Switch(
-                        value: isLocked,
-                        onChanged: (value) {
-                          setState(() {
-                            isLocked = value;
-                          });
-                        },
-                        activeColor: EColors.primary, // Change this to your preferred color
-                        activeTrackColor: Colors.grey.shade300,
-                      ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    'By ${widget.author}',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 11,
+                      color: Colors.black38,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    'Available: ${widget.availableQty} copies',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      color: EColors.textColorPrimary1,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: TweenAnimationBuilder(
+                          tween: Tween<double>(begin: 1, end: 0.9),
+                          duration: Duration(milliseconds: 200),
+                          builder: (context, scaleValue, child) {
+                            return Transform.scale(
+                              scale: scaleValue,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  widget.onTapLockButton(); // Call the onTapLockButton callback
+                                  setState(() {
+                                    isLocked = widget.lockStatus.toLowerCase() == 'true' ? true : false;
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(80, 30),
+                                  backgroundColor: isLocked ? Colors.redAccent.shade100 : Colors.grey.shade200,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                                child: Text(
+                                  isLocked ? 'Locked' : 'Unlocked',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    color: isLocked ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -137,6 +152,2005 @@ class _BookContainerState extends State<BookContainer> {
   }
 }
 
+
+
+/*
+/// issue in this code when i tap double time then its Updating the lock status
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+class BookContainer extends StatefulWidget {
+  final String imageUrl;
+  final String title;
+  final String author;
+  final String availableQty;
+  final String lockStatus;
+  final String bookId;
+
+  const BookContainer({
+    Key? key,
+    required this.imageUrl,
+    required this.title,
+    required this.author,
+    required this.availableQty,
+    required this.lockStatus,
+    required this.bookId,
+  }) : super(key: key);
+
+  @override
+  State<BookContainer> createState() => _BookContainerState();
+}
+
+class _BookContainerState extends State<BookContainer> {
+  late bool isLocked;
+  bool isLoading = false;
+
+  // Use a shared instance of BookController for all BookContainers
+  final BookController controller = Get.find<BookController>();
+
+  @override
+  void initState() {
+    super.initState();
+    isLocked = widget.lockStatus == 'True';
+  }
+  Future<bool?> _showLockConfirmationDialog() async {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Lock'),
+          content: Text('Do you want to lock the book?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // User confirmed lock
+              },
+              child: Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // User canceled
+              },
+              child: Text('No'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Book Image with shadow
+          Container(
+            width: 120,
+            height: 120,
+            margin: EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              image: DecorationImage(
+                image: NetworkImage(widget.imageUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+
+          // Book Details
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: EColors.textColorPrimary1,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    'By ${widget.author}',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 11,
+                      color: Colors.black38,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    'Available: ${widget.availableQty} copies',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      color: EColors.textColorPrimary1,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  /*
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                            setState(() {
+                              isLocked = !isLocked;
+                            });
+                            await controller.changeLockStatus(widget.bookId, isLocked);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(80, 30),
+                            backgroundColor:
+                            isLocked ? Colors.redAccent.shade100 : Colors.grey.shade200,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                          child: isLoading
+                              ? CircularProgressIndicator()
+                              : Text(
+                            isLocked ? 'Locked' : 'Unlocked',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                              color: isLocked ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                   */
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                            bool? confirmLock = await _showLockConfirmationDialog();
+                            if (confirmLock != null && confirmLock) {
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              // Change the lock status locally
+                              isLocked = !isLocked;
+                              await controller.changeLockStatus(widget.bookId, isLocked);
+
+                              // After changing the lock status, send the request to the API
+                              setState(() {
+                                isLoading = false;
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(80, 30),
+                            backgroundColor:
+                            isLocked ? Colors.redAccent.shade100 : Colors.grey.shade200,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                          child: isLoading
+                              ? CircularProgressIndicator()
+                              : Text(
+                            isLocked ? 'Locked' : 'Unlocked',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                              color: isLocked ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BookController extends GetxController {
+  var _lockedBooks = <String, bool>{};
+
+  bool isBookLocked(String bookId) {
+    return _lockedBooks[bookId] ?? false;
+  }
+
+  Future<void> changeLockStatus(String bookId, bool currentStatus) async {
+    try {
+      var newLockStatus = !currentStatus;
+      _lockedBooks[bookId] = newLockStatus;
+      update(); // Notify listeners
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('user_id') ?? '';
+
+      var request = http.MultipartRequest(
+          'POST', Uri.parse('http://myglobalapp.in/global/API005/lock_book'));
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'USER_ID': userId,
+        'book_id': bookId,
+        'lock_status': newLockStatus ? 'True' : 'False',
+      });
+
+      var headers = {
+        'Cookie': 'ci_session=4lajhlf2a5kdgho9a8ac4m1nhvq7g0k7; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+      };
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print('API Response: ${await response.stream.bytesToString()}');
+      } else {
+        print('API Error: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+}
+
+
+ */
+
+
+/// ------>>>>>
+
+/*
+/// the UI is not Updating when the Button is tapped
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+class BookContainer extends StatefulWidget {
+  final String imageUrl;
+  final String title;
+  final String author;
+  final String availableQty;
+  final String lockStatus;
+  final String bookId;
+
+  const BookContainer({
+    Key? key,
+    required this.imageUrl,
+    required this.title,
+    required this.author,
+    required this.availableQty,
+    required this.lockStatus,
+    required this.bookId,
+  }) : super(key: key);
+
+  @override
+  State<BookContainer> createState() => _BookContainerState();
+}
+
+class _BookContainerState extends State<BookContainer> {
+  late bool isLocked;
+  bool isLoading = false; // Add this variable for loading indicator
+
+  @override
+  void initState() {
+    super.initState();
+    isLocked = widget.lockStatus == 'True';
+  }
+
+  // Future<void> _callApi() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   var userId = prefs.getString('user_id') ?? '';
+  //
+  //   // Toggle the lock status
+  //   var newLockStatus = isLocked ? 'False' : 'True';
+  //
+  //   setState(() {
+  //     isLoading = true; // Set loading to true when the API call starts
+  //   });
+  //
+  //   var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/lock_book'));
+  //   request.fields.addAll({
+  //     'APIKEY': 'GNCS0225',
+  //     'USER_ID': userId,
+  //     'book_id': widget.bookId,
+  //     'lock_status': newLockStatus,
+  //   });
+  //
+  //   var headers = {
+  //     'Cookie': 'ci_session=4lajhlf2a5kdgho9a8ac4m1nhvq7g0k7; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+  //   };
+  //   request.headers.addAll(headers);
+  //
+  //   try {
+  //     http.StreamedResponse response = await request.send();
+  //
+  //     if (response.statusCode == 200) {
+  //       print('API Response: ${await response.stream.bytesToString()}');
+  //       // Update isLocked based on the new lock status
+  //       setState(() {
+  //         isLocked = !isLocked;
+  //       });
+  //     } else {
+  //       print('API Error: ${response.reasonPhrase}');
+  //     }
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false; // Set loading to false when the API call completes (either success or error)
+  //     });
+  //   }
+  // }
+
+  Future<void> _callApi() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      var controller = Get.find<BookController>();
+      await controller.changeLockStatus(widget.bookId, isLocked);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<BookController>(
+      init: BookController(),
+      builder: (controller) {
+        return Container(
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              // Book Image with shadow
+              Container(
+                width: 120,
+                height: 120,
+                margin: EdgeInsets.only(right: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  image: DecorationImage(
+                    image: NetworkImage(widget.imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+
+              // Book Details
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: EColors.textColorPrimary1
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Text(
+                        'By ${widget.author}',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 11,
+                          color: Colors.black38,
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Text(
+                        'Available: ${widget.availableQty} copies',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          color: EColors.textColorPrimary1,
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: isLoading
+                                  ? null
+                                  : () async {
+                                await controller.changeLockStatus(widget.bookId, isLocked);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(80, 30),
+                                backgroundColor: isLocked ? Colors.redAccent.shade100 : Colors.grey.shade200,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                              child: isLoading
+                                  ? CircularProgressIndicator() // Show CircularProgressIndicator when loading
+                                  : Text(
+                                isLocked ? 'Locked' : 'Unlocked',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 12,
+                                  color: isLocked ? Colors.white : Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class BookController extends GetxController {
+  var _lockedBooks = <String, bool>{};
+
+  bool isBookLocked(String bookId) {
+    return _lockedBooks[bookId] ?? false;
+  }
+
+  Future<void> changeLockStatus(String bookId, bool currentStatus) async {
+    try {
+      var newLockStatus = !currentStatus;
+      _lockedBooks[bookId] = newLockStatus;
+      update();  // Notify listeners
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('user_id') ?? '';
+
+      var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/lock_book'));
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'USER_ID': userId,
+        'book_id': bookId,
+        'lock_status': newLockStatus ? 'True' : 'False',
+      });
+
+      var headers = {
+        'Cookie': 'ci_session=4lajhlf2a5kdgho9a8ac4m1nhvq7g0k7; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+      };
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print('API Response: ${await response.stream.bytesToString()}');
+      } else {
+        print('API Error: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+}
+
+ */
+
+
+/*
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+class BookContainer extends StatefulWidget {
+  final String imageUrl;
+  final String title;
+  final String author;
+  final String availableQty;
+  final String lockStatus;
+  final String bookId;
+
+  const BookContainer({
+    Key? key,
+    required this.imageUrl,
+    required this.title,
+    required this.author,
+    required this.availableQty,
+    required this.lockStatus,
+    required this.bookId,
+  }) : super(key: key);
+
+  @override
+  State<BookContainer> createState() => _BookContainerState();
+}
+
+class _BookContainerState extends State<BookContainer> {
+  late bool isLocked;
+  bool isLoading = false; // Add this variable for loading indicator
+
+  @override
+  void initState() {
+    super.initState();
+    isLocked = widget.lockStatus == 'True';
+  }
+
+  Future<void> _callApi() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+
+    // Toggle the lock status
+    var newLockStatus = isLocked ? 'False' : 'True';
+
+    setState(() {
+      isLoading = true; // Set loading to true when the API call starts
+    });
+
+    var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/lock_book'));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'book_id': widget.bookId,
+      'lock_status': newLockStatus,
+    });
+
+    var headers = {
+      'Cookie': 'ci_session=4lajhlf2a5kdgho9a8ac4m1nhvq7g0k7; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+    };
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print('API Response: ${await response.stream.bytesToString()}');
+        // Update isLocked based on the new lock status
+        setState(() {
+          isLocked = !isLocked;
+        });
+      } else {
+        print('API Error: ${response.reasonPhrase}');
+      }
+    } finally {
+      setState(() {
+        isLoading = false; // Set loading to false when the API call completes (either success or error)
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<BookController>(
+      init: BookController(),
+      builder: (controller) {
+        return Container(
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              // Book Image with shadow
+              Container(
+                width: 120,
+                height: 120,
+                margin: EdgeInsets.only(right: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  image: DecorationImage(
+                    image: NetworkImage(widget.imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+
+              // Book Details
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: EColors.textColorPrimary1
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Text(
+                        'By ${widget.author}',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 11,
+                          color: Colors.black38,
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Text(
+                        'Available: ${widget.availableQty} copies',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          color: EColors.textColorPrimary1,
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: isLoading
+                                  ? null
+                                  : () async {
+                                await controller.changeLockStatus(widget.bookId, isLocked);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(80, 30),
+                                backgroundColor: isLocked ? Colors.redAccent.shade100 : Colors.grey.shade200,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                              child: isLoading
+                                  ? CircularProgressIndicator() // Show CircularProgressIndicator when loading
+                                  : Text(
+                                isLocked ? 'Locked' : 'Unlocked',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 12,
+                                  color: isLocked ? Colors.white : Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class BookController extends GetxController {
+  var _lockedBooks = <String, bool>{};
+
+  bool isBookLocked(String bookId) {
+    return _lockedBooks[bookId] ?? false;
+  }
+
+  Future<void> changeLockStatus(String bookId, bool currentStatus) async {
+    var newLockStatus = !currentStatus;
+    // Set the new lock status locally
+    _lockedBooks[bookId] = newLockStatus;
+
+    // Notify listeners
+    update();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+
+    var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/lock_book'));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'book_id': bookId,
+      'lock_status': newLockStatus ? 'True' : 'False',
+    });
+
+    var headers = {
+      'Cookie': 'ci_session=4lajhlf2a5kdgho9a8ac4m1nhvq7g0k7; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+    };
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print('API Response: ${await response.stream.bytesToString()}');
+      } else {
+        print('API Error: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+}
+*/
+
+/*
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+class BookContainer extends StatefulWidget {
+  final String imageUrl;
+  final String title;
+  final String author;
+  final String availableQty;
+  final String lockStatus;
+  final String bookId;
+
+  const BookContainer({
+    Key? key,
+    required this.imageUrl,
+    required this.title,
+    required this.author,
+    required this.availableQty,
+    required this.lockStatus,
+    required this.bookId,
+  }) : super(key: key);
+
+  @override
+  State<BookContainer> createState() => _BookContainerState();
+}
+
+class _BookContainerState extends State<BookContainer> {
+  late bool isLocked;
+  bool isLoading = false; // Add this variable for loading indicator
+
+  @override
+  void initState() {
+    super.initState();
+    isLocked = widget.lockStatus == 'True';
+  }
+
+  Future<void> _callApi() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+
+    // Toggle the lock status
+    var newLockStatus = isLocked ? 'False' : 'True';
+
+    setState(() {
+      isLoading = true; // Set loading to true when the API call starts
+    });
+
+    var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/lock_book'));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'book_id': widget.bookId,
+      'lock_status': newLockStatus,
+    });
+
+    var headers = {
+      'Cookie': 'ci_session=4lajhlf2a5kdgho9a8ac4m1nhvq7g0k7; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+    };
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print('API Response: ${await response.stream.bytesToString()}');
+        // Update isLocked based on the new lock status
+        setState(() {
+          isLocked = !isLocked;
+        });
+      } else {
+        print('API Error: ${response.reasonPhrase}');
+      }
+    } finally {
+      setState(() {
+        isLoading = false; // Set loading to false when the API call completes (either success or error)
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<BookController>(
+      init: BookController(),
+      builder: (controller) {
+        return Container(
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              // Book Image with shadow
+              Container(
+                width: 120,
+                height: 120,
+                margin: EdgeInsets.only(right: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  image: DecorationImage(
+                    image: NetworkImage(widget.imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+
+              // Book Details
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: EColors.textColorPrimary1
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Text(
+                        'By ${widget.author}',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 11,
+                          color: Colors.black38,
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Text(
+                        'Available: ${widget.availableQty} copies',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          color: EColors.textColorPrimary1,
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TweenAnimationBuilder(
+                              tween: Tween<double>(begin: 1, end: 0.9),
+                              duration: Duration(milliseconds: 200),
+                              builder: (context, scaleValue, child) {
+                                return Transform.scale(
+                                  scale: scaleValue,
+                                  child: ElevatedButton(
+                                    onPressed: isLoading
+                                        ? null // Disable button when loading
+                                        : () async {
+                                      await controller.changeLockStatus(widget.bookId, isLocked);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: Size(80, 30),
+                                      backgroundColor: isLocked ? Colors.redAccent.shade100 : Colors.grey.shade200,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                    child: isLoading
+                                        ? CircularProgressIndicator() // Show CircularProgressIndicator when loading
+                                        : Text(
+                                      isLocked ? 'Locked' : 'Unlocked',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 12,
+                                        color: isLocked ? Colors.white : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class BookController extends GetxController {
+  var _lockedBooks = <String, bool>{};
+
+  bool isBookLocked(String bookId) {
+    return _lockedBooks[bookId] ?? false;
+  }
+
+  Future<void> changeLockStatus(String bookId, bool currentStatus) async {
+    var newLockStatus = !currentStatus;
+    // Set the new lock status locally
+    _lockedBooks[bookId] = newLockStatus;
+
+    // Notify listeners
+    update();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+
+    var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/lock_book'));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'book_id': bookId,
+      'lock_status': newLockStatus ? 'True' : 'False',
+    });
+
+    var headers = {
+      'Cookie': 'ci_session=4lajhlf2a5kdgho9a8ac4m1nhvq7g0k7; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+    };
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print('API Response: ${await response.stream.bytesToString()}');
+      } else {
+        print('API Error: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+}
+
+
+ */
+
+
+/*
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:shared_preferences/shared_preferences.dart';
+
+class BookContainerController extends GetxController {
+  var isLocked = true.obs;
+  var isLoading = false.obs;
+
+  Future<void> lockUnlockBook(String bookId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+
+    // Toggle the lock status
+    var newLockStatus = isLocked.value ? 'False' : 'True';
+
+    isLoading.value = true; // Set loading to true when the API call starts
+
+    var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/lock_book'));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'book_id': bookId,
+      'lock_status': newLockStatus,
+    });
+
+    var headers = {
+      'Cookie': 'ci_session=4lajhlf2a5kdgho9a8ac4m1nhvq7g0k7; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+    };
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print('API Response: ${await response.stream.bytesToString()}');
+        // Update isLocked based on the new lock status
+        isLocked.value = !isLocked.value;
+      } else {
+        print('API Error: ${response.reasonPhrase}');
+      }
+    } finally {
+      isLoading.value = false; // Set loading to false when the API call completes (either success or error)
+    }
+  }
+}
+
+class BookContainer extends StatelessWidget {
+  final String imageUrl;
+  final String title;
+  final String author;
+  final String availableQty;
+  final String lockStatus;
+  final String bookId;
+
+  BookContainer({
+    Key? key,
+    required this.imageUrl,
+    required this.title,
+    required this.author,
+    required this.availableQty,
+    required this.lockStatus,
+    required this.bookId,
+  }) : super(key: key);
+
+  final controller = Get.put(BookContainerController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Book Image with shadow
+          Container(
+            width: 120,
+            height: 120,
+            margin: EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              image: DecorationImage(
+                image: NetworkImage(imageUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+
+          // Book Details
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: EColors.textColorPrimary1
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    'By $author',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 11,
+                      color: Colors.black38,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    'Available: $availableQty copies',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      color: EColors.textColorPrimary1,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: TweenAnimationBuilder(
+                          tween: Tween<double>(begin: 1, end: 0.9),
+                          duration: Duration(milliseconds: 200),
+                          builder: (context, scaleValue, child) {
+                            return Transform.scale(
+                              scale: scaleValue,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  // Call the controller method to lock/unlock the book
+                                  await controller.lockUnlockBook(bookId);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(80, 30),
+                                  backgroundColor: controller.isLocked.value
+                                      ? Colors.redAccent.shade100
+                                      : Colors.grey.shade200,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                                child: Obx(() => controller.isLoading.value
+                                    ? CircularProgressIndicator()
+                                    : Text(
+                                  controller.isLocked.value ? 'Locked' : 'Unlocked',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    color: controller.isLocked.value ? Colors.white : Colors.black,
+                                  ),
+                                )),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+*/
+/// ----------
+
+/*
+/// Get x
+import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
+class BookContainer extends StatelessWidget {
+  final String imageUrl;
+  final String title;
+  final String author;
+  final String availableQty;
+  final String lockStatus;
+  final String bookId;
+
+  BookContainer({
+    Key? key,
+    required this.imageUrl,
+    required this.title,
+    required this.author,
+    required this.availableQty,
+    required this.lockStatus,
+    required this.bookId,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<BookController>(
+      init: BookController(),
+      builder: (controller) => Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Book Image with shadow
+            Container(
+              width: 120,
+              height: 120,
+              margin: EdgeInsets.only(right: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                image: DecorationImage(
+                  image: NetworkImage(imageUrl),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+
+            // Book Details
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: EColors.textColorPrimary1),
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      'By $author',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 11,
+                        color: Colors.black38,
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      'Available: $availableQty copies',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 13,
+                        color: EColors.textColorPrimary1,
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: TweenAnimationBuilder(
+                            tween: Tween<double>(begin: 1, end: 0.9),
+                            duration: Duration(milliseconds: 200),
+                            builder: (context, scaleValue, child) {
+                              return Transform.scale(
+                                scale: scaleValue,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    controller.toggleLockStatus(bookId, lockStatus);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: Size(80, 30),
+                                    backgroundColor: controller.isLocked ? Colors.redAccent.shade100 : Colors.grey.shade200,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ),
+                                  child: controller.isLoading
+                                      ? CircularProgressIndicator() // Show CircularProgressIndicator when loading
+                                      : Text(
+                                    controller.isLocked ? 'Locked' : 'Unlocked',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 12,
+                                      color: controller.isLocked ? Colors.white : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class BookController extends GetxController {
+  bool isLoading = false;
+  bool isLocked = false;
+
+  void toggleLockStatus(String bookId, String currentLockStatus) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+
+    // Toggle the lock status
+    var newLockStatus = currentLockStatus == 'True' ? 'False' : 'True';
+
+    isLoading = true; // Set loading to true when the API call starts
+    update();
+
+    var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/lock_book'));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'book_id': bookId,
+      'lock_status': newLockStatus,
+    });
+
+    var headers = {
+      'Cookie': 'ci_session=4lajhlf2a5kdgho9a8ac4m1nhvq7g0k7; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+    };
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print('API Response: ${await response.stream.bytesToString()}');
+        // Update isLocked based on the new lock status
+        isLocked = !isLocked;
+        update();
+      } else {
+        print('API Error: ${response.reasonPhrase}');
+      }
+    } finally {
+      isLoading = false; // Set loading to false when the API call completes (either success or error)
+      update();
+    }
+  }
+}
+
+
+ */
+
+
+
+/*
+import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:shared_preferences/shared_preferences.dart';
+
+class BookContainer extends StatefulWidget {
+  final String imageUrl;
+  final String title;
+  final String author;
+  final String availableQty;
+  final String lockStatus;
+  final String bookId;
+  const BookContainer({
+    Key? key,
+    required this.imageUrl,
+    required this.title,
+    required this.author,
+    required this.availableQty,
+    required this.lockStatus,
+    required this.bookId,
+  }) : super(key: key);
+
+  @override
+  State<BookContainer> createState() => _BookContainerState();
+}
+
+class _BookContainerState extends State<BookContainer> {
+  late bool isLocked;
+  bool isLoading = false; // Add this variable for loading indicator
+
+  @override
+  void initState() {
+    super.initState();
+    isLocked = widget.lockStatus == 'True';
+  }
+
+  Future<void> _callApi() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+
+    // Toggle the lock status
+    var newLockStatus = isLocked ? 'False' : 'True';
+
+    setState(() {
+      isLoading = true; // Set loading to true when the API call starts
+    });
+
+    var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/lock_book'));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'book_id': widget.bookId,
+      'lock_status': newLockStatus,
+    });
+
+    var headers = {
+      'Cookie': 'ci_session=4lajhlf2a5kdgho9a8ac4m1nhvq7g0k7; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+    };
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print('API Response: ${await response.stream.bytesToString()}');
+        // Update isLocked based on the new lock status
+        setState(() {
+          isLocked = !isLocked;
+        });
+      } else {
+        print('API Error: ${response.reasonPhrase}');
+      }
+    } finally {
+      setState(() {
+        isLoading = false; // Set loading to false when the API call completes (either success or error)
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Book Image with shadow
+          Container(
+            width: 120,
+            height: 120,
+            margin: EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              image: DecorationImage(
+                image: NetworkImage(widget.imageUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+
+          // Book Details
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: EColors.textColorPrimary1
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    'By ${widget.author}',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 11,
+                      color: Colors.black38,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    'Available: ${widget.availableQty} copies',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      color: EColors.textColorPrimary1,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: TweenAnimationBuilder(
+                          tween: Tween<double>(begin: 1, end: 0.9),
+                          duration: Duration(milliseconds: 200),
+                          builder: (context, scaleValue, child) {
+                            return Transform.scale(
+                              scale: scaleValue,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  setState(() {
+                                    isLocked = !isLocked;
+                                  });
+                                  await _callApi();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(80, 30),
+                                  backgroundColor: isLocked ? Colors.redAccent.shade100 : Colors.grey.shade200,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                                child: isLoading
+                                    ? CircularProgressIndicator() // Show CircularProgressIndicator when loading
+                                    : Text(
+                                  isLocked ? 'Locked' : 'Unlocked',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    color: isLocked ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+*/
+
+
+///
+// import 'package:flutter/material.dart';
+// import 'package:globalcollegeapp/data/api/api_services.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:globalcollegeapp/utils/constants/colors.dart';
+//
+// class BookContainer extends StatefulWidget {
+//   final String imageUrl;
+//   final String title;
+//   final String author;
+//   final String availableQty;
+//   final String lockStatus;
+//   final String bookId;
+//
+//   const BookContainer({
+//     Key? key,
+//     required this.imageUrl,
+//     required this.title,
+//     required this.author,
+//     required this.availableQty,
+//     required this.lockStatus,
+//     required this.bookId,
+//   }) : super(key: key);
+//
+//   @override
+//   State<BookContainer> createState() => _BookContainerState();
+// }
+//
+// class _BookContainerState extends State<BookContainer> {
+//   late bool isLocked; // State variable for the Switch
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     // Set the initial state of the Switch based on the provided lock status
+//     isLocked = widget.lockStatus == '1'; // Assuming lock status is '1' for locked and '0' for unlocked
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: EdgeInsets.all(12),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(15),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.grey.withOpacity(0.3),
+//             spreadRadius: 2,
+//             blurRadius: 5,
+//             offset: Offset(0, 3),
+//           ),
+//         ],
+//       ),
+//       child: Row(
+//         children: [
+//           // Book Image with shadow
+//           Container(
+//             width: 120,
+//             height: 120,
+//             margin: EdgeInsets.only(right: 8),
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.circular(4),
+//               image: DecorationImage(
+//                 image: NetworkImage(widget.imageUrl),
+//                 fit: BoxFit.cover,
+//               ),
+//             ),
+//           ),
+//
+//           // Book Details
+//           Expanded(
+//             child: Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 10),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text(
+//                     widget.title,
+//                     style: TextStyle(
+//                       fontFamily: 'Inter',
+//                       fontSize: 13,
+//                       fontWeight: FontWeight.bold,
+//                       color: EColors.textColorPrimary1,
+//                     ),
+//                   ),
+//                   SizedBox(height: 6),
+//                   Text(
+//                     'By ${widget.author}',
+//                     style: TextStyle(
+//                       fontFamily: 'Inter',
+//                       fontSize: 11,
+//                       color: Colors.black38,
+//                     ),
+//                   ),
+//                   SizedBox(height: 6),
+//                   Text(
+//                     'Available: ${widget.availableQty} copies',
+//                     style: TextStyle(
+//                       fontFamily: 'Inter',
+//                       fontSize: 13,
+//                       color: EColors.textColorPrimary1,
+//                     ),
+//                   ),
+//                   SizedBox(height: 6),
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: [
+//                       Expanded(
+//                         child: GestureDetector(
+//                           onTap: () {
+//                             // Handle button tap if needed
+//                             handleLockUnlockBook(widget.bookId);
+//                           },
+//                           child: TweenAnimationBuilder(
+//                             tween: Tween<double>(begin: 1, end: 0.9),
+//                             duration: Duration(milliseconds: 200),
+//                             builder: (context, scaleValue, child) {
+//                               return Transform.scale(
+//                                 scale: scaleValue,
+//                                 child: ElevatedButton(
+//                                   onPressed: () {
+//                                     // Handle button press if needed
+//                                     handleLockUnlockBook(widget.bookId);
+//                                   },
+//                                   style: ElevatedButton.styleFrom(
+//                                     minimumSize: Size(80, 30),
+//                                     backgroundColor: isLocked ? Colors.redAccent.shade100 : Colors.grey.shade200,
+//                                     shape: RoundedRectangleBorder(
+//                                       borderRadius: BorderRadius.circular(4),
+//                                     ),
+//                                   ),
+//                                   child: Text(
+//                                     isLocked ? 'Locked' : 'Unlocked',
+//                                     style: TextStyle(
+//                                       fontFamily: 'Inter',
+//                                       fontSize: 12,
+//                                       color: isLocked ? Colors.white : Colors.black,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               );
+//                             },
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+//
+//   Future<void> handleLockUnlockBook(String bookId) async {
+//     // Fetch user ID from local storage
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     String? userId = prefs.getString('user_id');
+//
+//     if (userId != null) {
+//       // Call the BookService to lock/unlock the book
+//       await ApiService.lockUnlockBook(userId, bookId, !isLocked);
+//
+//       // Update the lock status locally
+//       setState(() {
+//         isLocked = !isLocked;
+//       });
+//     } else {
+//       // Handle the case where user ID is not available
+//       print('User ID not found in local storage.');
+//     }
+//   }
+// }
+//
+
+
+
+/// Correct Code
+// import 'package:flutter/material.dart';
+// import 'package:globalcollegeapp/utils/constants/colors.dart';
+//
+// class BookContainer extends StatefulWidget {
+//   final String imageUrl;
+//   final String title;
+//   final String author;
+//   final String availableQty;
+//   final String lockStatus;
+//   const BookContainer({
+//     Key? key,
+//     required this.imageUrl,
+//     required this.title,
+//     required this.author,
+//     required this.availableQty,
+//     required this.lockStatus,
+//   }) : super(key: key);
+//
+//   @override
+//   State<BookContainer> createState() => _BookContainerState();
+// }
+//
+// class _BookContainerState extends State<BookContainer> {
+//   bool isLocked = false; // State variable for the Switch
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     // Set the initial state of the Switch based on the provided lock status
+//     isLocked = widget.lockStatus.toLowerCase() == 'true';
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: EdgeInsets.all(12),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(15),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.grey.withOpacity(0.3),
+//             spreadRadius: 2,
+//             blurRadius: 5,
+//             offset: Offset(0, 3),
+//           ),
+//         ],
+//       ),
+//       child: Row(
+//         children: [
+//           // Book Image with shadow
+//           Container(
+//             width: 120,
+//             height: 120,
+//             margin: EdgeInsets.only(right: 8),
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.circular(4),
+//               image: DecorationImage(
+//                 image: NetworkImage(widget.imageUrl),
+//                 fit: BoxFit.cover,
+//               ),
+//             ),
+//           ),
+//
+//           // Book Details
+//           Expanded(
+//             child: Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 10),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text(
+//                     widget.title,
+//                     style: TextStyle(
+//                       fontFamily: 'Inter',
+//                       fontSize: 13,
+//                       fontWeight: FontWeight.bold,
+//                       color: EColors.textColorPrimary1
+//                     ),
+//                   ),
+//                   SizedBox(height: 6),
+//                   Text(
+//                     'By ${widget.author}',
+//                     style: TextStyle(
+//                       fontFamily: 'Inter',
+//                       fontSize: 11,
+//                       color: Colors.black38,
+//                     ),
+//                   ),
+//                   SizedBox(height: 6),
+//                   Text(
+//                     'Available: ${widget.availableQty} copies',
+//                     style: TextStyle(
+//                       fontFamily: 'Inter',
+//                       fontSize: 13,
+//                       color: EColors.textColorPrimary1,
+//                     ),
+//                   ),
+//                   SizedBox(height: 6),
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: [
+//                       // Text(
+//                       //   'Lock Status:',
+//                       //   style: TextStyle(
+//                       //     fontSize: 12,
+//                       //   ),
+//                       // ),
+//
+//                       // SizedBox(width: 15),
+//
+//                       // Transform.scale(
+//                       //   scale: .7,
+//                       //   child: Switch(
+//                       //     value: isLocked,
+//                       //     onChanged: (value) {
+//                       //       setState(() {
+//                       //         isLocked = value;
+//                       //       });
+//                       //     },
+//                       //     activeColor: EColors.primary, // Change this to your preferred color
+//                       //     activeTrackColor: Colors.grey.shade300,
+//                       //   ),
+//                       // ),
+//                       Expanded(
+//                         child: GestureDetector(
+//                           onTap: () {
+//                             // Handle button tap if needed
+//                             setState(() {
+//                               isLocked = !isLocked;
+//                             });
+//                           },
+//                           child: TweenAnimationBuilder(
+//                             tween: Tween<double>(begin: 1, end: 0.9),
+//                             duration: Duration(milliseconds: 200),
+//                             builder: (context, scaleValue, child) {
+//                               return Transform.scale(
+//                                 scale: scaleValue,
+//                                 child: ElevatedButton(
+//                                   onPressed: () {
+//                                     // Handle button press if needed
+//                                   },
+//                                   style: ElevatedButton.styleFrom(
+//                                     minimumSize: Size(80, 30),
+//                                     backgroundColor: isLocked ? Colors.redAccent.shade100 : Colors.grey.shade200,
+//                                     shape: RoundedRectangleBorder(
+//                                       borderRadius: BorderRadius.circular(4),
+//                                     ),
+//                                   ),
+//                                   child: Text(
+//                                     isLocked ? 'Locked' : 'Unlocked',
+//                                     style: TextStyle(
+//                                       fontFamily: 'Inter',
+//                                       fontSize: 12,
+//                                       color: isLocked ? Colors.white : Colors.black,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               );
+//                             },
+//                           ),
+//                         ),
+//                       ),
+//                       /*
+//                       Expanded(
+//                         child: ElevatedButton(
+//                           onPressed: () {
+//                             // Handle button press if needed
+//                           },
+//                           style: ElevatedButton.styleFrom(
+//                           minimumSize: Size(100, 30),
+//                             backgroundColor: isLocked ? Colors.redAccent.shade100 : Colors.grey.shade200,
+//                             shape: RoundedRectangleBorder(
+//                               borderRadius: BorderRadius.circular(4),
+//                             ),
+//                           ),
+//                           child: Text(
+//                             isLocked ? 'Locked' : 'Unlocked',
+//                             style: TextStyle(
+//                               fontSize: 12,
+//                               color: isLocked ? Colors.white : Colors.black,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//
+//                        */
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
 
 
 
