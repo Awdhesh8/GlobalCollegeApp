@@ -316,6 +316,7 @@ class DownloadPDFButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         const Text(
           'Download: Read Anytime',
@@ -326,7 +327,7 @@ class DownloadPDFButtonWidget extends StatelessWidget {
             fontWeight: FontWeight.w400,
           ),
         ),
-        const SizedBox(width: 10),
+        // const SizedBox(width: 10),
         IconButton(
           onPressed: () async {
             // Open the link in the default web browser

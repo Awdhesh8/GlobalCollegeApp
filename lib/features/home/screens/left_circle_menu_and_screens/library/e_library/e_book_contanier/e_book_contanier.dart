@@ -48,6 +48,32 @@ class _EBookDetailsContainerState extends State<EBookDetailsContainer> {
             children: [
               Column(
                 children: [
+                   Container(
+                     width: 130.0,
+                     height: 144.69,
+                      child: Image.network(
+                        widget.imageUrl,
+                        errorBuilder: (context, error, stackTrace) {
+                          print('Error loading image: $error');
+                          return Container(
+                            width: 130.0,
+                            height: 144.69,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.black),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Book cover not available',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                  /*
                   // Check if imageUrl is empty
                   widget.imageUrl.isNotEmpty
                       ? Container(
@@ -77,6 +103,8 @@ class _EBookDetailsContainerState extends State<EBookDetailsContainer> {
                             ),
                           ),
                         ),
+
+                   */
                 ],
               ),
               const SizedBox(width: 8),
@@ -89,9 +117,9 @@ class _EBookDetailsContainerState extends State<EBookDetailsContainer> {
                       height: ESizes.spaceBtwItems,
                     ),
                     // BookDescriptionWidget(description: bookData['description']),
-                    const SizedBox(
-                      height: ESizes.spaceBtwItems,
-                    ),
+                    // const SizedBox(
+                    //   height: ESizes.spaceBtwItems,
+                    // ),
                     AuthorLabelWidget(),
                     const SizedBox(height: 4),
                     AuthorNameWidget(author: widget.author),
@@ -100,9 +128,9 @@ class _EBookDetailsContainerState extends State<EBookDetailsContainer> {
                     ),
                     // AvailableQuantityWidget(
                     //     availableQty: bookData['availableQty']),
-                    const SizedBox(
-                      height: ESizes.spaceBtwItems,
-                    ),
+                    // const SizedBox(
+                    //   height: ESizes.spaceBtwItems,
+                    // ),
 
                     DownloadPDFButtonWidget(downloadLink: widget.downloadEBook),
                     // DownloadPDFButtonWidget(),

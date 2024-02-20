@@ -122,7 +122,7 @@ class _ELibraryScreenState extends State<ELibraryScreen> {
                   return Padding(
                     padding: EdgeInsets.all(8.0),
                     child: EBookDetailsContainer(
-                      imageUrl: book['covor_image'] ?? '',
+                      imageUrl: book['cover_image'] ?? '',
                       title: book['book_title'] ?? '',
                       author: book['aublisher'] ?? '',
                       downloadEBook : book['ebook'] ?? '' ,
