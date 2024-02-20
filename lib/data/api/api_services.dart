@@ -465,4 +465,37 @@ class ApiService {
     }
   }
 
+  /// Issued Books ---->>>
+  static Future<Map<String, dynamic>> issuedBooks() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // var userId = prefs.getString('user_id') ?? '';
+    var userType = prefs.getString('user_type') ?? '';
+    var empID = prefs.getString('emp_id') ?? '';
+
+    print(empID);
+    print(userType);
+
+    var headers = {
+      'Cookie': 'ci_session=emi9l982e536e4alkaneli56uq6vghqb',
+    };
+
+    var request = http.MultipartRequest(
+        'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.issuedBooks)));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'emp_id': empID,
+      'USER_TYPE': userType,
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(await response.stream.bytesToString());
+      return data;
+    } else {
+      throw Exception('Failed to load Data');
+    }
+  }
 }

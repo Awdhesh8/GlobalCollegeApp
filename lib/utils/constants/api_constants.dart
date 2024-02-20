@@ -13,6 +13,7 @@ class APIConstants {
   static const String getBooks = 'book_search';
   static const String getEBooks = 'Ebook_search';
   static const String lockOrUnlockBooks = 'lock_book';
+  static const String issuedBooks = 'issued_book';
 
 
   // Add more endpoints as needed
