@@ -250,7 +250,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     CustomContainerButton(
                       buttonText: 'Issued Books',
                       onTap: () {
-                        Get.to(() => const IssuedBooksScreen(),
+                        Get.to(() => IssuedBooksScreen(),
                             curve: Curves.easeInOut,
                             transition: Transition.cupertino);
                       },

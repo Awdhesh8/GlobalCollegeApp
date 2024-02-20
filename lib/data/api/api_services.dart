@@ -7,15 +7,17 @@ import '../../features/time_table/time_table.dart';
 import '../../utils/constants/api_constants.dart';
 
 class ApiService {
-
   /// User Login --->>>
-  static Future<Map<String, dynamic>> loginUser(String username, String password) async {
+  static Future<Map<String, dynamic>> loginUser(
+      String username, String password) async {
     try {
       var headers = {
-        'Cookie': 'ci_session=trb1cdm1k01ka4jrt6t55nrstv6frt8p; remember_code=529f1face76aad1813e947055101a76386950be0.e599f6271f11ddc484b1e8288df76ed79742de7399f1cd73f46f29113b68db349035fc15cdae996a5df0a4faec0d53c40d3b666f6336fc9ea236da0428f702c6'
+        'Cookie':
+            'ci_session=trb1cdm1k01ka4jrt6t55nrstv6frt8p; remember_code=529f1face76aad1813e947055101a76386950be0.e599f6271f11ddc484b1e8288df76ed79742de7399f1cd73f46f29113b68db349035fc15cdae996a5df0a4faec0d53c40d3b666f6336fc9ea236da0428f702c6'
       };
 
-      var request = http.MultipartRequest('POST', Uri.parse(APIConstants.getFullUrl(APIConstants.loginEndpoint)));
+      var request = http.MultipartRequest('POST',
+          Uri.parse(APIConstants.getFullUrl(APIConstants.loginEndpoint)));
       request.fields.addAll({
         'APIKEY': 'GNCS0225',
         'USERNAME': username,
@@ -27,7 +29,8 @@ class ApiService {
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(await response.stream.bytesToString());
+        final Map<String, dynamic> data =
+            json.decode(await response.stream.bytesToString());
         return data;
       } else {
         throw Exception('Failed to login. Status Code: ${response.statusCode}');
@@ -44,7 +47,8 @@ class ApiService {
     String userType = prefs.getString('user_type') ?? '';
 
     var request = http.MultipartRequest(
-      'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getProfileEndpoint)),
+      'POST',
+      Uri.parse(APIConstants.getFullUrl(APIConstants.getProfileEndpoint)),
     );
     request.fields.addAll({
       'APIKEY': 'GNCS0225',
@@ -61,7 +65,8 @@ class ApiService {
         var responseData = json.decode(await response.stream.bytesToString());
 
         // Check if 'response' key is present and not null
-        if (responseData.containsKey('response') && responseData['response'] != null) {
+        if (responseData.containsKey('response') &&
+            responseData['response'] != null) {
           return responseData;
         } else {
           print('Error: Missing or null "response" key in the API response.');
@@ -130,13 +135,13 @@ class ApiService {
           throw Exception(data['message']);
         }
       } else {
-        throw Exception('Failed to load blood groups: ${response.reasonPhrase}');
+        throw Exception(
+            'Failed to load blood groups: ${response.reasonPhrase}');
       }
     } catch (e) {
       throw Exception('Exception while fetching blood groups: $e');
     }
   }
-
 
   /// Edit Profile --->>>>
   static Future<void> updateProfile({
@@ -185,11 +190,14 @@ class ApiService {
         // Load the asset image and add it to the request
         ByteData byteData = await rootBundle.load(imagePath);
         List<int> imageData = byteData.buffer.asUint8List();
-        http.MultipartFile multipartFile = http.MultipartFile.fromBytes('form_file', imageData, filename: imagePath);
+        http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
+            'form_file', imageData,
+            filename: imagePath);
         request.files.add(multipartFile);
       } else {
         // Assume local file image
-        var imageFile = await http.MultipartFile.fromPath('form_file', imagePath);
+        var imageFile =
+            await http.MultipartFile.fromPath('form_file', imagePath);
         request.files.add(imageFile);
       }
 
@@ -208,14 +216,13 @@ class ApiService {
   }
 
   /// Get Educational Info --->>>
-  Future<Map<String, dynamic>> fetchEducationalDetails() async { // Removed static keyword
+  Future<Map<String, dynamic>> fetchEducationalDetails() async {
+    // Removed static keyword
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
     var userType = prefs.getString('user_type') ?? '';
 
-    var headers = {
-      'Cookie': 'ci_session=s63p3q25pe1l70smdpptatqmg0j2vb8p'
-    };
+    var headers = {'Cookie': 'ci_session=s63p3q25pe1l70smdpptatqmg0j2vb8p'};
 
     var request = http.MultipartRequest(
       'POST',
@@ -280,7 +287,8 @@ class ApiService {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      Map<String, dynamic> data = json.decode(await response.stream.bytesToString());
+      Map<String, dynamic> data =
+          json.decode(await response.stream.bytesToString());
       return data;
     } else {
       throw Exception('Failed to load timetable');
@@ -290,7 +298,8 @@ class ApiService {
   /// <<<---- Library --->>>
 
   /// Library Search --->
-  static Future<List<Map<String, dynamic>>> bookSearch(String searchKeyword) async {
+  static Future<List<Map<String, dynamic>>> bookSearch(
+      String searchKeyword) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
     var userType = prefs.getString('user_type') ?? '';
@@ -389,14 +398,17 @@ class ApiService {
    */
 
   /// Lock Books
-  static Future<void> lockUnlockBook(String userId, String bookId, bool isLocked) async {
+  static Future<void> lockUnlockBook(
+      String userId, String bookId, bool isLocked) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
     var headers = {
-      'Cookie': 'ci_session=1fg7qtrjhkdjsirg0hjaccu8f35u7s8m; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
+      'Cookie':
+          'ci_session=1fg7qtrjhkdjsirg0hjaccu8f35u7s8m; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
     };
 
-    var request = http.MultipartRequest('POST', Uri.parse(APIConstants.getFullUrl(APIConstants.lockOrUnlockBooks)));
+    var request = http.MultipartRequest('POST',
+        Uri.parse(APIConstants.getFullUrl(APIConstants.lockOrUnlockBooks)));
     request.fields.addAll({
       'APIKEY': 'GNCS0225',
       'USER_ID': userId,
@@ -410,26 +422,28 @@ class ApiService {
 
     if (response.statusCode == 200) {
       // Parse the response JSON
-      Map<String, dynamic> responseData = json.decode(await response.stream.bytesToString());
+      Map<String, dynamic> responseData =
+          json.decode(await response.stream.bytesToString());
 
       // Assuming lock_status is returned as a string
-      String updatedLockStatusString = responseData['response'][0]['lock_status'];
+      String updatedLockStatusString =
+          responseData['response'][0]['lock_status'];
 
       // Convert the lock_status to a boolean
-      bool updatedLockStatus = (updatedLockStatusString.toLowerCase() == 'true');
+      bool updatedLockStatus =
+          (updatedLockStatusString.toLowerCase() == 'true');
 
       print('Updated Lock Status: $updatedLockStatus');
 
       // Do something with the updated lock status if needed
-
     } else {
       print(response.reasonPhrase);
     }
   }
 
   /// eLibrary
-  static Future<List<Map<String, dynamic>>> getEBooks(String searchKeyword) async {
-
+  static Future<List<Map<String, dynamic>>> getEBooks(
+      String searchKeyword) async {
     try {
       var headers = {
         'Cookie': 'ci_session=7am93kpc7ut7avqqauh42l8t8pk9a1u8',
@@ -443,7 +457,6 @@ class ApiService {
       request.fields.addAll({
         'APIKEY': 'GNCS0225',
         'srch_keyword': searchKeyword,
-
       });
       print(request);
       request.headers.addAll(headers);
@@ -465,37 +478,47 @@ class ApiService {
     }
   }
 
-  /// Issued Books ---->>>
+  /// IssueBooks History ---->>>
   static Future<Map<String, dynamic>> issuedBooks() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // var userId = prefs.getString('user_id') ?? '';
     var userType = prefs.getString('user_type') ?? '';
     var empID = prefs.getString('emp_id') ?? '';
 
-    print(empID);
-    print(userType);
+    print("EMP_ID: $empID");
+    // print("USER_TYPE: $userType");
 
     var headers = {
+      'Content-Type': 'application/x-www-form-urlencoded', // Set the correct content type
       'Cookie': 'ci_session=emi9l982e536e4alkaneli56uq6vghqb',
     };
 
-    var request = http.MultipartRequest(
-        'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.issuedBooks)));
-    request.fields.addAll({
+    var body = {
       'APIKEY': 'GNCS0225',
       'emp_id': empID,
       'USER_TYPE': userType,
-    });
+    };
 
-    request.headers.addAll(headers);
+    var uri = Uri.parse(APIConstants.getFullUrl(APIConstants.issuedBooks));
+    var response = await http.post(uri, headers: headers, body: body);
 
-    http.StreamedResponse response = await request.send();
+    /*
+    print('Link URL: ${response.request}');
+    print("Headers: ${response.headers}");
+    print("Code: ${response.statusCode}");
+    print('Body: ${response.body}');
+    print(empID);
+    print("Print Response : $response");
+    */
 
     if (response.statusCode == 200) {
-      Map<String, dynamic> data = json.decode(await response.stream.bytesToString());
+      Map<String, dynamic> data = json.decode(response.body);
       return data;
     } else {
-      throw Exception('Failed to load Data');
+      throw Exception('Failed to load timetable');
     }
   }
+
+  /// Book History ---->>>
+
+
 }

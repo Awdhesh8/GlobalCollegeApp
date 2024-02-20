@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../../../../common/widgets/book_contanier/book_contanier.dart';
 import '../../../../../../common/widgets/custom_shapes/containers/search_container.dart';
 import '../../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../../data/api/api_services.dart';
 import '../../../../../../utils/constants/sizes.dart';
-import '../book_data/book_data_class.dart';
 import '../library_screen.dart';
-import 'book_widget/e_book_widget.dart';
 import 'e_book_contanier/e_book_contanier.dart';
 
 class ELibraryScreen extends StatefulWidget {
@@ -39,7 +35,7 @@ class _ELibraryScreenState extends State<ELibraryScreen> {
       });
 
       List<Map<String, dynamic>> result =
-      await ApiService.getEBooks(searchKeyword);
+          await ApiService.getEBooks(searchKeyword);
       print(result);
 
       setState(() {
@@ -98,44 +94,31 @@ class _ELibraryScreenState extends State<ELibraryScreen> {
 
             // Container with e-Book Data
             /// Container with e-Book Data
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 15),
-            //   child: Column(
-            //     children: BookData.books.map((bookData) {
-            //       return EBookDetailsContainer(bookData: bookData);
-            //     }).toList(),
-            //   ),
-            // ),
             isLoading
                 ? Center(
-              child: ShimmerLoadingWidget(),
-            )
+                    child: ShimmerLoadingWidget(),
+                  )
                 : Padding(
-              padding: EdgeInsets.all(8.0),
-              child: ListView.builder(
-                shrinkWrap: true, // Set shrinkWrap to true
-                physics:
-                NeverScrollableScrollPhysics(), // Disable scrolling
-                itemCount: eBooks.length,
-                itemBuilder: (context, index) {
-                  var book = eBooks[index];
-                  return Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: EBookDetailsContainer(
-                      imageUrl: book['cover_image'] ?? '',
-                      title: book['book_title'] ?? 'NA',
-                      author: book['aublisher'] ?? '',
-                      downloadEBook : book['ebook'] ?? '' ,
-                      // availableQty: book['available_qty'],
-                      // lockStatus: book['lock_status'],
-                      // bookId: book['title_id'],
-                      // bookData: const {},
-
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                      shrinkWrap: true, // Set shrinkWrap to true
+                      physics:
+                          const NeverScrollableScrollPhysics(), // Disable scrolling
+                      itemCount: eBooks.length,
+                      itemBuilder: (context, index) {
+                        var book = eBooks[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: EBookDetailsContainer(
+                            imageUrl: book['cover_image'] ?? '',
+                            title: book['book_title'] ?? 'NA',
+                            author: book['aublisher'] ?? '',
+                            downloadEBook: book['ebook'] ?? '',
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
             const SizedBox(
               height: ESizes.spaceBtwItems1,
             ),
@@ -144,8 +127,8 @@ class _ELibraryScreenState extends State<ELibraryScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(top: 66),
-        child:  CustomSearchContainer(
+        padding: const EdgeInsets.only(top: 66),
+        child: CustomSearchContainer(
           showBackground: true,
           dark: false,
           showBorder: true,
@@ -173,7 +156,7 @@ class _ELibraryScreenState extends State<ELibraryScreen> {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child:
-              BookContainerShimmer(), // Create a BookContainerShimmer widget for shimmer effect
+                  BookContainerShimmer(), // Create a BookContainerShimmer widget for shimmer effect
             );
           },
         ),
@@ -193,9 +176,6 @@ final List<String> defaultEBookImages = [
   'assets/books/4book.jpg',
   // Add more image URLs as needed
 ];
-
-
-
 
 /*
 import 'package:flutter/material.dart';
