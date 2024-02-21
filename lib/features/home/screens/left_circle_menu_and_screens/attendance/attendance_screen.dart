@@ -146,6 +146,7 @@ class _CalendarPageState extends State<CalendarPage> {
     ]
   ''';
 
+
   List<CalendarEvent> _events = [];
 
   void _loadEventsFromJson() {
