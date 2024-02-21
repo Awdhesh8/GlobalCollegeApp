@@ -11,7 +11,7 @@ class FeesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
       child: Container(
         width: double.infinity,
         decoration: ShapeDecoration(
@@ -30,7 +30,7 @@ class FeesCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            /// Commencement Text
+            /// Commitment Text
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
