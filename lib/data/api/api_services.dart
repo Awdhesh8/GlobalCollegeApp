@@ -1,10 +1,15 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/personalization/screens/settings/edit_profile/edit_Profile.dart';
 import '../../features/time_table/time_table.dart';
 import '../../utils/constants/api_constants.dart';
+import '../../utils/constants/colors.dart';
 
 class ApiService {
   /// User Login --->>>
@@ -340,104 +345,90 @@ class ApiService {
     }
   }
 
-  /// Lock Books
-  // static Future<void> lockUnlockBook(String userId, String bookId, bool isLocked) async {
-  //   var headers = {
-  //     'Cookie': 'ci_session=1fg7qtrjhkdjsirg0hjaccu8f35u7s8m; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
-  //   };
-  //
-  //   var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/API005/lock_book'));
-  //   request.fields.addAll({
-  //     'APIKEY': 'GNCS0225',
-  //     'USER_ID': userId,
-  //     'book_id': bookId,
-  //     'lock_status': '0'
-  //   });
-  //
-  //   // Set the lock status in the request based on the isLocked parameter
-  //   request.fields['lock_status'] = isLocked ? 'true' : 'false';
-  //
-  //   request.headers.addAll(headers);
-  //
-  //   http.StreamedResponse response = await request.send();
-  //
-  //   if (response.statusCode == 200) {
-  //     print(await response.stream.bytesToString());
-  //   } else {
-  //     print(response.reasonPhrase);
-  //   }
-  // }
-  /*
-  /// Lock Books
-  static Future<void> lockUnlockBook(String bookId, bool isLocked) async {
+  /// Lock unlock Books
+  Future<void> updateLockStatus(String bookId, bool newLockStatus, BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
 
-    var headers = {
-      'Cookie': 'ci_session=1fg7qtrjhkdjsirg0hjaccu8f35u7s8m; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
-    };
+    try {
+      var headers = {'Cookie': 'ci_session=41u6ft1qdlm59a6h30cuc0or6p46ot2m'};
+      var request = http.MultipartRequest(
+          'POST',
+          Uri.parse(APIConstants.getFullUrl(APIConstants.lockOrUnlockBooks))
+        // Uri.parse('http://myglobalapp.in/global/API005/lock_book'),
+      );
 
-    var request = http.MultipartRequest('POST', Uri.parse(APIConstants.getFullUrl(APIConstants.lockOrUnlockBooks)),);
-    request.fields.addAll({
-      'APIKEY': 'GNCS0225',
-      'USER_ID': userId,
-      'book_id': bookId,
-      'lock_status': isLocked.toString(),
-    });
+      // Set request fields
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'USER_ID': userId,
+        'book_id': bookId,
+        'lock_status': newLockStatus.toString(),
+      });
 
-    request.headers.addAll(headers);
+      request.headers.addAll(headers);
 
-    http.StreamedResponse response = await request.send();
+      http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
-   */
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(await response.stream.bytesToString());
+        // Print the response data
+        print('Response Data: $responseData');
 
-  /// Lock Books
-  static Future<void> lockUnlockBook(
-      String userId, String bookId, bool isLocked) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userId = prefs.getString('user_id') ?? '';
-    var headers = {
-      'Cookie':
-          'ci_session=1fg7qtrjhkdjsirg0hjaccu8f35u7s8m; remember_code=032536b7b1a6cc5611bee1901a81b3e67537fc03.7f088c4c0016afe16e096a472ab25bf5a9f14008a8863a8dcc0817961b0c6ccb828a93b9e9756fdb6f4dfa89658c4df7d66ccaf3f0d6f85e8e688dbda00457f9'
-    };
+        // Handle the response data as needed
+        var status = responseData['status'];
+        var message = responseData['message'];
 
-    var request = http.MultipartRequest('POST',
-        Uri.parse(APIConstants.getFullUrl(APIConstants.lockOrUnlockBooks)));
-    request.fields.addAll({
-      'APIKEY': 'GNCS0225',
-      'USER_ID': userId,
-      'book_id': bookId,
-      'lock_status': isLocked.toString(),
-    });
+        if (status == '1') {
+          // Update was successful, handle accordingly
+          print('Lock Status Updated Successfully');
 
-    request.headers.addAll(headers);
+          // Show a SnackBar with the success message
+          Get.snackbar('Lock Status : ', '$message',colorText: EColors.textColorPrimary1,);
+          // Get.snackbar('Lock Status : $message', 'You can now take the book from the college library.');
 
-    http.StreamedResponse response = await request.send();
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('Lock Status Updated Successfully. You can now take the book from the college library.'),
+          //     duration: Duration(seconds: 4),
+          //   ),
+          // );
+        } else {
+          // Update failed, handle accordingly
+          print('Lock Status Update Failed: $message');
 
-    if (response.statusCode == 200) {
-      // Parse the response JSON
-      Map<String, dynamic> responseData =
-          json.decode(await response.stream.bytesToString());
+          // Show a SnackBar with the failure message
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('Lock Status Update Failed: $message'),
+          //     duration: Duration(seconds: 2),
+          //   ),
+          // );
+          Get.snackbar('Lock Status Update Failed: ', '$message');
+        }
+      } else {
+        // Print the reason phrase in case of non-200 status code
+        print('Error: ${response.reasonPhrase}');
 
-      // Assuming lock_status is returned as a string
-      String updatedLockStatusString =
-          responseData['response'][0]['lock_status'];
+        // Show a SnackBar with the error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${response.reasonPhrase}'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (error) {
+      // Handle any other errors that might occur during the request
+      print('Error updating lock status: $error');
 
-      // Convert the lock_status to a boolean
-      bool updatedLockStatus =
-          (updatedLockStatusString.toLowerCase() == 'true');
-
-      print('Updated Lock Status: $updatedLockStatus');
-
-      // Do something with the updated lock status if needed
-    } else {
-      print(response.reasonPhrase);
+      // Show a SnackBar with the error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating lock status: $error'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -514,11 +505,51 @@ class ApiService {
       Map<String, dynamic> data = json.decode(response.body);
       return data;
     } else {
-      throw Exception('Failed to load timetable');
+      throw Exception('Failed to load Issue Book History Data');
     }
   }
 
   /// Book History ---->>>
+  static Future<Map<String, dynamic>> libraryHistory() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userType = prefs.getString('user_type') ?? '';
+    var empID = prefs.getString('emp_id') ?? '';
+
+    print("EMP_ID: $empID");
+    print("USER_TYPE: $userType");
+
+    var headers = {
+      'Cookie': 'ci_session=06idajds6tidndrcefdn7cqj6qvqu2k5; remember_code=3fe3befddf2e48650ddc76d5d6697a61cfbf4ed6.156bad30a0afd8ce50fb8553e490c99d170e19371cf15b4366cad31d125d8279806b12813a77c9d93859ad8b3d4c157324dbf43326429d7138599ed5aa06965a',
+    };
+
+    var body = {
+      'APIKEY': 'GNCS0225',
+      'emp_id': empID,
+      'USER_TYPE': userType,
+    };
+
+    var uri = Uri.parse(APIConstants.getFullUrl(APIConstants.libraryHistory));
+    var response = await http.post(uri, headers: headers, body: body);
+
+
+    print('Link URL: ${response.request}');
+    print("Headers: ${response.headers}");
+    print("Code: ${response.statusCode}");
+    print('Body: ${response.body}');
+    print(empID);
+    print("Print Response : $response");
+
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      return data;
+    } else {
+      throw Exception('Failed to load History Data');
+    }
+  }
+
+  /// Attendance (In Calender)
+
 
 
 }

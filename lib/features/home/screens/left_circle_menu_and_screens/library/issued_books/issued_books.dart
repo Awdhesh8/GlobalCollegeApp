@@ -22,7 +22,6 @@ class _IssuedBooksScreenState extends State<IssuedBooksScreen> {
   @override
   void initState() {
     super.initState();
-    // Call the bookSearch function when the screen initializes
     issuedBooks();
   }
 

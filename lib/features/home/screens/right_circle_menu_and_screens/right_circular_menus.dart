@@ -210,7 +210,7 @@ class _RightSideCircularScrollingBoxesState
 
   final List<String> contentListRight = [
     'CV/Resume',
-    'Assessment Test',
+    'Assessment',
     'Assignment',
     'Fees',
     'Mid Term',
@@ -220,7 +220,7 @@ class _RightSideCircularScrollingBoxesState
     'Feedback',
     'Training',
     'CV/Resume',
-    'Assessment Test',
+    'Assessment',
     'Assignment',
     'Fees',
     'Mid Term',

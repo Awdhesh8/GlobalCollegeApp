@@ -10,6 +10,7 @@ import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/custom_container_button/custom_container_button.dart';
 import '../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../data/api/api_services.dart';
+import '../../../../../utils/constants/api_constants.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
 import 'book_contaner/book_contanier.dart';
@@ -56,62 +57,18 @@ class _LibraryScreenState extends State<LibraryScreen> {
     }
   }
 
-  // Function to update lock status
-  // Function to update lock status
-  /*
-  Future<void> updateLockStatus(String bookId, bool newLockStatus) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userId = prefs.getString('user_id') ?? '';
-
+  Future<void> updateLockStatus(String bookId, bool newLockStatus, BuildContext context) async {
     try {
-      var headers = {'Cookie': 'ci_session=41u6ft1qdlm59a6h30cuc0or6p46ot2m'};
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse('http://myglobalapp.in/global/API005/lock_book'),
-      );
+      await ApiService().updateLockStatus(bookId, newLockStatus, context);
 
-      // Set request fields
-      request.fields.addAll({
-        'APIKEY': 'GNCS0225',
-        'USER_ID': userId,
-        'book_id': bookId,
-        'lock_status': newLockStatus.toString(), // Use newLockStatus here
+      setState(() {
+        // Update the UI as per your requirements
       });
-
-      request.headers.addAll(headers);
-      print('Request Body: ${request.fields}');
-
-      http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200) {
-        Map<String, dynamic> responseData = json.decode(
-            await response.stream.bytesToString());
-        // Print the response data
-        print('Response Data: $responseData');
-
-        // Handle the response data as needed
-        // For example, check the status and message
-        var status = responseData['status'];
-        var message = responseData['message'];
-
-        if (status == '1') {
-          // Update was successful, handle accordingly
-          print('Lock Status Updated Successfully');
-        } else {
-          // Update failed, handle accordingly
-          print('Lock Status Update Failed: $message');
-        }
-      } else {
-        // Print the reason phrase in case of non-200 status code
-        print('Error: ${response.reasonPhrase}');
-      }
     } catch (error) {
-      // Handle any other errors that might occur during the request
       print('Error updating lock status: $error');
     }
   }
-   */
-
+/*
   Future<void> updateLockStatus(String bookId, bool newLockStatus, BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
@@ -120,7 +77,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
       var headers = {'Cookie': 'ci_session=41u6ft1qdlm59a6h30cuc0or6p46ot2m'};
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('http://myglobalapp.in/global/API005/lock_book'),
+        Uri.parse(APIConstants.getFullUrl(APIConstants.lockOrUnlockBooks))
+        // Uri.parse('http://myglobalapp.in/global/API005/lock_book'),
       );
 
       // Set request fields
@@ -197,6 +155,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
     }
   }
 
+
+ */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -318,14 +278,25 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             bookId: book['title_id'],
                             onTapLockButton: (bool newLockStatus) async {
                               // Handle lock or unlock the book Button
-                              // Call the updateLockStatus function
-                              await updateLockStatus(book['title_id'], newLockStatus, context);
+                              // Call the updateLockStatus function using an instance of ApiService
+                              var apiService = ApiService();
+                              await apiService.updateLockStatus(book['title_id'], newLockStatus, context);
 
                               // After updating the lock status, refresh the UI if needed
                               setState(() {
                                 book['lock_status'] = newLockStatus ? 'True' : 'False';
                               });
                             },
+                            // onTapLockButton: (bool newLockStatus) async {
+                            //   // Handle lock or unlock the book Button
+                            //   // Call the updateLockStatus function
+                            //   await updateLockStatus(book['title_id'], newLockStatus, context);
+                            //
+                            //   // After updating the lock status, refresh the UI if needed
+                            //   setState(() {
+                            //     book['lock_status'] = newLockStatus ? 'True' : 'False';
+                            //   });
+                            // },
                           ),
                         );
                       },

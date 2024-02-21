@@ -14,6 +14,8 @@ class APIConstants {
   static const String getEBooks = 'Ebook_search';
   static const String lockOrUnlockBooks = 'lock_book';
   static const String issuedBooks = 'issued_book';
+  static const String libraryHistory = 'book_history';
+
 
 
   // Add more endpoints as needed
