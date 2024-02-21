@@ -7,63 +7,8 @@ import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:intl/intl.dart';
 import '../../../../../common/widgets/texts/top_first_heading.dart';
+import 'attendance_controller/attendance_controller.dart';
 import 'attendance_widgets/example_attendance_boxes.dart';
-
-/// Attendance Controller using GetX
-class AttendanceController extends GetxController {
-  late DateTime currentMonth;
-  final PageController pageController = PageController(initialPage: DateTime.now().month - 1);
-
-  @override
-  void onInit() {
-    super.onInit();
-    currentMonth = DateTime.now();
-    _loadEventsFromJson();
-  }
-
-  List<CalendarEvent> _events = [];
-
-  void _loadEventsFromJson() {
-    const jsonData = '''
-      [
-        {"eventName": "P", "eventDate": "2024-02-01"},
-        {"eventName": "P", "eventDate": "2024-02-02"},
-        {"eventName": "P", "eventDate": "2024-02-03"},
-        {"eventName": "A", "eventDate": "2024-02-04"},
-        {"eventName": "P", "eventDate": "2024-02-05"},
-        {"eventName": "A", "eventDate": "2024-02-06"},
-        {"eventName": "L", "eventDate": "2024-02-13"},
-        {"eventName": "H", "eventDate": "2024-02-15"},
-        {"eventName": "WH", "eventDate": "2024-02-20"}
-      ]
-    ''';
-
-    final List<dynamic> jsonDataList = jsonDecode(jsonData);
-    _events = jsonDataList.map((data) {
-      return CalendarEvent(
-        eventName: data['eventName'],
-        eventDate: DateTime.parse(data['eventDate']),
-      );
-    }).toList();
-  }
-
-  Color getEventBackgroundColor(String eventName) {
-    switch (eventName) {
-      case 'P':
-        return Colors.cyan.shade100;
-      case 'A':
-        return Colors.red.shade200;
-      case 'L':
-        return Colors.green.shade500;
-      case 'H':
-        return Colors.orange.shade300;
-      case 'WH':
-        return Colors.yellow.shade300;
-      default:
-        return Colors.transparent;
-    }
-  }
-}
 
 
 class AttendanceScreen extends StatelessWidget {
@@ -372,7 +317,7 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: MediaQuery.of(context).size.height * 0.4,
       child: Column(
         children: [
           buildNavigationButtons(),

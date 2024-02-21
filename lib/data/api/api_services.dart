@@ -7,7 +7,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/personalization/screens/settings/edit_profile/edit_Profile.dart';
-import '../../features/time_table/time_table.dart';
 import '../../utils/constants/api_constants.dart';
 import '../../utils/constants/colors.dart';
 
@@ -549,7 +548,38 @@ class ApiService {
   }
 
   /// Attendance (In Calender)
+  static Future<void> makeAttendanceRequest() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String empId = prefs.getString('emp_id') ?? ''; // replace with your actual key
+      String userType = prefs.getString('USER_TYPE') ?? ''; // replace with your actual key
 
+      var headers = {
+        'Cookie': 'ci_session=6tb2g58tb2c3cn3io2q8p3eei2re7soo',
+      };
+      print(empId);
+      print(userType);
+      var request = http.MultipartRequest(
+          'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.attendanceCalender)));
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'emp_id': empId,
+        'USER_TYPE': userType,
+      });
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print(await response.stream.bytesToString());
+      } else {
+        print(response.reasonPhrase);
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
 
 }

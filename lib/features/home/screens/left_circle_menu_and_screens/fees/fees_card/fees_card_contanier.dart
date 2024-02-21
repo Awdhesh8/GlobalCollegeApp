@@ -175,11 +175,11 @@ class FeesCard extends StatelessWidget {
                         children: [
                           InkWell(
                             onTap: () =>
-                                Get.to(
-                                  const FeesScreen(),
-                                  transition: Transition.cupertino,
-                                  duration: const Duration(milliseconds: 500),
-                                ),
+                            Get.to(() =>
+                              const FeesScreen(),
+                              transition: Transition.cupertino,
+                              duration: const Duration(milliseconds: 500),
+                            ),
 
                             child: const Padding(
                               padding: EdgeInsets.all(6.0),

@@ -339,13 +339,14 @@ class _RightSideCircularScrollingBoxesState
                                 displayText,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
+                                  fontFamily: 'Inter',
                                   // color: isSelected[index]
                                   //     ? EColors.white
                                   //     : EColors.textColorPrimary1,
                                   color: EColors.textColorPrimary1,
                                   // : const Color.fromRGBO(16, 34, 130, 1),
                                   fontSize: fontSize,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),

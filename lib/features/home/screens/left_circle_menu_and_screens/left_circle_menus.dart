@@ -146,9 +146,10 @@ class _LeftSideCircularScrollingBoxesState
                                           displayText,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
+                                            fontFamily: 'Inter',
                                             color: EColors.textColorPrimary1,
                                             fontSize: fontSize,
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ),

@@ -468,12 +468,16 @@ class FeesData extends StatelessWidget {
                 size: 18,
               ),
               const SizedBox(width: 5),
-              Text(
-                'Balance Amount: ${details['Balance Amount']}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: EColors.textColorPrimary1,
+              Expanded(
+                child: Text(
+                  'Balance Amount: ${details['Balance Amount']}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: EColors.textColorPrimary1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  maxLines: 2,
                 ),
               ),
             ],
