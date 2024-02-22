@@ -530,14 +530,14 @@ class ApiService {
     var uri = Uri.parse(APIConstants.getFullUrl(APIConstants.libraryHistory));
     var response = await http.post(uri, headers: headers, body: body);
 
-
+    /*
     print('Link URL: ${response.request}');
     print("Headers: ${response.headers}");
     print("Code: ${response.statusCode}");
     print('Body: ${response.body}');
     print(empID);
     print("Print Response : $response");
-
+     */
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
@@ -548,36 +548,48 @@ class ApiService {
   }
 
   /// Attendance (In Calender)
-  static Future<void> makeAttendanceRequest() async {
+  static Future<Map<String, dynamic>> getAttendanceData(int year, int month) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String empId = prefs.getString('emp_id') ?? ''; // replace with your actual key
-      String userType = prefs.getString('USER_TYPE') ?? ''; // replace with your actual key
+      String empId = prefs.getString('emp_id') ?? '';
+      String userType = prefs.getString('user_type') ?? '';
 
       var headers = {
         'Cookie': 'ci_session=6tb2g58tb2c3cn3io2q8p3eei2re7soo',
       };
-      print(empId);
-      print(userType);
+
       var request = http.MultipartRequest(
-          'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.attendanceCalender)));
-      request.fields.addAll({
+          'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.attendanceCalender)));      request.fields.addAll({
         'APIKEY': 'GNCS0225',
         'emp_id': empId,
         'USER_TYPE': userType,
+        'year': year.toString(),
+        'month': month.toString(),
       });
+          print('Emp id: $empId');
+          print('user type: $userType');
+          print('year: $year');
+          print('month: $month');
+          print('request fields: ${request.fields}');
+          print('request headers: ${request.headers}');
+          // print('API response: $jsonData');
+
 
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
-
+      print('Response: $response');
+      print('Response: ${response.stream}');
+      print('Request: $request');
       if (response.statusCode == 200) {
-        print(await response.stream.bytesToString());
+        String responseBody = await response.stream.bytesToString();
+        Map<String, dynamic> jsonData = jsonDecode(responseBody);
+        return jsonData;
       } else {
-        print(response.reasonPhrase);
+        return {'error': response.reasonPhrase};
       }
     } catch (e) {
-      print('Error: $e');
+      return {'error': 'Error: $e'};
     }
   }
 
