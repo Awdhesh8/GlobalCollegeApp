@@ -4,13 +4,13 @@ import 'package:iconsax/iconsax.dart';
 import '../../../utils/constants/colors.dart';
 
 class ESettingsMenuTile extends StatelessWidget {
-  const ESettingsMenuTile({super.key,
-    this.icon,
-    required this.title,
-    required this.subTitle,
-    this.trailing,
-    this.onTap
-  });
+  const ESettingsMenuTile(
+      {super.key,
+      this.icon,
+      required this.title,
+      required this.subTitle,
+      this.trailing,
+      this.onTap});
 
   final IconData? icon;
   final String title, subTitle;
@@ -23,15 +23,11 @@ class ESettingsMenuTile extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             boxShadow: [
-              BoxShadow(
-                  blurRadius: 0,
-                  offset: Offset(-2, -2),
-                  color: Colors.white
-              )
+              const BoxShadow(
+                  blurRadius: 0, offset: Offset(-2, -2), color: Colors.white)
             ],
             color: EColors.lightContainer1,
-            borderRadius: BorderRadius.circular(14)
-        ),
+            borderRadius: BorderRadius.circular(14)),
         // decoration: BoxDecoration(
         //   border: Border.all(width: 2, color: Colors.white),
         //   color: EColors.backgroundColor,
@@ -60,9 +56,30 @@ class ESettingsMenuTile extends StatelessWidget {
         // ),
         child: ListTile(
           dense: true,
-          leading: Icon(icon, size: 24, color: EColors.primary,),
-          title: Text(title, style: Theme.of(context).textTheme.titleSmall, overflow: TextOverflow.ellipsis),
-          subtitle: Text(subTitle, style: Theme.of(context).textTheme.bodySmall, maxLines: 2, overflow: TextOverflow.ellipsis),
+          leading: Icon(
+            icon,
+            size: 24,
+            color: EColors.primary,
+          ),
+          title: Text(title,
+              style: const TextStyle(
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black54,
+              ),
+              overflow: TextOverflow.ellipsis),
+          // title: Text(title, style: Theme.of(context).textTheme.titleSmall, overflow: TextOverflow.ellipsis),
+          subtitle: Text(subTitle,
+              style: const TextStyle(
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                  // fontWeight: FontWeight.w400,
+                  color: EColors.textColorPrimary1,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis),
+          // subtitle: Text(subTitle, style: Theme.of(context).textTheme.bodySmall, maxLines: 2, overflow: TextOverflow.ellipsis),
           // trailing: const Icon(Iconsax.arrow_right_3, size: 20),
           onTap: onTap,
         ),

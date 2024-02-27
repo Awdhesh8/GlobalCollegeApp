@@ -55,12 +55,9 @@ dependencies:
   # Calendar
   table_calendar: ^3.0.0
 
-
-
   # State Management
   get: ^4.6.6
   get_storage: ^2.1.1
-
 
   # Product Specific
   readmore: ^2.2.0
@@ -73,7 +70,7 @@ dependencies:
   flip_card: ^0.7.0
   particles_fly: ^0.0.8
   font_awesome_flutter: ^10.7.0
-
+  animated_text_kit: ^4.2.2
   shimmer: ^3.0.0
 
   # Calendar

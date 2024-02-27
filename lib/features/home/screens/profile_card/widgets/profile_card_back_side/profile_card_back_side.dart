@@ -104,6 +104,7 @@ class UserDetailsWidget extends StatelessWidget {
 class BackUserDetailsWidget extends StatelessWidget {
   final String fatherName;
   final String motherName;
+  final String dateOfBirth;
   final String studentSession;
   final String mobile;
   final String email;
@@ -115,6 +116,7 @@ class BackUserDetailsWidget extends StatelessWidget {
     required this.studentSession,
     required this.mobile,
     required this.email,
+    required this.dateOfBirth,
   }) : super(key: key);
 
   @override
@@ -169,7 +171,7 @@ class BackUserDetailsWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Date Of Birth: $studentSession',
+                    'Date Of Birth: $dateOfBirth',
                     style: const TextStyle(
                       color: EColors.white,
                       fontSize: 13,

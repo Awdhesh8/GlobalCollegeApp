@@ -299,8 +299,6 @@ class ApiService {
     }
   }
 
-  /// <<<---- Library --->>>
-
   /// Library Search --->
   static Future<List<Map<String, dynamic>>> bookSearch(
       String searchKeyword) async {
@@ -345,17 +343,17 @@ class ApiService {
   }
 
   /// Lock unlock Books
-  Future<void> updateLockStatus(String bookId, bool newLockStatus, BuildContext context) async {
+  Future<void> updateLockStatus(
+      String bookId, bool newLockStatus, BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
 
     try {
       var headers = {'Cookie': 'ci_session=41u6ft1qdlm59a6h30cuc0or6p46ot2m'};
-      var request = http.MultipartRequest(
-          'POST',
+      var request = http.MultipartRequest('POST',
           Uri.parse(APIConstants.getFullUrl(APIConstants.lockOrUnlockBooks))
-        // Uri.parse('http://myglobalapp.in/global/API005/lock_book'),
-      );
+          // Uri.parse('http://myglobalapp.in/global/API005/lock_book'),
+          );
 
       // Set request fields
       request.fields.addAll({
@@ -370,7 +368,8 @@ class ApiService {
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> responseData = json.decode(await response.stream.bytesToString());
+        Map<String, dynamic> responseData =
+            json.decode(await response.stream.bytesToString());
         // Print the response data
         print('Response Data: $responseData');
 
@@ -383,7 +382,11 @@ class ApiService {
           print('Lock Status Updated Successfully');
 
           // Show a SnackBar with the success message
-          Get.snackbar('Lock Status : ', '$message',colorText: EColors.textColorPrimary1,);
+          Get.snackbar(
+            'Lock Status : ',
+            '$message',
+            colorText: EColors.textColorPrimary1,
+          );
           // Get.snackbar('Lock Status : $message', 'You can now take the book from the college library.');
 
           // ScaffoldMessenger.of(context).showSnackBar(
@@ -478,7 +481,8 @@ class ApiService {
     // print("USER_TYPE: $userType");
 
     var headers = {
-      'Content-Type': 'application/x-www-form-urlencoded', // Set the correct content type
+      'Content-Type':
+          'application/x-www-form-urlencoded', // Set the correct content type
       'Cookie': 'ci_session=emi9l982e536e4alkaneli56uq6vghqb',
     };
 
@@ -518,7 +522,8 @@ class ApiService {
     print("USER_TYPE: $userType");
 
     var headers = {
-      'Cookie': 'ci_session=06idajds6tidndrcefdn7cqj6qvqu2k5; remember_code=3fe3befddf2e48650ddc76d5d6697a61cfbf4ed6.156bad30a0afd8ce50fb8553e490c99d170e19371cf15b4366cad31d125d8279806b12813a77c9d93859ad8b3d4c157324dbf43326429d7138599ed5aa06965a',
+      'Cookie':
+          'ci_session=06idajds6tidndrcefdn7cqj6qvqu2k5; remember_code=3fe3befddf2e48650ddc76d5d6697a61cfbf4ed6.156bad30a0afd8ce50fb8553e490c99d170e19371cf15b4366cad31d125d8279806b12813a77c9d93859ad8b3d4c157324dbf43326429d7138599ed5aa06965a',
     };
 
     var body = {
@@ -548,7 +553,8 @@ class ApiService {
   }
 
   /// Attendance (In Calender)
-  static Future<Map<String, dynamic>> getAttendanceData(int year, int month) async {
+  static Future<Map<String, dynamic>> getAttendanceData(
+      int year, int month) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String empId = prefs.getString('emp_id') ?? '';
@@ -558,29 +564,36 @@ class ApiService {
         'Cookie': 'ci_session=6tb2g58tb2c3cn3io2q8p3eei2re7soo',
       };
 
-      var request = http.MultipartRequest(
-          'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.attendanceCalender)));      request.fields.addAll({
+      var request = http.MultipartRequest('POST',
+          Uri.parse(APIConstants.getFullUrl(APIConstants.attendanceCalender)));
+      request.fields.addAll({
         'APIKEY': 'GNCS0225',
         'emp_id': empId,
         'USER_TYPE': userType,
         'year': year.toString(),
         'month': month.toString(),
       });
+      /*
           print('Emp id: $empId');
           print('user type: $userType');
           print('year: $year');
           print('month: $month');
           print('request fields: ${request.fields}');
           print('request headers: ${request.headers}');
-          // print('API response: $jsonData');
+          print('request headers: ${request.method}');
 
+       */
 
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
+
+      /*
       print('Response: $response');
       print('Response: ${response.stream}');
       print('Request: $request');
+       */
+
       if (response.statusCode == 200) {
         String responseBody = await response.stream.bytesToString();
         Map<String, dynamic> jsonData = jsonDecode(responseBody);
@@ -590,6 +603,47 @@ class ApiService {
       }
     } catch (e) {
       return {'error': 'Error: $e'};
+    }
+  }
+
+  /// Fees
+  static Future<Map<String, dynamic>> fetchFeeSummary() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String empId = prefs.getString('emp_id') ?? '';
+    String userType = prefs.getString('user_type') ?? '';
+    var headers = {
+      'Cookie':
+      'ci_session=edn7k256dg192cpgoa8qltoc355qma65; remember_code=192544114397b621016b697351b3071fd3e499b5.caea73eb212ce286f0a0eca04192926bd52e2a0ce1f90a928834801fd9a4f355d64005f9426390aafb37e68a807fd6e907c88ce541d6f50b2d20d8a50a29bb3c'
+    };
+
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('http://myglobalapp.in/global/API005/feesummary'));
+
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'emp_id': empId,
+      'USER_TYPE': userType,
+    });
+
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        String responseBody = await response.stream.bytesToString();
+        Map<String, dynamic> jsonResponse = json.decode(responseBody);
+
+        if (jsonResponse.containsKey('response')) {
+          return jsonResponse['response'];
+        } else {
+          throw Exception("Response data not found in the response");
+        }
+      } else {
+        throw Exception("Failed to fetch data. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Error: $e");
     }
   }
 

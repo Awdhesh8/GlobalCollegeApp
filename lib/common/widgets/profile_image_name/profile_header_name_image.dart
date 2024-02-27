@@ -63,14 +63,17 @@ class UserProfile extends StatelessWidget {
                       Text(
                         userText2 ?? '',
                         style: const TextStyle(
-                            fontSize: 16,),
+                          fontFamily: 'Inter',
+                            fontSize: 16,
+                        ),
                       ),
                       Text(
                         userText,
                         style:
                           const TextStyle(
+                            fontFamily: 'Inter',
                             fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                             color: EColors.textColorPrimary1,
                           ),
                         ),

@@ -20,7 +20,7 @@ class AppRoutes {
     GetPage(name: splash, page: () => const SplashScreen()),
     
     /// These are sub screens
-    GetPage(name: fees, page: () => const FeesScreen()),
+    GetPage(name: fees, page: () => FeesScreen()),
     GetPage(name: library, page: () =>  LibraryScreen()),
     GetPage(name: cvResume, page: () => const CVResumeScreen()),
     GetPage(name: assessment, page: () => const AssessmentTestScreen()),

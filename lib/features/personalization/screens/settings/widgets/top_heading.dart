@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
 
 class TopHeading extends StatelessWidget {
   final String text;
@@ -12,7 +13,9 @@ class TopHeading extends StatelessWidget {
       text,
       style: TextStyle(
         fontSize: fontSize,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w500,
+        fontFamily: 'Inter',
+        color: EColors.textColorPrimary1
       ),
     );
   }

@@ -138,6 +138,204 @@
 //   }
 // }
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../../utils/constants/colors.dart';
+
+class ViewMoreScreen extends StatelessWidget {
+  final Map<String, dynamic> viewMoreData;
+  final int sem;
+  final perSemFees;
+  final paidAmount;
+  final balanceAmount;
+  ViewMoreScreen(this.viewMoreData, this.sem, this.perSemFees, this.paidAmount, this.balanceAmount);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: GAppBar(
+        backgroundColor: Colors.transparent,
+        showBackArrow: true,
+        title: Text(
+          "Sem ${sem.toString()}",
+          style: const TextStyle(
+            color: EColors.textColorPrimary1,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white70,
+            // color: EColors.backgroundColor,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.red.withOpacity(0.1),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              _topFeesContainer('Per Semester', '₹$perSemFees' ?? '',),
+              // SizedBox(height: 15,),
+              _topFeesContainer('Balance Amt', '₹$balanceAmount' ?? '',),
+              // _buildInfoCard('Per Semester', '₹${data['Per Semester']}'),
+              const Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, bottom: 10, top: 8),
+                    child: Text(
+                      'Fees Summary',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: EColors.textColorPrimary1,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              for (var entry in viewMoreData.entries)
+                _buildInfoCard(entry.key, entry.value),
+                // ListTile(
+                //   title: Text(entry.key),
+                //   subtitle: Text(entry.value.toString()),
+                // ),
+              _topFeesContainer('Total Paid', '₹$paidAmount' ?? '',),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Widget _buildInfoCard(String title, int value) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 5,right: 5, bottom: 5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Icon(
+                FontAwesomeIcons.solidCreditCard,
+                color: EColors.primary,
+                size: 15,
+              ),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontFamily: 'Inter',
+                    color: EColors.textColorPrimary1
+                  // fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+          '₹${value.toString()}',
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Inter',
+                color: EColors.textColorPrimary1
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+Widget _topFeesContainer(String title, String value) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: EColors.backgroundColor,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.red.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: const Offset(2, 2),
+          ),
+          const BoxShadow(
+            color: Colors.white,
+            spreadRadius: 2,
+            blurRadius: 2,
+            offset: Offset(-3, -3),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: EColors.textColorPrimary1,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                '$value.00',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: EColors.textColorPrimary1,
+                ),
+              ),
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.pinkAccent,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.pinkAccent.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: const Icon(
+              FontAwesomeIcons.creditCard,
+              color: EColors.backgroundColor,
+              size: 20,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+/*
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
@@ -341,3 +539,6 @@ class SemesterFeesScreen extends StatelessWidget {
   }
 }
 
+
+
+ */

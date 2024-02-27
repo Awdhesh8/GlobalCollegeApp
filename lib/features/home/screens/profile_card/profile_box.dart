@@ -161,96 +161,117 @@ class _ProfileBoxState extends State<ProfileBox> {
     }
   }
 
+  Widget buildBack() {
+    if (profileData != null && profileData!['response'] != null && profileData!['response'].isNotEmpty) {
+      var responseData = profileData!['response'][0];
 
-  // Widget buildFront() {
-  //   double containerWidth = MediaQuery.of(context).size.width * 0.9;
-  //
-  //   if (profileData?['response'] != null && profileData!['response'].isNotEmpty) {
-  //     var responseData = profileData!['response'][0];
-  //
-  //     // Find the index of 'Profile photo' in responseData
-  //     int photoIndex = responseData.indexWhere((field) => field['type'] == 'Profile photo');
-  //
-  //     // Use the profile photo URL if found, otherwise use a default image URL
-  //     String imageUrl = photoIndex != -1 ? responseData[photoIndex]['value'] : 'assets/avaters/Avatar Default.jpg';
-  //
-  //     return Column(
-  //       children: [
-  //         Container(
-  //           width: containerWidth,
-  //           height: 125,
-  //           decoration: BoxDecoration(
-  //             color: EColors.primarySecond,
-  //             borderRadius: BorderRadius.circular(10),
-  //             boxShadow: const [
-  //               BoxShadow(
-  //                 offset: Offset(0, 0),
-  //                 blurRadius: 10,
-  //                 color: Colors.black12,
-  //               )
-  //             ],
-  //           ),
-  //           child: Container(
-  //             decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(20),
-  //             ),
-  //             padding: const EdgeInsets.all(0),
-  //             child: UserProfileWidget(
-  //               imageUrl: imageUrl,
-  //               name: responseData[0]['value'] ?? 'Unknown',
-  //               branch: responseData[8]['value'] ?? 'Unknown',
-  //               courseType: responseData[7]['value'] ?? 'Unknown',
-  //               enroll: responseData[1]['value'] ?? 'Unknown',
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     );
-  //   } else {
-  //     // Handle the case when response or its sublists are null or empty
-  //     return Container(
-  //       width: containerWidth,
-  //       height: 125,
-  //       decoration: BoxDecoration(
-  //         color: EColors.primarySecond,
-  //         borderRadius: BorderRadius.circular(10),
-  //         boxShadow: const [
-  //           BoxShadow(
-  //             offset: Offset(0, 0),
-  //             blurRadius: 10,
-  //             color: Colors.black12,
-  //           )
-  //         ],
-  //       ),
-  //       child: const Center(
-  //         child: Text(
-  //           'Profile data is not available.',
-  //           style: TextStyle(
-  //             color: EColors.textColorPrimary1,
-  //             fontSize: 16,
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
+      return BackUserDetailsWidget(
+        fatherName: responseData['Fathers_Name'] ?? '',
+        motherName: responseData['Mothers_Name'] ?? '',
+        dateOfBirth: responseData['DOB'] ?? '',
+        studentSession: responseData['stud_session'] ?? '',
+        mobile: responseData['ContactNo'] ?? '',
+        email: responseData['Email'] ?? '',
+      );
+    } else {
+      // Handle the case when response or its sublist are null or empty
+      return Container(
+        // Your fallback UI or message for when the data is not available
+      );
+    }
+  }
 
-
-
+/*
   Widget buildBack() {
     return BackUserDetailsWidget(
-      fatherName: profileData?['response']?[0]?[3]?['value'] ?? '',
-      motherName: profileData?['response']?[0]?[4]?['value'] ?? '',
-      studentSession: profileData?['response']?[0]?[5]?['value'] ?? '',
-      mobile: profileData?['response']?[0]?[6]?['value'] ?? '',
+      fatherName: profileData?['response']?[0]?[5]?['fathers_name'] ?? '',
+      motherName: profileData?['response']?[0]?[5]?['mothers_name'] ?? '',
+      studentSession: profileData?['response']?[0]?[15]?['stud_session'] ?? '',
+      mobile: profileData?['response']?[0]?[7]?['mobile'] ?? '',
       email: profileData?['response']?[0]?[11]?['value'] ?? 'NA',
     );
   }
 
+   */
+
 }
 
 
+/*
+// Widget buildFront() {
+//   double containerWidth = MediaQuery.of(context).size.width * 0.9;
+//
+//   if (profileData?['response'] != null && profileData!['response'].isNotEmpty) {
+//     var responseData = profileData!['response'][0];
+//
+//     // Find the index of 'Profile photo' in responseData
+//     int photoIndex = responseData.indexWhere((field) => field['type'] == 'Profile photo');
+//
+//     // Use the profile photo URL if found, otherwise use a default image URL
+//     String imageUrl = photoIndex != -1 ? responseData[photoIndex]['value'] : 'assets/avaters/Avatar Default.jpg';
+//
+//     return Column(
+//       children: [
+//         Container(
+//           width: containerWidth,
+//           height: 125,
+//           decoration: BoxDecoration(
+//             color: EColors.primarySecond,
+//             borderRadius: BorderRadius.circular(10),
+//             boxShadow: const [
+//               BoxShadow(
+//                 offset: Offset(0, 0),
+//                 blurRadius: 10,
+//                 color: Colors.black12,
+//               )
+//             ],
+//           ),
+//           child: Container(
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.circular(20),
+//             ),
+//             padding: const EdgeInsets.all(0),
+//             child: UserProfileWidget(
+//               imageUrl: imageUrl,
+//               name: responseData[0]['value'] ?? 'Unknown',
+//               branch: responseData[8]['value'] ?? 'Unknown',
+//               courseType: responseData[7]['value'] ?? 'Unknown',
+//               enroll: responseData[1]['value'] ?? 'Unknown',
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   } else {
+//     // Handle the case when response or its sublists are null or empty
+//     return Container(
+//       width: containerWidth,
+//       height: 125,
+//       decoration: BoxDecoration(
+//         color: EColors.primarySecond,
+//         borderRadius: BorderRadius.circular(10),
+//         boxShadow: const [
+//           BoxShadow(
+//             offset: Offset(0, 0),
+//             blurRadius: 10,
+//             color: Colors.black12,
+//           )
+//         ],
+//       ),
+//       child: const Center(
+//         child: Text(
+//           'Profile data is not available.',
+//           style: TextStyle(
+//             color: EColors.textColorPrimary1,
+//             fontSize: 16,
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+*/
 
 // import 'package:flutter/material.dart';
 // import 'package:globalcollegeapp/features/home/screens/profile_card/widgets/profile_card_back_side/profile_card_back_side.dart';

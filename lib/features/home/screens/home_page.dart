@@ -47,6 +47,7 @@ import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/features/home/screens/profile_card/profile_box.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import '../../../Circular Menus/circular_menus_with_circle.dart';
+import '../../../data/api/api_services.dart';
 import '../widgets/animation_switcher/hide_show_animation.dart';
 import 'left_circle_menu_and_screens/fees/fees_card/fees_card_contanier.dart';
 
@@ -89,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             AnimatedSwitcherWidget(
-              firstWidget: const FeesCard(),
+              firstWidget: FeesCard(),
               secondWidget: const ProfileBox(),
               showFirst: showFeesCard,
               selectedIndex: selectedIndex,
