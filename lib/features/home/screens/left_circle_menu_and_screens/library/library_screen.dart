@@ -167,7 +167,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
           showBackArrow: true,
           surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.transparent,
-          centerTitle: true,
+          // centerTitle: true,
           title: const Text(
             'Library',
             style: TextStyle(
@@ -251,7 +251,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     child: TopHeading(
                       text:
                           'Unveiling Our Newest\nArrivals: Dive into\nFresh Reads',
-                    )),
+                    ),
+                ),
               ],
             ),
             isLoading

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/applyLeave/apply_leave.dart';
 import 'dart:math';
 import '../../../../utils/constants/colors.dart';
 import 'package:get/get.dart';
@@ -190,6 +191,10 @@ class _LeftSideCircularScrollingBoxesState
           case 12:
         screen = () => AttendanceScreen();
         break;
+      case 3:
+      case 13:
+        screen = () => const ApplyLeave();
+        break;
 
     // Add cases for other indices/screens as needed
       default:
@@ -253,7 +258,7 @@ class _LeftSideCircularScrollingBoxesState
 
   bool isUnderDevelopmentLeftMenus(int index) {
     // Add the indices of screens that are under development
-    List<int> underDevelopmentIndices = [3, 4, 5, 6, 7, 8, 9, 13, 14, 15, 16, 17, 18];
+    List<int> underDevelopmentIndices = [4, 5, 6, 7, 8, 9, 14, 15, 16, 17, 18];
 
     return underDevelopmentIndices.contains(index);
   }

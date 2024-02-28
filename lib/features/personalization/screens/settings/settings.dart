@@ -43,9 +43,10 @@ class SettingsScreen extends StatelessWidget {
       appBar: const GAppBar(
         showBackArrow: false,
         title: Text(
-          'Account',
+          'Profile',
           style: TextStyle(
             fontSize: 20.0,
+            fontFamily: 'Inter',
             color: Colors.white,
             fontWeight: FontWeight.w600,
           ),

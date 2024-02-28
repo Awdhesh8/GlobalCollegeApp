@@ -52,42 +52,46 @@ class _FeesCardState extends State<FeesCard> {
       summaryData.isEmpty
           ? ShimmerFeesCard()
           :
-      Container(
-        width: double.infinity,
-        decoration: ShapeDecoration(
-          color: EColors.backgroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(21),
-          ),
-          shadows: const [
-            BoxShadow(
-              color: Color(0x26000000),
-              blurRadius: 10.90,
-              offset: Offset(0, 0),
-              spreadRadius: 0,
-            )
-          ],
-        ),
-        child: Column(
+      Column(
+        children: [
+        Column(
           children: [
-          Column(
-            children: [
-              Container(
-                width: double.infinity,
-                decoration: ShapeDecoration(
-                  color: EColors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(21),
-                  ),
-                  shadows: const [
+            Container(
+              width: double.infinity,
+                decoration: BoxDecoration(
+                  color: EColors.backgroundColor,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
                     BoxShadow(
-                      color: Color(0x26000000),
-                      blurRadius: 10.90,
-                      offset: Offset(0, 0),
-                      spreadRadius: 0,
-                    )
+                      color: Colors.red.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 4,
+                      offset: const Offset(2, 2),
+                    ),
+                    const BoxShadow(
+                      color: Colors.white,
+                      spreadRadius: 2,
+                      blurRadius: 2,
+                      offset: Offset(-3, -3),
+                    ),
                   ],
                 ),
+              // decoration: ShapeDecoration(
+              //   color: EColors.white,
+              //   shape: RoundedRectangleBorder(
+              //     borderRadius: BorderRadius.circular(21),
+              //   ),
+              //   shadows: const [
+              //     BoxShadow(
+              //       color: Color(0x26000000),
+              //       blurRadius: 10.90,
+              //       offset: Offset(0, 0),
+              //       spreadRadius: 0,
+              //     )
+              //   ],
+              // ),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
                 child: Column(
                   children: [
                     Row(
@@ -95,46 +99,61 @@ class _FeesCardState extends State<FeesCard> {
                       children: [
                         Expanded(
                           child: Container(
-                            decoration: const BoxDecoration(
-                              // color: EColors.circleAvatar,
-                              // color: Color(0xFF9D0D11),
-                                borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(0), topLeft: Radius.circular(12))
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 15,),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Icon(FontAwesomeIcons.indianRupeeSign, color: Colors.amber, size: 40,),
-
-                                  InkWell(
-                                    onTap: () =>
-                                        Get.to(() =>
-                                            FeesScreen(),
-                                          transition: Transition.cupertino,
-                                          duration: const Duration(milliseconds: 500),
-                                        ),
-
-                                    child: Row(
-                                      children: [
-                                        Shimmer.fromColors(
-                                          baseColor: EColors.primary,
+                            // decoration: const BoxDecoration(
+                            //     borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(0), topLeft: Radius.circular(12))
+                            // ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Icon(FontAwesomeIcons.moneyCheck, color: Colors.pinkAccent, size: 40,),
+                                Row(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: EColors.backgroundColor,
+                                        borderRadius: BorderRadius.circular(15),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.red.withOpacity(0.2),
+                                            spreadRadius: 2,
+                                            blurRadius: 4,
+                                            offset: const Offset(2, 2),
+                                          ),
+                                          const BoxShadow(
+                                            color: Colors.white,
+                                            spreadRadius: 2,
+                                            blurRadius: 2,
+                                            offset: Offset(-3, -3),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Shimmer.fromColors(
+                                        baseColor: EColors.primary,
+                                        highlightColor: EColors.primarySecond,
+                                        child: IconButton( onPressed: () =>
+                                            Get.to(() =>
+                                                FeesScreen(),
+                                              transition: Transition.cupertino,
+                                              duration: const Duration(milliseconds: 500),
+                                            ), icon: const Icon(Iconsax.element_equal),
                                           highlightColor: EColors.primarySecond,
-                                          child: const Icon(FontAwesomeIcons.arrowRight, size: 20,),
                                         ),
-                                      ],
+                                        // child: const Icon(FontAwesomeIcons.ellipsisVertical, size: 20,),
+                                        // child: const Icon(FontAwesomeIcons.arrowRight, size: 20,),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ],
                     ),
+                    SizedBox(height: 10,),
                     /// Balance Fees & Text
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 0),
                       child: Row(
                         children: [
                           Text(
@@ -153,12 +172,13 @@ class _FeesCardState extends State<FeesCard> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
+                      padding: EdgeInsets.symmetric(horizontal: 00),
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 "${summaryData["tbal"].toString()}.00",
@@ -170,61 +190,44 @@ class _FeesCardState extends State<FeesCard> {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              // const Text(
-                              //   '(Rest Amt)',
-                              //   // textAlign: TextAlign.center,
-                              //   style: TextStyle(
-                              //     color: EColors.textColorPrimary1,
-                              //     fontSize: 8,
-                              //     fontFamily: 'Inter',
-                              //     fontWeight: FontWeight.w600,
-                              //   ),
-                              // ),
+                              const Icon(FontAwesomeIcons.indianRupeeSign, color: Colors.black12, size: 50,),
                             ],
                           ),
-                          const Icon(FontAwesomeIcons.indianRupeeSign, color: Colors.amber, size: 40,),
+                          Row(
+                            children: [
+                              Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                                  child: Shimmer.fromColors(
+                                    baseColor: EColors.primary,
+                                    highlightColor: EColors.primarySecond,
+                                    child: Text(
+                                      '${summaryData["comit_remark"]}',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: EColors.primary,
+                                          fontSize: 12,
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w600,
+                                          overflow:TextOverflow.ellipsis
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                            ],
+                          ),
                         ],
                       ),
                     ),
-                    // const SizedBox(
-                    //   height: ESizes.spaceBtwItems,
-                    // ),
                   ],
-                )
-              ),
-            ],
-          ),
-            /// Commitment Text
-            Column(
-              children: [
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-                    child: Row(
-                      children: [
-                        Shimmer.fromColors(
-                          baseColor: EColors.primary,
-                          highlightColor: EColors.primarySecond,
-                          child: Text(
-                            '${summaryData["comit_remark"]}',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                color: EColors.primary,
-                                fontSize: 12,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w600,
-                                overflow:TextOverflow.ellipsis
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
-              ],
+              )
             ),
           ],
         ),
+        ],
       ),
     );
   }

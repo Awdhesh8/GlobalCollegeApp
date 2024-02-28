@@ -150,7 +150,8 @@ class ViewMoreScreen extends StatelessWidget {
   final perSemFees;
   final paidAmount;
   final balanceAmount;
-  ViewMoreScreen(this.viewMoreData, this.sem, this.perSemFees, this.paidAmount, this.balanceAmount);
+  ViewMoreScreen(this.viewMoreData, this.sem, this.perSemFees, this.paidAmount,
+      this.balanceAmount);
 
   @override
   Widget build(BuildContext context) {
@@ -186,9 +187,15 @@ class ViewMoreScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _topFeesContainer('Per Semester', '₹$perSemFees' ?? '',),
+              _topFeesContainer(
+                'Per Semester',
+                '₹$perSemFees' ?? '',
+              ),
               // SizedBox(height: 15,),
-              _topFeesContainer('Balance Amt', '₹$balanceAmount' ?? '',),
+              _topFeesContainer(
+                'Balance Amt',
+                '₹$balanceAmount' ?? '',
+              ),
               // _buildInfoCard('Per Semester', '₹${data['Per Semester']}'),
               const Row(
                 children: [
@@ -207,11 +214,14 @@ class ViewMoreScreen extends StatelessWidget {
               ),
               for (var entry in viewMoreData.entries)
                 _buildInfoCard(entry.key, entry.value),
-                // ListTile(
-                //   title: Text(entry.key),
-                //   subtitle: Text(entry.value.toString()),
-                // ),
-              _topFeesContainer('Total Paid', '₹$paidAmount' ?? '',),
+              // ListTile(
+              //   title: Text(entry.key),
+              //   subtitle: Text(entry.value.toString()),
+              // ),
+              _topFeesContainer(
+                'Total Paid',
+                '₹$paidAmount' ?? '',
+              ),
             ],
           ),
         ),
@@ -221,44 +231,43 @@ class ViewMoreScreen extends StatelessWidget {
 }
 
 Widget _buildInfoCard(String title, int value) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 5,right: 5, bottom: 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Icon(
-                FontAwesomeIcons.solidCreditCard,
-                color: EColors.primary,
-                size: 15,
-              ),
-              Text(
-                title,
-                style: const TextStyle(
+  return Padding(
+    padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Icon(
+              FontAwesomeIcons.solidCreditCard,
+              color: EColors.primary,
+              size: 15,
+            ),
+            Text(
+              title,
+              style: const TextStyle(
                   fontSize: 15,
                   fontFamily: 'Inter',
-                    color: EColors.textColorPrimary1
+                  color: EColors.textColorPrimary1
                   // fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
+                  ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
           '₹${value.toString()}',
-            style: const TextStyle(
+          style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               fontFamily: 'Inter',
-                color: EColors.textColorPrimary1
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+              color: EColors.textColorPrimary1),
+        ),
+      ],
+    ),
+  );
+}
 
 Widget _topFeesContainer(String title, String value) {
   return Padding(
@@ -333,7 +342,6 @@ Widget _topFeesContainer(String title, String value) {
     ),
   );
 }
-
 
 /*
 import 'package:flutter/material.dart';
