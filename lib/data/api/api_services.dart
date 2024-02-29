@@ -647,5 +647,99 @@ class ApiService {
     }
   }
 
+  /// Apply Leave
+  static Future<String> applyLeave({
+    required String applyFrom,
+    required String applyTo,
+    required String reason,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('user_id') ?? '';
+
+      var headers = {
+        'Cookie': 'ci_session=9918717oip21ucg7572uevf8cn0e3f5u',
+      };
+
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://myglobalapp.in/global/API005/applyleave'),
+      );
+
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'USER_ID': userId,
+        'applyfrom': applyFrom,
+        'applyto': applyTo,
+        'reason': reason,
+      });
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        String responseBody = await response.stream.bytesToString();
+        // Parse the JSON response
+        Map<String, dynamic> jsonResponse = json.decode(responseBody);
+
+        String message = jsonResponse['message'] ?? 'Unknown response';
+
+        return message;
+      } else {
+        print(response.reasonPhrase);
+        return 'Error occurred: ${response.reasonPhrase}';
+      }
+    } catch (e) {
+      print('Error applying leave: $e');
+      return 'Error occurred: $e';
+    }
+  }
+
+  /// Leave History
+  static Future<List<Map<String, dynamic>>> getLeaveHistory() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('user_id') ?? '';
+
+      var headers = {
+        'Cookie': 'ci_session=9918717oip21ucg7572uevf8cn0e3f5u',
+      };
+
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://myglobalapp.in/global/API005/get_leavehistory'),
+      );
+
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'USER_ID': userId,
+      });
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        String responseBody = await response.stream.bytesToString();
+        Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+        if (jsonResponse['status'] == '1') {
+          // Successful API response
+          List<Map<String, dynamic>>? leaveHistoryList = jsonResponse['response'];
+          return leaveHistoryList ?? [];
+        } else {
+          // Error in AP I response
+          print('Error in API response: ${jsonResponse['message']}');
+          return [];
+        }
+      } else {
+        print(response.reasonPhrase);
+        return [];
+      }
+    } catch (e) {
+      print('Error getting leave history: $e');
+      return [];
+    }
+  }
 
 }
