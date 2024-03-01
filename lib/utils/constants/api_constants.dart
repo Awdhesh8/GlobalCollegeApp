@@ -17,6 +17,7 @@ class APIConstants {
   static const String libraryHistory = 'book_history';
   static const String attendanceCalender = 'newattendance_details';
   static const String feesDetails = 'feesummary';
+  static const String cancelLeave = 'cancelleave';
 
 
 

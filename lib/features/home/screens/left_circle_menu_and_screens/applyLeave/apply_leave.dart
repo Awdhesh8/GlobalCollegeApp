@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../data/api/api_services.dart';
@@ -14,7 +15,7 @@ class ApplyLeave extends StatelessWidget {
     Get.put(LeaveFormController());
     return Scaffold(
       backgroundColor: EColors.backgroundColor,
-      appBar: GAppBar(
+      appBar: const GAppBar(
         backgroundColor: Colors.transparent,
         showBackArrow: true,
         title: Text(
@@ -29,7 +30,7 @@ class ApplyLeave extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             children: [
               /// Top Heading
@@ -39,16 +40,36 @@ class ApplyLeave extends StatelessWidget {
 
               /// Leave Form
               LeaveForm(),
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                child: Shimmer.fromColors(
+                  baseColor: EColors.primary,
+                  highlightColor: EColors.primarySecond,
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Need to backtrack? Swipe to Cancel!',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
-              // Divider to separate current leave application and history
-              Divider(),
+              /// Divider to separate current leave application and history
+              const Divider(),
 
-              // Leave application history
+              /// Leave application history
+              const TopHeading(
+                text: 'History',
+              ),
+
               SingleChildScrollView(
                 child: Container(
-                    decoration: BoxDecoration(
-                        color: EColors.backgroundColor,
-                        borderRadius: BorderRadius.circular(20)),
+                    decoration: const BoxDecoration(
+                      color: EColors.backgroundColor,
+                      // borderRadius: BorderRadius.circular(20),
+                    ),
                     child: LeaveApplicationHistory()),
               ),
             ],
@@ -78,36 +99,76 @@ class LeaveForm extends StatelessWidget {
       child: Column(
         children: [
           Obx(() => ListTile(
-                title: Text(
-                    'From Date: ${controller.fromController.value.isEmpty ? 'Select From Date' : controller.fromController.value}'),
-                onTap: () {
-                  print("Selecting From Date");
-                  _selectDate(context, true, controller.fromController);
-                },
-              )),
+            title: Text(
+                'From Date: ${controller.fromController.value.isEmpty ? 'Select From Date' : controller.fromController.value}'),
+            onTap: () {
+              print("Selecting From Date");
+              _selectDate(context, true, controller.fromController);
+            },
+          )),
           Obx(() => ListTile(
-                title: Text(
-                    'To Date: ${controller.toController.value.isEmpty ? 'Select To Date' : controller.toController.value}'),
-                onTap: () {
-                  print("Selecting To Date");
-                  _selectDate(context, false, controller.toController);
-                },
-              )),
-          Obx(() => TextFormField(
+            title: Text(
+                'To Date: ${controller.toController.value.isEmpty ? 'Select To Date' : controller.toController.value}'),
+            onTap: () {
+              print("Selecting To Date");
+              _selectDate(context, false, controller.toController);
+            },
+          )),
+          Obx(
+                () => AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              decoration: BoxDecoration(
+                // border: Border.all(
+                //   color: controller.reasonError.value
+                //       ? Colors.red
+                //       : Colors.transparent,
+                // ),
+                // borderRadius: BorderRadius.circular(8.0),
+              ),
+              constraints: const BoxConstraints(
+                minHeight:
+                50.0,
+              ),
+              child: TextFormField(
                 onChanged: (value) {
                   controller.reasonController.value = value;
-                  controller.reasonError.value =
-                      false; // Reset the error state when the user starts typing
+                  controller.reasonError.value = false;
+                  // Reset the error state when the user starts typing
                 },
                 decoration: InputDecoration(
-                  labelText: 'Reason',
+                  isDense: true,
+                  suffixIcon: const Icon(Iconsax.document_text),
+                  labelText: 'Application',
                   errorText: controller.reasonError.value
                       ? 'Please enter a reason'
                       : null,
                 ),
-              )
+                maxLength: 250,
+                maxLines:
+                null, // Allow the field to expand vertically as needed
+              ),
+            ),
+
+            // Obx(() => TextFormField(
+            //   onChanged: (value) {
+            //     controller.reasonController.value = value;
+            //     controller.reasonError.value =
+            //     false; // Reset the error state when the user starts typing
+            //   },
+            //   decoration: InputDecoration(
+            //     isDense: true,
+            //     suffixIcon: const Icon(Iconsax.document_text),
+            //     labelText: 'Application',
+            //     errorText: controller.reasonError.value
+            //         ? 'Please enter a reason'
+            //         : null,
+            //   ),
+            //   maxLength: 250,
+            //   maxLines: 3,
+            // ),
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () async {
               if (_isValidForm(controller)) {
@@ -136,7 +197,7 @@ class LeaveForm extends StatelessWidget {
                 controller.reasonController.value = '';
               }
             },
-            child: Text('Submit'),
+            child: const Text('Submit'),
           ),
         ],
       ),
@@ -192,47 +253,291 @@ class LeaveApplicationHistory extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // API call is still in progress, show a loading indicator
-          return CircularProgressIndicator();
+          return ShimmerLeaveHistory();
         } else if (snapshot.hasError) {
           // Error occurred while fetching leave history
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.data == null || snapshot.data!.isEmpty) {
           // No leave history data available
-          return Text('No leave history available');
+          return const Text('No leave history available');
         } else {
           // Convert dynamic list to List<Map<String, dynamic>>
-          List<Map<String, dynamic>> leaveHistoryList = List<Map<String, dynamic>>.from(snapshot.data!);
+          List<Map<String, dynamic>> leaveHistoryList =
+          List<Map<String, dynamic>>.from(snapshot.data!);
 
           // Display leave application history using ListView.builder
           controller.leaveHistory.clear();
-          for (var leaveData in leaveHistoryList) {
-            // Format leave application for display in history
-            String formattedLeave =
-                'From: ${leaveData['applyfrom']}, To: ${leaveData['applyto']}, Reason: ${leaveData['leav_purpose']}';
-            controller.leaveHistory.add(formattedLeave);
-          }
-
           return ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: controller.leaveHistory.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: leaveHistoryList.length,
             itemBuilder: (context, index) {
-              final leaveApplication = controller.leaveHistory[index];
-              return ListTile(
-                title: Text(leaveApplication),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    // Delete the leave application
-                    controller.leaveHistory.removeAt(index);
-                  },
+              final leaveData = leaveHistoryList[index];
+              final purpose = leaveData['leav_purpose'] as String;
+              final leaveItemController = Get.put(LeaveItemController());
+
+              // Check if leav_status is Approved or Cancelled
+              bool isApproved = leaveData['leav_status'] == 'Approved';
+              bool isCancelled = leaveData['leav_status'] == 'Cancelled';
+
+              return Dismissible(
+                key: UniqueKey(),
+                background: isApproved || isCancelled ? null : Container(
+                  color: Colors.red.shade300,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Cancel Application....   ',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 26,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Inter'),
+                          ),
+                        ),
+                        Icon(
+                          Icons.cancel,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
+                confirmDismiss: (direction) async {
+                  if (isApproved || isCancelled) {
+                    // Show an alert dialog indicating that cancelation is not allowed
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Cancelation Not Allowed'),
+                          content: const Text(
+                            'Cancelation is not allowed for this leave application.',
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    return false;
+                  } else {
+                    // Show confirmation dialog for cancelation
+                    return await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Confirm Cancelation'),
+                          content: const Text(
+                              'Are you sure you want to Cancel this leave application?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text('No'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: const Text('Yes'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                onDismissed: (direction) {
+                  if (!isApproved && !isCancelled) {
+                    // Remove the item from the list if confirmed
+                    // controller.leaveHistory.removeAt(index);
+                    controller.leaveHistory.remove(leaveData);
+                    // Call your delete API here using leaveData['leav_id']
+                    ApiService.cancelLeave(leaveData['leav_id']);
+                    Get.snackbar(
+                      'Leave Application',
+                      'Leave application deleted.',
+                      snackPosition: SnackPosition.BOTTOM,
+                    );
+                  }
+                },
+                direction: DismissDirection.endToStart,
+                child: LeaveItemWidget(leaveData: leaveData),
               );
             },
           );
         }
       },
     );
+  }
+}
+
+class LeaveItemWidget extends StatelessWidget {
+  final Map<String, dynamic> leaveData;
+
+  const LeaveItemWidget({required this.leaveData});
+
+  @override
+  Widget build(BuildContext context) {
+    final purpose = leaveData['leav_purpose'] as String;
+    final leaveItemController = Get.put(LeaveItemController());
+
+    Color statusColor = Colors.grey.shade500;
+    Color statusTextColor = Colors.grey.shade500;
+    switch (leaveData['leav_status']) {
+      case 'Pending':
+        statusColor = Colors.amberAccent.shade400;
+        statusTextColor = Colors.white;
+        break;
+      case 'Cancelled':
+        statusColor = Colors.red.shade300;
+        statusTextColor = Colors.white;
+        break;
+      case 'Approved':
+        statusColor = Colors.green.shade200;
+        statusTextColor = Colors.white;
+        break;
+      default:
+        statusColor = Colors.grey.shade500;
+        break;
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${leaveData['stud_name']}',
+                  style: const TextStyle(
+                    color: EColors.textColorPrimary1,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Leave Dates: ${leaveData['leave_date']}',
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text('Status: ',
+                      style: TextStyle(
+                        color: Colors.grey.shade400, // Text color for all status colors
+                        fontSize: 13,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: statusColor,
+                          borderRadius: BorderRadius.circular(8)
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          '${leaveData['leav_status']}',
+                          style: TextStyle(
+                            color: statusTextColor, // Text color for all status colors
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8), // Add some spacing
+                LeavePurposeTextWidget(purpose: purpose),
+              ],
+            ),
+            trailing: const Icon(Icons.drag_handle), // Add icon for drag handle
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class LeavePurposeTextWidget extends StatelessWidget {
+  final String purpose;
+
+  const LeavePurposeTextWidget({required this.purpose});
+
+  @override
+  Widget build(BuildContext context) {
+    final leaveItemController = Get.find<LeaveItemController>();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Obx(
+              () => Text(
+            purpose,
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 14,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
+            ),
+            softWrap: true,
+            maxLines: leaveItemController.isExpanded.value ? null : 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        if (purpose.split('\n').length >
+            3) // Check if text has more than 3 lines
+          TextButton(
+            onPressed: () {
+              leaveItemController.toggleExpand();
+            },
+            child: Obx(
+                  () => Text(
+                leaveItemController.isExpanded.value
+                    ? 'View Less'
+                    : 'View More',
+                style: const TextStyle(
+                  color: Colors.blue, // You can adjust the color as needed
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class LeaveItemController extends GetxController {
+  var isExpanded = false.obs;
+
+  void toggleExpand() {
+    isExpanded.value = !isExpanded.value;
   }
 }
 
@@ -248,9 +553,12 @@ class ShimmerLeaveHistory extends StatelessWidget {
             baseColor: Colors.grey[300]!,
             highlightColor: Colors.grey[100]!,
             child: Container(
-              height: 16.0,
+              height: 100.0,
               width: double.infinity,
-              color: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
             ),
           ),
         ),

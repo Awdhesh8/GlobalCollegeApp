@@ -647,7 +647,6 @@ class ApiService {
     }
   }
 
-  /// Apply Leave
   static Future<String> applyLeave({
     required String applyFrom,
     required String applyTo,
@@ -696,7 +695,7 @@ class ApiService {
     }
   }
 
-  /// Leave History
+  /// Get Leave History
   static Future<List<Map<String, dynamic>>> getLeaveHistory() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -722,13 +721,18 @@ class ApiService {
       if (response.statusCode == 200) {
         String responseBody = await response.stream.bytesToString();
         Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-
+        print(responseBody);
+        print(response.request);
         if (jsonResponse['status'] == '1') {
           // Successful API response
-          List<Map<String, dynamic>>? leaveHistoryList = jsonResponse['response'];
-          return leaveHistoryList ?? [];
+          List<dynamic> leaveHistoryData = jsonResponse['response'];
+          List<Map<String, dynamic>> leaveHistoryList = [];
+          for (var leaveData in leaveHistoryData) {
+            leaveHistoryList.add(Map<String, dynamic>.from(leaveData));
+          }
+          return leaveHistoryList;
         } else {
-          // Error in AP I response
+          // Error in API response
           print('Error in API response: ${jsonResponse['message']}');
           return [];
         }
@@ -742,4 +746,30 @@ class ApiService {
     }
   }
 
+  ///  Cancel Leave
+  static Future<void> cancelLeave(String leaveId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+    var headers = {
+      'Cookie': 'ci_session=5a5e359s108tlmsgdfsnevd9s51pns27'
+    };
+    var body = {
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'leav_id': leaveId,
+    };
+
+    var response = await http.post(
+      Uri.parse(APIConstants.getFullUrl(APIConstants.cancelLeave)),
+      headers: headers,
+      body: body,
+    );
+    print(body);
+    print(response);
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
 }
