@@ -647,6 +647,7 @@ class ApiService {
     }
   }
 
+  /// Apply Leave
   static Future<String> applyLeave({
     required String applyFrom,
     required String applyTo,
@@ -772,4 +773,6 @@ class ApiService {
       print(response.reasonPhrase);
     }
   }
+
+
 }
