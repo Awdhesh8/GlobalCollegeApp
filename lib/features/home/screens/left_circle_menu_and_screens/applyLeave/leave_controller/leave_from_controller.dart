@@ -12,4 +12,6 @@ class LeaveFormController extends GetxController {
 
   // RxList to store the history of leave applications
   RxList<String> leaveHistory = <String>[].obs;
+
+
 }

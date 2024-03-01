@@ -4,6 +4,7 @@ import 'dart:math';
 import '../../../../utils/constants/colors.dart';
 import 'package:get/get.dart';
 import 'attendance/attendance_screen.dart';
+import 'gate_pass/gate_pass.dart';
 import 'library/library_screen.dart';
 
 class LeftSideCircularScrollingBoxes extends StatefulWidget {
@@ -193,7 +194,10 @@ class _LeftSideCircularScrollingBoxesState
         break;
       case 3:
       case 13:
-        screen = () => const ApplyLeave();
+        screen = () => ApplyLeave();
+        break;
+        case 5:
+        screen = () => const GatePass();
         break;
 
     // Add cases for other indices/screens as needed
@@ -258,7 +262,7 @@ class _LeftSideCircularScrollingBoxesState
 
   bool isUnderDevelopmentLeftMenus(int index) {
     // Add the indices of screens that are under development
-    List<int> underDevelopmentIndices = [4, 5, 6, 7, 8, 9, 14, 15, 16, 17, 18];
+    List<int> underDevelopmentIndices = [4, 6, 7, 8, 9, 14, 15, 16, 17, 18];
 
     return underDevelopmentIndices.contains(index);
   }

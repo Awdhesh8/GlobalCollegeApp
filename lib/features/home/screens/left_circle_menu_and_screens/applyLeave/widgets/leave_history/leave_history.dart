@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
 import '../../../../../../../data/api/api_services.dart';
 import '../../apply_leave.dart';
 import '../../leave_controller/leave_from_controller.dart';
@@ -10,8 +9,10 @@ import '../shimmer/leave_shimmer_contanier.dart';
 class LeaveApplicationHistory extends StatelessWidget {
   final controller = Get.find<LeaveFormController>();
 
+
   @override
   Widget build(BuildContext context) {
+
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: ApiService.getLeaveHistory(),
       builder: (context, snapshot) {

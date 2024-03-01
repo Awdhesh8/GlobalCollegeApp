@@ -509,6 +509,8 @@ class ShimmerItem extends StatelessWidget {
   }
 }
 
+
+
 /// Correctly Fetch the API
 
 /*

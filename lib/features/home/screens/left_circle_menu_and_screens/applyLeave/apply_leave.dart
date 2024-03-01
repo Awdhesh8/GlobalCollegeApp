@@ -31,6 +31,7 @@ class ApplyLeave extends StatelessWidget {
           ),
         ),
       ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -242,6 +243,7 @@ class LeaveItemController extends GetxController {
     isExpanded.value = !isExpanded.value;
   }
 }
+
 
 /// Correct code
 /*

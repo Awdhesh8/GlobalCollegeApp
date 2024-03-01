@@ -42,7 +42,7 @@ class LeaveForm extends StatelessWidget {
                       decoration: InputDecoration(
                         isDense: true,
                         suffixIcon: IconButton(
-                          icon: Icon(Iconsax.calendar_add),
+                          icon: const Icon(Iconsax.calendar_add),
                           onPressed: () {
                             _selectDate(
                                 context, false, controller.fromController);
@@ -93,7 +93,7 @@ class LeaveForm extends StatelessWidget {
                         decoration: InputDecoration(
                           isDense: true,
                           suffixIcon: IconButton(
-                            icon: Icon(Iconsax.calendar_add),
+                            icon: const Icon(Iconsax.calendar_add),
                             onPressed: () {
                               _selectDate(
                                   context, false, controller.toController);
@@ -114,53 +114,6 @@ class LeaveForm extends StatelessWidget {
                         //     null, // Allow the field to expand vertically as needed
                       ),
                     ),
-                    /*
-            Container(
-              width: 150,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black54)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${controller.toController.value.isEmpty ? 'To' : controller.toController.value}',
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 13,
-                        color: EColors.textColorPrimary1,
-                      ),
-
-                      // maxLength: 250,
-                      maxLines:
-                      null, // Allow the field to expand vertically as needed
-                    ),
-                    Icon(Iconsax.calendar_add, size: 20,)
-                  ],
-                ),
-              ),
-              /*
-                  ListTile(
-                    trailing: const Icon(Iconsax.calendar_add),
-                    dense: true,
-                    title: Text(
-                      '${controller.toController.value.isEmpty ? 'To' : controller.toController.value}',
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 13,
-                        color: EColors.textColorPrimary1,
-                      ),
-                    ),
-                    onTap: () {
-                      print("Selecting To Date");
-                      _selectDate(context, false, controller.toController);
-                    },
-                  ),*/
-            ),
-            */
                   )),
             ],
           ),
@@ -203,6 +156,7 @@ class LeaveForm extends StatelessWidget {
               ),
             ),
           ),
+
           ElevatedButton(
             onPressed: () async {
               if (_isValidForm(controller)) {
@@ -229,6 +183,11 @@ class LeaveForm extends StatelessWidget {
                 controller.fromController.value = '';
                 controller.toController.value = '';
                 controller.reasonController.value = '';
+
+                await ApiService.getLeaveHistory();
+
+
+
               }
             },
             child: const Text('Submit'),
@@ -279,3 +238,70 @@ class LeaveForm extends StatelessWidget {
     return 'From: ${controller.fromController.value}, To: ${controller.toController.value}, Reason: ${controller.reasonController.value}';
   }
 }
+
+/// pop back
+/*
+ElevatedButton(
+  onPressed: () async {
+    if (_isValidForm(controller)) {
+      // Show circular progress indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+
+      try {
+        // Call the API to apply leave
+        String apiResponse = await ApiService.applyLeave(
+          applyFrom: controller.fromController.value,
+          applyTo: controller.toController.value,
+          reason: controller.reasonController.value,
+        );
+
+        // Dismiss the circular progress indicator
+        Navigator.of(context).pop();
+
+        // Show a GetX snackbar with the API response message
+        Get.snackbar(
+          'Leave Application',
+          apiResponse,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+
+        // Clear the form fields after successful submission
+        controller.fromController.value = '';
+        controller.toController.value = '';
+        controller.reasonController.value = '';
+
+        // Fetch and update leave history
+        await ApiService.getLeaveHistory();
+
+        // Navigate to a new screen upon successful submission
+        Navigator.of(context).pop();
+      } catch (error) {
+        // Handle error if API call fails
+        print("API Error: $error");
+
+        // Dismiss the circular progress indicator
+        Navigator.of(context).pop();
+
+        // Show an error snackbar
+        Get.snackbar(
+          'Error',
+          'Failed to submit leave application. Please try again.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    }
+  },
+  child: const Text('Submit'),
+),
+
+ */
