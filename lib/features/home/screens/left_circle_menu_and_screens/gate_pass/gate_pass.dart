@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/gate_pass/widgets/gate_pass_form_widget/gate_pass_form.dart';
+import '../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../utils/constants/colors.dart';
 
 class GatePass extends StatelessWidget {
@@ -7,23 +9,41 @@ class GatePass extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: EColors.backgroundColor,
-      /// App Bar
-      appBar: GAppBar(
-        backgroundColor: Colors.transparent,
-        showBackArrow: true,
-        title: Text(
-          'Gate Pass',
-          style: TextStyle(
-            fontSize: 20.0,
-            fontFamily: 'Inter',
-            color: EColors.textColorPrimary1,
-            fontWeight: FontWeight.w500,
+    return Scaffold(
+        backgroundColor: EColors.backgroundColor,
+
+        /// App Bar
+        appBar: const GAppBar(
+          backgroundColor: Colors.transparent,
+          showBackArrow: true,
+          title: Text(
+            'Gate Pass',
+            style: TextStyle(
+              fontSize: 20.0,
+              fontFamily: 'Inter',
+              color: EColors.textColorPrimary1,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
-      ),
-      body: Center(child: Text('Gate Pass'),),
-    );
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              children: [
+
+                /// Top Heading
+                const TopHeading(
+                  fontSize: 20,
+                  text: 'Wanderlust Approved:\nGet Your Exit Pass Now!',
+                ),
+
+                /// Form
+                GatePassForm(),
+              ],
+            ),
+          ),
+        ));
   }
 }

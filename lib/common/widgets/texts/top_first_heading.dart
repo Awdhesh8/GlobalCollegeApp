@@ -7,7 +7,7 @@ class TopHeading extends StatelessWidget {
     Key? key,
     required this.text,
     this.fontSize = ESizes.fontSizeXl, // Add default value for fontSize
-    this.fontWeight = FontWeight.w600, // Add default value for fontWeight
+    this.fontWeight = FontWeight.w500, // Add default value for fontWeight
     this.textColor = EColors.textSecondaryTitle, // Add default value for textColor
   }) : super(key: key);
 
@@ -27,6 +27,7 @@ class TopHeading extends StatelessWidget {
               fontSize: fontSize,
               fontWeight: fontWeight,
               color: textColor,
+              fontFamily: 'Inter',
             ),
             overflow: TextOverflow.ellipsis,
             softWrap: true,
