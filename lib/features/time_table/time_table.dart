@@ -23,7 +23,7 @@ class _TimeTableState extends State<TimeTable> {
           style: TextStyle(
             fontSize: ESizes.appTitle,
             color: EColors.textPrimaryHeading,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w200,
           ),
         ),
         backgroundColor: Colors.transparent,
