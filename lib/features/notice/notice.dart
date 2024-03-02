@@ -26,7 +26,7 @@ class _NoticeState extends State<Notice> {
           style: TextStyle(
               fontSize: ESizes.appTitle,
               color: EColors.textPrimaryHeading,
-              fontWeight: FontWeight.w600),
+              fontWeight: FontWeight.w500),
         ),
         centerTitle: false,
       ),
