@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../common/widgets/appbar/appbar.dart';
@@ -12,6 +14,18 @@ class TimeTable extends StatefulWidget {
 
 class _TimeTableState extends State<TimeTable> {
 
+  int getcurrt_tbl_day(){
+    int currDay = DateTime.now().weekday;
+    if(currDay == 6){
+      return 0;
+    }else
+    if(currDay == 7){
+      return 0;
+    }
+    else{
+      return currDay-1;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,8 +53,8 @@ class _TimeTableState extends State<TimeTable> {
           } else if (snapshot.hasData) {
             Map<String, dynamic> responseData = snapshot.data!;
             List<dynamic> timetableData = responseData['response'] ?? [];
-
             return DefaultTabController(
+              initialIndex: getcurrt_tbl_day(),
               length: timetableData.length,
               child: Column(
                 children: [
@@ -68,6 +82,7 @@ class _TimeTableState extends State<TimeTable> {
                       ),
                       // decoration: customDecoration(),
                       child: TabBar(
+
                         padding: const EdgeInsets.all(8),
                         isScrollable: true,
                         physics: const BouncingScrollPhysics(),
@@ -98,6 +113,12 @@ class _TimeTableState extends State<TimeTable> {
                         dividerColor: Colors.transparent,
                         tabs: timetableData
                             .map((dayData) {
+                              //x
+                              //Tab(~),Tab(~),
+                              //print(DateTime.now().weekday);
+                              //print(dayData.keys);
+
+
                               String day = dayData.keys.first;
                               return Padding(
                                 padding:
