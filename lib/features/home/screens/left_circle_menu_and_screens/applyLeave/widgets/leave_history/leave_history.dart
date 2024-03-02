@@ -153,5 +153,11 @@ class LeaveApplicationHistory extends StatelessWidget {
         }
       },
     );
+
   }
+
+}
+
+class LeaveStateController extends GetxController {
+  RxList<String> leaveHistory = <String>[].obs;
 }

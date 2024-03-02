@@ -299,6 +299,61 @@ class ApiService {
     }
   }
 
+  /*
+  /// By using GetX
+  static Future<Map<String, dynamic>> fetchTimetable() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+    var userType = prefs.getString('user_type') ?? '';
+
+
+
+    var headers = {
+      'Cookie': 'ci_session=ga2gv43kdoaqr8bs0f91tqof0rss55r4',
+    };
+
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse(APIConstants.getFullUrl(APIConstants.getTimeTable)),
+    );
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'USER_TYPE': userType,
+    });
+    print(userId);
+    print(userType);
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      try {
+        Map<String, dynamic> data =
+        json.decode(await response.stream.bytesToString());
+
+        // Check if the response is a list and convert it to a map if necessary
+        if (data['response'] is List) {
+          List<dynamic> timetableDataList = data['response'];
+          Map<String, dynamic> convertedData = {};
+
+          for (var dayData in timetableDataList) {
+            String day = dayData.keys.first;
+            convertedData[day] = dayData[day];
+          }
+
+          return {'response': convertedData};
+        } else {
+          return {'response': data['response']};
+        }
+      } catch (e) {
+        throw Exception('Error parsing response: $e');
+      }
+    } else {
+      throw Exception('Failed to load timetable');
+    }
+  }
+   */
+
   /// Library Search --->
   static Future<List<Map<String, dynamic>>> bookSearch(
       String searchKeyword) async {

@@ -149,14 +149,77 @@ class LeaveForm extends StatelessWidget {
                       ? 'Please write a short Application'
                       : null,
                 ),
-
+                minLines: 3,
                 maxLength: 250,
                 maxLines:
                     null, // Allow the field to expand vertically as needed
               ),
             ),
           ),
+          ElevatedButton(
+            onPressed: () async {
+              if (_isValidForm(controller)) {
+                // Show circular progress indicator
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
 
+                try {
+                  // Call the API to apply leave
+                  String apiResponse = await ApiService.applyLeave(
+                    applyFrom: controller.fromController.value,
+                    applyTo: controller.toController.value,
+                    reason: controller.reasonController.value,
+                  );
+
+                  // Dismiss the circular progress indicator
+                  Navigator.of(context).pop();
+
+                  // Show a GetX snackbar with the API response message
+                  Get.snackbar(
+                    'Leave Application',
+                    apiResponse,
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
+
+                  // Clear the form fields after successful submission
+                  controller.fromController.value = '';
+                  controller.toController.value = '';
+                  controller.reasonController.value = '';
+
+                  // Fetch and update leave history
+                  await ApiService.getLeaveHistory();
+
+                  // Navigate to a new screen upon successful submission
+                  Navigator.of(context).pop();
+                } catch (error) {
+                  // Handle error if API call fails
+                  print("API Error: $error");
+
+                  // Dismiss the circular progress indicator
+                  Navigator.of(context).pop();
+
+                  // Show an error snackbar
+                  Get.snackbar(
+                    'Error',
+                    'Failed to submit leave application. Please try again.',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                }
+              }
+            },
+            child: const Text('Submit'),
+          ),
+
+/*
           ElevatedButton(
             onPressed: () async {
               if (_isValidForm(controller)) {
@@ -184,7 +247,7 @@ class LeaveForm extends StatelessWidget {
                 controller.toController.value = '';
                 controller.reasonController.value = '';
 
-                await ApiService.getLeaveHistory();
+                // await ApiService.getLeaveHistory();
 
 
 
@@ -192,6 +255,8 @@ class LeaveForm extends StatelessWidget {
             },
             child: const Text('Submit'),
           ),
+
+ */
         ],
       ),
     );
@@ -231,11 +296,6 @@ class LeaveForm extends StatelessWidget {
     }
     print("Form validation successful");
     return true;
-  }
-
-  String _formatLeaveApplication(LeaveFormController controller) {
-    // Format leave application for display in history
-    return 'From: ${controller.fromController.value}, To: ${controller.toController.value}, Reason: ${controller.reasonController.value}';
   }
 }
 
