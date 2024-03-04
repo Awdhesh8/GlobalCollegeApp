@@ -5,7 +5,7 @@ class CustomDeco {
   static ShapeDecoration decoRectangle() {
     return ShapeDecoration(
       shape: ContinuousRectangleBorder(
-        borderRadius: BorderRadius.circular(70.0),
+        borderRadius: BorderRadius.circular(70.0,),
       ),
       color: Colors.white,
       shadows: [
