@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../../../utils/constants/colors.dart';
 import '../../../../../../../utils/constants/sizes.dart';
+import '../../gate_pass_controller/gate_pass_from_controller.dart';
 import '../BottomSheetContainerDecoration/bottom_sheet_container.dart';
 
 class GatePassController extends GetxController {
@@ -25,6 +26,8 @@ class GatePassForm extends StatelessWidget {
     'Emergency',
     'Official Business',
   ];
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -272,6 +275,56 @@ class GatePassForm extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+}
+
+/*
+Widget _buildGatePassReasonDropdown(List<GatePassReason> gatePassReasons) {
+
+
+  String initialValue = GatePassFormController.reasonController.value?.id ?? '';
+
+  if (initialValue.isEmpty) {
+    initialValue = 'Select Your Gate Pass Reasons'; // Set default prompt
+  }
+
+  return DropdownButtonFormField<String>(
+    value: initialValue, // Set initial value here
+    decoration: const InputDecoration(
+      labelText: 'Gate Pass Reasons',
+      labelStyle: TextStyle(color: EColors.textColorPrimary1),
+    ),
+    onChanged: (String? newValue) {
+      GatePassFormController.reasonController.value =
+          gatePassReasons.firstWhere((group) => group.id == newValue);
+    },
+    items: [
+      const DropdownMenuItem<String>(
+        value: 'Select Your Gate Pass Reasons',
+        child: Text('Select Your Gate Pass Reasons'),
+      ),
+      ...gatePassReasons.map<DropdownMenuItem<String>>((GatePassReason group) {
+        return DropdownMenuItem<String>(
+          value: group.id,
+          child: Text(group.name),
+        );
+      }).toList(),
+    ],
+  );
+}
+ */
+
+class GatePassReason {
+  final String id;
+  final String name;
+
+  GatePassReason({required this.id, required this.name});
+
+  factory GatePassReason.fromJson(Map<String, dynamic> json) {
+    return GatePassReason(
+      id: json['reason_id'] ?? '',
+      name: json['reason_title'] ?? '',
     );
   }
 }

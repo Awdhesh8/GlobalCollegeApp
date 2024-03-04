@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../features/home/screens/left_circle_menu_and_screens/gate_pass/widgets/gate_pass_form_widget/gate_pass_form.dart';
 import '../../features/personalization/screens/settings/edit_profile/edit_Profile.dart';
 import '../../utils/constants/api_constants.dart';
 import '../../utils/constants/colors.dart';
@@ -829,6 +830,34 @@ class ApiService {
     }
   }
 
+  // Get Gate Pass Reasons
+  static Future<List<GatePassReason>> fetchGatePassReasons() async {
+     try{
+       final response = await http.post(
+         Uri.parse(APIConstants.getFullUrl(APIConstants.getGatePassReasons)),
+         headers: APIConstants.headers,
+         body: {'APIKEY': 'GNCS0225'},
+       );
 
+       if (response.statusCode == 200) {
+         final Map<String, dynamic> data = json.decode(response.body);
+         if (data['status'] == "1") {
+           List<dynamic> GatePassReasonData = data['response'];
+           List<GatePassReason> gatePassReasons = GatePassReasonData
+               .map((gatePassReasonJson) => GatePassReason.fromJson(gatePassReasonJson))
+               .toList();
+           return gatePassReasons;
+
+         }else {
+           throw Exception(data['message']);
+         }
+       } else {
+         throw Exception(
+             'Failed to load Gate Pass Reasons: ${response.reasonPhrase}');
+       }
+     } catch (e) {
+       throw Exception('Exception while fetching Gate Pass Reasons: $e');
+     }
+  }
 
 }

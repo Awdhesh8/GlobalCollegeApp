@@ -18,6 +18,7 @@ class APIConstants {
   static const String attendanceCalender = 'newattendance_details';
   static const String feesDetails = 'feesummary';
   static const String cancelLeave = 'cancelleave';
+  static const String getGatePassReasons = 'get_gpassreason';
 
 
 
