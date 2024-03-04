@@ -1,17 +1,73 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../utils/constants/colors.dart';
+
+class AcademicResult {
+  final String semester;
+  final double marks;
+
+  AcademicResult({required this.semester, required this.marks});
+}
+
+class SubjectResult {
+  final String subject;
+  final double marks;
+
+  SubjectResult({required this.subject, required this.marks});
+}
+
+class ResultController extends GetxController {
+  RxList<AcademicResult> results = <AcademicResult>[
+    AcademicResult(semester: 'Semester 1', marks: 85.5),
+    AcademicResult(semester: 'Semester 2', marks: 78.0),
+    AcademicResult(semester: 'Semester 3', marks: 92.5),
+    AcademicResult(semester: 'Semester 4', marks: 92.5),
+    AcademicResult(semester: 'Semester 5', marks: 92.5),
+
+    // Add more semesters as needed
+  ].obs;
+
+  // Dummy subject-wise results for each semester
+  Map<String, List<SubjectResult>> subjectResults = {
+    'Semester 1': [
+      SubjectResult(subject: 'Math', marks: 90),
+      SubjectResult(subject: 'Physics', marks: 85),
+      SubjectResult(subject: 'Chemistry', marks: 92),
+    ],
+    'Semester 2': [
+      SubjectResult(subject: 'Computer Science', marks: 88),
+      SubjectResult(subject: 'English', marks: 78),
+      SubjectResult(subject: 'History', marks: 95),
+    ],
+    'Semester 3': [
+      SubjectResult(subject: 'Economics', marks: 94),
+      SubjectResult(subject: 'Biology', marks: 89),
+      SubjectResult(subject: 'Geography', marks: 91),
+    ],
+     'Semester 4': [
+      SubjectResult(subject: 'Economics', marks: 94),
+      SubjectResult(subject: 'Biology', marks: 89),
+      SubjectResult(subject: 'Geography', marks: 91),
+    ],
+     'Semester 5': [
+      SubjectResult(subject: 'Economics', marks: 94),
+      SubjectResult(subject: 'Biology', marks: 89),
+      SubjectResult(subject: 'Geography', marks: 91),
+    ],
+
+    // Add more subjects and semesters as needed
+  };
+}
 
 class Result extends StatelessWidget {
   const Result({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ResultController resultController = Get.put(ResultController());
+
     return Scaffold(
       backgroundColor: EColors.backgroundColor,
 
@@ -20,32 +76,138 @@ class Result extends StatelessWidget {
         backgroundColor: Colors.transparent,
         showBackArrow: true,
         title: Text(
-          'Result',
+          'Your Results',
           style: TextStyle(
-            fontSize: 20.0,
+            fontSize: 24.0,
             fontFamily: 'Inter',
             color: EColors.textColorPrimary1,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
 
-      /// Body --->
-
+      /// Body
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Padding(
-          padding: EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(15.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// Top Heading
-              TopHeading(
-                fontSize: 20,
-                text: 'Your Academic \nScorecard is Here 📊',
+              /// Overall Status Card
+              Container(
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TopHeading(
+                      fontSize: 26,
+                      text: 'Overall Performance',
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Total Marks: ${resultController.results.map((result) => result.marks).reduce((a, b) => a + b)}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: EColors.textColorPrimary1,
+                          ),
+                        ),
+                        Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              
-              ///
-              ElevatedButton(onPressed: () => Get.to(() => NewScreen()), child: Text('data'))
+
+              /// Semester-wise Results
+              Obx(
+                () => GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16.0,
+                    mainAxisSpacing: 16.0,
+                  ),
+                  itemCount: resultController.results.length,
+                  itemBuilder: (context, index) {
+                    final result = resultController.results[index];
+                    return GestureDetector(
+                      onTap: () {
+                        // Navigate to a detailed view for the selected semester
+                        Get.to(() => SemesterDetail(
+                              semester: result.semester,
+                              subjectResults: resultController
+                                      .subjectResults[result.semester] ??
+                                  [],
+                            ));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              result.semester,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Marks: ${result.marks}',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: EColors.textColorPrimary1,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -54,80 +216,42 @@ class Result extends StatelessWidget {
   }
 }
 
-class NewScreen extends StatelessWidget {
-  const NewScreen({super.key});
+class SemesterDetail extends StatelessWidget {
+  final String semester;
+  final List<SubjectResult> subjectResults;
+
+  const SemesterDetail({
+    Key? key,
+    required this.semester,
+    required this.subjectResults,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GAppBar(
-        title: Text('New Animation'),
-      ),
-      body: SingleChildScrollView(
-        child: AnimatedGradientRectangle(),
-      ),
-    );
-  }
-}
-
-
-class AnimatedGradientRectangle extends StatefulWidget {
-  @override
-  _AnimatedGradientRectangleState createState() =>
-      _AnimatedGradientRectangleState();
-}
-
-class _AnimatedGradientRectangleState extends State<AnimatedGradientRectangle>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 5),
-    )..repeat();
-
-    _animation = Tween<double>(
-      begin: 0.0,
-      end: 2 * pi,
-    ).animate(_controller);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Container(
-          width: 200,
-          height: 200,
-          decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(20.0),
-            gradient: SweepGradient(
-              colors: [
-                Colors.blue.shade200,
-                Colors.green.shade200,
-                Colors.yellow.shade200,
-                Colors.red.shade200,
-              ],
-              stops: [0.0, 0.25, 0.5, 0.75],
-              startAngle: _animation.value,
-              endAngle: _animation.value + pi / 2,
-            ),
+        appBar: AppBar(
+          title: Text(semester),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Subjects:',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: subjectResults
+                    .map((subject) => Text(
+                          '${subject.subject}: ${subject.marks}',
+                          style: TextStyle(fontSize: 16.0),
+                        ))
+                    .toList(),
+              ),
+            ],
           ),
-        );
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+        ));
   }
 }
