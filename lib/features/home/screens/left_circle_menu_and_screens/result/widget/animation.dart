@@ -50,7 +50,7 @@ class CustomAnimation extends GetWidget<CustomAnimationController> {
         animation: controller.controller,
         builder: (context, child) {
           return Transform.translate(
-            offset: Offset(0, controller.bouncyAnimation.value),
+            offset: Offset(20, controller.bouncyAnimation.value),
             child: Transform.scale(
               scale: controller.curvyAnimation.value,
               child: this.child,
