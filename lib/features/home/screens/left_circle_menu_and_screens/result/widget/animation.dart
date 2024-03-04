@@ -20,10 +20,10 @@ class CustomAnimationController extends GetxController with SingleGetTickerProvi
     );
 
     fadeAnimation = Tween<double>(begin: 0, end: 1).animate(controller);
-    bouncyAnimation = Tween<double>(begin: -20, end: 0).animate(
+    bouncyAnimation = Tween<double>(begin: -30, end: 0).animate(
       CurvedAnimation(parent: controller, curve: Curves.elasticOut),
     );
-    curvyAnimation = Tween<double>(begin: 50, end: 1).animate(
+    curvyAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: controller, curve: Curves.easeInOut),
     );
 
