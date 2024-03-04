@@ -23,7 +23,7 @@ class CustomAnimationController extends GetxController with SingleGetTickerProvi
     bouncyAnimation = Tween<double>(begin: -20, end: 0).animate(
       CurvedAnimation(parent: controller, curve: Curves.elasticOut),
     );
-    curvyAnimation = Tween<double>(begin: 0, end: 1).animate(
+    curvyAnimation = Tween<double>(begin: 50, end: 1).animate(
       CurvedAnimation(parent: controller, curve: Curves.easeInOut),
     );
 
@@ -50,7 +50,7 @@ class CustomAnimation extends GetWidget<CustomAnimationController> {
         animation: controller.controller,
         builder: (context, child) {
           return Transform.translate(
-            offset: Offset(20, controller.bouncyAnimation.value),
+            offset: Offset(0, controller.bouncyAnimation.value),
             child: Transform.scale(
               scale: controller.curvyAnimation.value,
               child: this.child,
