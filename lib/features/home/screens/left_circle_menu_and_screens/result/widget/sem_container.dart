@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../../../common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
 import '../../../../../../utils/constants/colors.dart';
@@ -61,6 +60,7 @@ class SemContainer extends StatelessWidget {
             ],
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 'Mid Term',
@@ -92,3 +92,4 @@ class SemContainer extends StatelessWidget {
     );
   }
 }
+
