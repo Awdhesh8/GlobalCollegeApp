@@ -57,10 +57,13 @@ class _FeesCardState extends State<FeesCard> {
           children: [
             Container(
               width: double.infinity,
-                decoration: BoxDecoration(
+                decoration: ShapeDecoration(
+                  shape: ContinuousRectangleBorder(
+                    borderRadius: BorderRadius.circular(70.0),
+                  ),
                   color: EColors.backgroundColor,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
+                  // borderRadius: BorderRadius.circular(15),
+                  shadows: [
                     BoxShadow(
                       color: Colors.red.withOpacity(0.2),
                       spreadRadius: 2,
@@ -108,10 +111,13 @@ class _FeesCardState extends State<FeesCard> {
                                 Row(
                                   children: [
                                     Container(
-                                      decoration: BoxDecoration(
+                                      decoration: ShapeDecoration(
+                                        shape: ContinuousRectangleBorder(
+                                          borderRadius: BorderRadius.circular(30.0),
+                                        ),
                                         color: EColors.backgroundColor,
-                                        borderRadius: BorderRadius.circular(15),
-                                        boxShadow: [
+                                        // borderRadius: BorderRadius.circular(15),
+                                        shadows: [
                                           BoxShadow(
                                             color: Colors.red.withOpacity(0.2),
                                             spreadRadius: 2,
