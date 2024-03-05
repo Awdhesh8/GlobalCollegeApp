@@ -170,7 +170,7 @@ class GatePassForm extends StatelessWidget {
         curve: Curves.easeInOut,
         decoration: const BoxDecoration(),
         constraints: const BoxConstraints(
-          minHeight: 50.0,
+          minHeight: 51.0,
         ),
 
                 child: FutureBuilder<List<GatePassReason>>(
