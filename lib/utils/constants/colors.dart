@@ -18,7 +18,7 @@ class EColors {
   static const kIconColor = Color(0xFFF48A37);
   static const kProgressIndicator = Color(0xFFBE7066);
 
-  static  Color kShadowColor = Color(0xFFD3D3D3).withOpacity(.84);
+  static  Color kShadowColor = const Color(0xFFD3D3D3).withOpacity(.84);
   // final kShadowColor = const Color(0xFFD3D3D3).withOpacity(.84);
 
   // Gradient Colors

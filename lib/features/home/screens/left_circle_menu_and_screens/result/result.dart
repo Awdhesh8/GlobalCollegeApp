@@ -98,6 +98,7 @@ class Result extends StatelessWidget {
                   },
                 ),
               ),
+
             ],
           ),
         ),
