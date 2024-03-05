@@ -164,10 +164,15 @@ class GatePassForm extends StatelessWidget {
           const SizedBox(
             height: ESizes.spaceBtwItems,
           ),
-          Row(
-            children: [
-              Container(
-                width: 350,
+
+      AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        decoration: const BoxDecoration(),
+        constraints: const BoxConstraints(
+          minHeight: 50.0,
+        ),
+
                 child: FutureBuilder<List<GatePassReason>>(
                   future: ApiService.fetchGatePassReasons(), // Fetch blood groups
                   builder: (context, snapshot) {
@@ -194,8 +199,8 @@ class GatePassForm extends StatelessWidget {
                 ),
               ),
 
-            ],
-          ),
+
+
 
 
           const SizedBox(
