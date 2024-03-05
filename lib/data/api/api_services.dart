@@ -830,7 +830,7 @@ class ApiService {
     }
   }
 
-  // Get Gate Pass Reasons
+  /// Get Gate Pass Reasons
   static Future<List<GatePassReason>> fetchGatePassReasons() async {
      try{
        final response = await http.post(
@@ -859,5 +859,61 @@ class ApiService {
        throw Exception('Exception while fetching Gate Pass Reasons: $e');
      }
   }
+
+  /// Apply Gate Pass
+  static Future<String> applyGatePass({
+    required String applyFrom,
+    required String applyTo,
+    required String reason,
+    required String goWith,
+    required String applyRemark,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('user_id') ?? '';
+
+      var headers = {
+        'Cookie': 'ci_session=9918717oip21ucg7572uevf8cn0e3f5u',
+      };
+
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://myglobalapp.in/global/API005/apply_gatepass'),
+     // final response = await http.post(
+     // Uri.parse(APIConstants.getFullUrl(APIConstants.getGatePassReasons)),
+      );
+
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'USER_ID': userId,
+        'applyfrom': applyFrom,
+        'applyto': applyTo,
+        'reason': reason,
+        'goWith':goWith,
+        'applyRemark':applyRemark,
+      });
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        String responseBody = await response.stream.bytesToString();
+        // Parse the JSON response
+        Map<String, dynamic> jsonResponse = json.decode(responseBody);
+
+        String message = jsonResponse['message'] ?? 'Unknown response';
+
+        return message;
+      } else {
+        print(response.reasonPhrase);
+        return 'Error occurred: ${response.reasonPhrase}';
+      }
+    } catch (e) {
+      print('Error applying Gate Pass: $e');
+      return 'Error occurred: $e';
+    }
+  }
+
 
 }

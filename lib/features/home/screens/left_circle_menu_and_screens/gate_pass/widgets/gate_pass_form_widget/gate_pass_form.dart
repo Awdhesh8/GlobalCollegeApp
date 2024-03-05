@@ -27,15 +27,14 @@ class GatePassForm extends StatelessWidget {
   final GatePassFormController controller = Get.put(GatePassFormController());
 
   // List of reasons for the gate pass
+  /*
   List<String> reasons = [
     'Meeting',
     'Personal',
     'Emergency',
     'Official Business',
   ];
-
-
-
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +48,7 @@ class GatePassForm extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
 
-              /// Pick Time
+              /// Pick From Time
               InkWell(
                 onTap: () async {
                   TimeOfDay? pickedTime = await showTimePicker(
@@ -58,12 +57,12 @@ class GatePassForm extends StatelessWidget {
                   );
 
                   if (pickedTime != null) {
-                    controller.selectedTime.value = pickedTime.format(context);
+                    controller.fromTimeController.value = pickedTime.format(context);
                   }
                 },
                 child: Obx(
                   () => AnimatedContainer(
-                    width: 150,
+                    width: 190,
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     decoration: const BoxDecoration(),
@@ -73,7 +72,7 @@ class GatePassForm extends StatelessWidget {
                     child: TextFormField(
                       readOnly: true,
                       controller: TextEditingController(
-                          text: controller.selectedTime.value),
+                          text: controller.fromTimeController.value),
                       style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 13,
@@ -91,12 +90,12 @@ class GatePassForm extends StatelessWidget {
                             );
 
                             if (pickedTime != null) {
-                              controller.selectedTime.value =
+                              controller.fromTimeController.value =
                                   pickedTime.format(context);
                             }
                           },
                         ),
-                        labelText: 'Time',
+                        labelText: 'From Time',
                         labelStyle: const TextStyle(
                           color: Colors.black54,
                           fontSize: 13,
@@ -108,18 +107,79 @@ class GatePassForm extends StatelessWidget {
                 ),
               ),
 
+              /// Pick To Time
+              InkWell(
+                onTap: () async {
+                  TimeOfDay? pickedTime = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+
+                  if (pickedTime != null) {
+                    controller.toTimeController.value = pickedTime.format(context);
+                  }
+                },
+                child: Obx(
+                      () => AnimatedContainer(
+                    width: 190,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    decoration: const BoxDecoration(),
+                    constraints: const BoxConstraints(
+                      minHeight: 50.0,
+                    ),
+                    child: TextFormField(
+                      readOnly: true,
+                      controller: TextEditingController(
+                          text: controller.toTimeController.value),
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 13,
+                        color: EColors.textColorPrimary1,
+                      ),
+                      onChanged: (value) {},
+                      decoration: InputDecoration(
+                        isDense: true,
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.timer_outlined),
+                          onPressed: () async {
+                            TimeOfDay? pickedTime = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            );
+
+                            if (pickedTime != null) {
+                              controller.toTimeController.value =
+                                  pickedTime.format(context);
+                            }
+                          },
+                        ),
+                        labelText: 'To Time',
+                        labelStyle: const TextStyle(
+                          color: Colors.black54,
+                          fontSize: 13,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+
               const SizedBox(
                 width: ESizes.spaceBtwItems,
               ),
 
               /// Reasons (In Bottom Sheet)
+              /*
               InkWell(
                 onTap: () {
                   _showReasonBottomSheet(context);
                 },
                 child: Obx(
                   () => AnimatedContainer(
-                    width: 150,
+                    width: 180,
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     decoration: const BoxDecoration(),
@@ -158,6 +218,8 @@ class GatePassForm extends StatelessWidget {
                   ),
                 ),
               ),
+
+               */
             ],
           ),
 
@@ -165,16 +227,17 @@ class GatePassForm extends StatelessWidget {
             height: ESizes.spaceBtwItems,
           ),
 
-      AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        decoration: const BoxDecoration(),
-        constraints: const BoxConstraints(
-          minHeight: 51.0,
-        ),
+          ///Gate Pass Reasons
+          AnimatedContainer(
+             duration: const Duration(milliseconds: 300),
+             curve: Curves.easeInOut,
+             decoration: const BoxDecoration(),
+             constraints: const BoxConstraints(
+                minHeight: 50.0,
+             ),
 
                 child: FutureBuilder<List<GatePassReason>>(
-                  future: ApiService.fetchGatePassReasons(), // Fetch blood groups
+                  future: ApiService.fetchGatePassReasons(), // Fetch Gate Pass Reasons
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       // Show shimmer loading effect while fetching
@@ -182,8 +245,7 @@ class GatePassForm extends StatelessWidget {
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
                         child: Container(
-                          width: 70,
-                          height: 60, // Adjust height as needed
+                         // Adjust height as needed
                           color: Colors.white,
                         ),
                       );
@@ -198,10 +260,6 @@ class GatePassForm extends StatelessWidget {
                   },
                 ),
               ),
-
-
-
-
 
           const SizedBox(
             height: ESizes.spaceBtwItems,
@@ -222,7 +280,7 @@ class GatePassForm extends StatelessWidget {
                 color: EColors.textColorPrimary1,
               ),
               onChanged: (value) {
-                controller.applicationText.value = value;
+                controller.goWithController.value = value;
               },
               decoration: const InputDecoration(
                 isDense: true,
@@ -239,6 +297,7 @@ class GatePassForm extends StatelessWidget {
               maxLines: null,
             ),
           ),
+
           const SizedBox(
             height: ESizes.spaceBtwItems,
           ),
@@ -258,7 +317,7 @@ class GatePassForm extends StatelessWidget {
                 color: EColors.textColorPrimary1,
               ),
               onChanged: (value) {
-                controller.applicationText.value = value;
+                controller.remarkController.value = value;
               },
               decoration: const InputDecoration(
                 isDense: true,
@@ -278,8 +337,68 @@ class GatePassForm extends StatelessWidget {
 
           /// Submit button
           ElevatedButton(
-            onPressed: () {
-              // Add your submit logic here
+            onPressed: () async {
+              if (_isValidForm(controller)) {
+                // Show circular progress indicator
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
+
+                try {
+                  // Call the API to apply leave
+                  String apiResponse = await ApiService.applyGatePass(
+                    applyFrom: controller.fromTimeController.value,
+                    applyTo: controller.toTimeController.value,
+                    reason: controller.reasonController
+                        .value?.id ?? '',
+                    goWith: controller.goWithController.value,
+                    applyRemark: controller.remarkController.value,
+                  );
+
+                  // Dismiss the circular progress indicator
+                  Navigator.of(context).pop();
+
+                  // Show a GetX snackbar with the API response message
+                  Get.snackbar(
+                    'Gate Pass Apply',
+                    apiResponse,
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
+
+                  // Clear the form fields after successful submission
+                  controller.fromTimeController.value = '';
+                  controller.toTimeController.value = '';
+                  //controller.reasonController.value?.id = '';
+                  controller.goWithController.value = '';
+                  controller.remarkController.value = '';
+                  // Fetch and update leave history
+                  //await ApiService.getLeaveHistory();
+
+                  // Navigate to a new screen upon successful submission
+                  Navigator.of(context).pop();
+                } catch (error) {
+                  // Handle error if API call fails
+                  print("API Error: $error");
+
+                  // Dismiss the circular progress indicator
+                  Navigator.of(context).pop();
+
+                  // Show an error snackbar
+                  Get.snackbar(
+                    'Error',
+                    'Failed to submit leave application. Please try again.',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                }
+              }
             },
             child: const Text('Submit'),
           ),
@@ -315,9 +434,10 @@ class GatePassForm extends StatelessWidget {
     }
 
     return DropdownButtonFormField<String>(
+      isDense: true,
       value: initialValue, // Set initial value here
       decoration: const InputDecoration(
-        labelText: 'Gate Pass Reasons',
+        //labelText: 'Gate Pass Reasons',
         labelStyle: TextStyle(color: EColors.textColorPrimary1),
       ),
       onChanged: (String? newValue) {
@@ -328,18 +448,24 @@ class GatePassForm extends StatelessWidget {
       items: [
         const DropdownMenuItem<String>(
           value: 'Select Your Gate Pass Reasons',
-          child: Text('Select Your Gate Pass Reasons'),
+          child: Text('Select Your Gate Pass Reasons',
+              style: TextStyle(
+              fontSize: 12
+          )
+          ),
         ),
         ...gatePassReasons.map<DropdownMenuItem<String>>((GatePassReason group) {
           return DropdownMenuItem<String>(
             value: group.id,
-            child: Text(group.name),
+            child: Text(group.name, style: TextStyle(
+              fontSize: 12
+            )),
           );
         }).toList(),
       ],
     );
   }
-
+/*
   void _showReasonBottomSheet(BuildContext context) {
     Get.bottomSheet(
       elevation: 8,
@@ -363,6 +489,28 @@ class GatePassForm extends StatelessWidget {
       ),
     );
   }
+
+ */
+
+  bool _isValidForm(GatePassFormController controller) {
+    if (controller.fromTimeController.value.isEmpty ||
+        controller.toTimeController.value.isEmpty ||
+        controller.reasonController.value!.id.isEmpty||
+        controller.goWithController.value.isEmpty ||
+        controller.remarkController.value.isEmpty ) {
+      controller.reasonError.value = controller.reasonController.value!.id.isEmpty;
+      controller.toError.value = controller.toTimeController.value.isEmpty;
+      controller.fromError.value = controller.fromTimeController.value.isEmpty;
+      controller.goWithError.value = controller.goWithController.value.isEmpty;
+      controller.remarkError.value = controller.remarkController.value.isEmpty;
+
+      print("Form validation failed");
+      return false;
+    }
+    print("Form validation successful");
+    return true;
+  }
+
 }
 
 
