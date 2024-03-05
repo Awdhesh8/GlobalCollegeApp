@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:globalcollegeapp/data/api/api_services.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../../../utils/constants/colors.dart';
 import '../../../../../../../utils/constants/sizes.dart';
 import '../../gate_pass_controller/gate_pass_from_controller.dart';
 import '../BottomSheetContainerDecoration/bottom_sheet_container.dart';
-
+/*
 class GatePassController extends GetxController {
   var selectedTime = ''.obs;
   // var selectedReason = ''.obs;
   var applicationText = ''.obs;
-  final TextEditingController reasonController = TextEditingController();
+  //final TextEditingController reasonController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final RxString selectedReason = ''.obs;
+  //Rx<GatePassReason?> reasonController = Rx<GatePassReason?>(null);
 }
 
+ */
+
+
 class GatePassForm extends StatelessWidget {
-  final GatePassController controller = Get.put(GatePassController());
+  // final GatePassController controller = Get.put(GatePassController());
+  final GatePassFormController controller = Get.put(GatePassFormController());
 
   // List of reasons for the gate pass
   List<String> reasons = [
@@ -26,6 +33,7 @@ class GatePassForm extends StatelessWidget {
     'Emergency',
     'Official Business',
   ];
+
 
 
 
@@ -152,6 +160,44 @@ class GatePassForm extends StatelessWidget {
               ),
             ],
           ),
+
+          const SizedBox(
+            height: ESizes.spaceBtwItems,
+          ),
+          Row(
+            children: [
+              Container(
+                width: 350,
+                child: FutureBuilder<List<GatePassReason>>(
+                  future: ApiService.fetchGatePassReasons(), // Fetch blood groups
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Show shimmer loading effect while fetching
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          width: 70,
+                          height: 60, // Adjust height as needed
+                          color: Colors.white,
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      // If data is fetched successfully
+                      return _buildGatePassReasonDropdown(snapshot.data!);
+                    } else {
+                      return Text('No data available'); // Handle the case when there is no data
+                    }
+                  },
+                ),
+              ),
+
+            ],
+          ),
+
+
           const SizedBox(
             height: ESizes.spaceBtwItems,
           ),
@@ -254,6 +300,41 @@ class GatePassForm extends StatelessWidget {
     );
   }
 
+  Widget _buildGatePassReasonDropdown(List<GatePassReason> gatePassReasons) {
+
+    String initialValue = controller.reasonController
+        .value?.id ?? '';
+
+    if (initialValue.isEmpty) {
+      initialValue = 'Select Your Gate Pass Reasons'; // Set default prompt
+    }
+
+    return DropdownButtonFormField<String>(
+      value: initialValue, // Set initial value here
+      decoration: const InputDecoration(
+        labelText: 'Gate Pass Reasons',
+        labelStyle: TextStyle(color: EColors.textColorPrimary1),
+      ),
+      onChanged: (String? newValue) {
+        controller.reasonController
+            .value =
+            gatePassReasons.firstWhere((group) => group.id == newValue);
+      },
+      items: [
+        const DropdownMenuItem<String>(
+          value: 'Select Your Gate Pass Reasons',
+          child: Text('Select Your Gate Pass Reasons'),
+        ),
+        ...gatePassReasons.map<DropdownMenuItem<String>>((GatePassReason group) {
+          return DropdownMenuItem<String>(
+            value: group.id,
+            child: Text(group.name),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
   void _showReasonBottomSheet(BuildContext context) {
     Get.bottomSheet(
       elevation: 8,
@@ -279,41 +360,6 @@ class GatePassForm extends StatelessWidget {
   }
 }
 
-/*
-Widget _buildGatePassReasonDropdown(List<GatePassReason> gatePassReasons) {
-
-
-  String initialValue = GatePassFormController.reasonController.value?.id ?? '';
-
-  if (initialValue.isEmpty) {
-    initialValue = 'Select Your Gate Pass Reasons'; // Set default prompt
-  }
-
-  return DropdownButtonFormField<String>(
-    value: initialValue, // Set initial value here
-    decoration: const InputDecoration(
-      labelText: 'Gate Pass Reasons',
-      labelStyle: TextStyle(color: EColors.textColorPrimary1),
-    ),
-    onChanged: (String? newValue) {
-      GatePassFormController.reasonController.value =
-          gatePassReasons.firstWhere((group) => group.id == newValue);
-    },
-    items: [
-      const DropdownMenuItem<String>(
-        value: 'Select Your Gate Pass Reasons',
-        child: Text('Select Your Gate Pass Reasons'),
-      ),
-      ...gatePassReasons.map<DropdownMenuItem<String>>((GatePassReason group) {
-        return DropdownMenuItem<String>(
-          value: group.id,
-          child: Text(group.name),
-        );
-      }).toList(),
-    ],
-  );
-}
- */
 
 class GatePassReason {
   final String id;
