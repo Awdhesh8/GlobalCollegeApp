@@ -99,13 +99,13 @@ class _CustomAnimatedButtonState extends State<CustomAnimatedButton>
             color: widget.buttonColor,
             border: Border.all(
               color: widget.borderColor,
-              // width: 1.5
+               width: 1.5
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: .6,
-                blurRadius: 2,
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: .8,
+                blurRadius: 1,
                 offset: const Offset(0, 0),
               ),
             ],

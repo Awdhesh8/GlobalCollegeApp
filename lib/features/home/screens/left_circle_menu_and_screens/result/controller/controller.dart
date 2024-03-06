@@ -82,6 +82,15 @@ class ResultController extends GetxController {
         Subject(name: 'Geography', marks: 42.5),
         Subject(name: 'English Literature', marks: 47.0),
         Subject(name: 'Geography', marks: 42.5),
+        Subject(name: 'English Literature', marks: 47.0),
+        Subject(name: 'Geography', marks: 42.5),
+        Subject(name: 'English Literature', marks: 47.0),
+        Subject(name: 'Geography', marks: 42.5),
+        Subject(name: 'Geography', marks: 42.5),
+        Subject(name: 'English Literature', marks: 47.0),
+        Subject(name: 'Geography', marks: 42.5),
+        Subject(name: 'English Literature', marks: 47.0),
+        Subject(name: 'Geography', marks: 42.5),
 
         // Add more subjects as needed
       ],

@@ -19,144 +19,130 @@ class SemContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // padding: const EdgeInsets.all(16),
       decoration: CustomDeco.decoRectangle(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          ///
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: 3),
+                  child: Text(
+                    result.semester,
+                    style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: EColors.textColorPrimary1),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: ESizes.spaceBtwItemsHeadings),
+
+          /// Final Button
+          Padding(
+            padding: const EdgeInsets.only(left: 15, top: 5, right: 15),
             child: Row(
               children: [
                 Expanded(
-                  child: Container(
-                    decoration: ShapeDecoration(
-                      shape: ContinuousRectangleBorder(
-                        borderRadius: BorderRadius.circular(70.0),
-                      ),
-                      color: Colors.white,
-                      shadows: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 1,
-                          blurRadius: 2,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        result.semester,
-                        style: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // const SizedBox(height: ESizes.spaceBtwItems),
-          Padding(
-            padding: const EdgeInsets.only(left: 15, top: 5),
-            child: Row(
-              children: [
-                CustomAnimatedButton(
-                  onNavigate: () {
-                    Get.to(() => SemesterDetail(
-                          semester: result.semester,
-                          universitySubjects: result.universitySubjects,
-                          midtermSubjects: result.midtermSubjects,
-                          practicalSubjects: result.practicalSubjects,
-                          isUniversityTab: true,
-                        ));
-                  },
-                  buttonColor: Colors.white,
-                  borderRadius: 50,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-                  height: 40,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Final Exam',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 12,
-                          color: EColors.textColorPrimary1,
-                        ),
-                      ),
-                      Icon(
-                        Iconsax.send_2,
-                        size: 20,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.only(left: 15, top: 2),
-            child: Row(
-              children: [
-                CustomAnimatedButton(
+                  child: CustomAnimatedButton(
                     onNavigate: () {
                       Get.to(() => SemesterDetail(
                             semester: result.semester,
                             universitySubjects: result.universitySubjects,
                             midtermSubjects: result.midtermSubjects,
                             practicalSubjects: result.practicalSubjects,
-                            isUniversityTab: false,
-                          ));
+                            isUniversityTab: true,
+                          ),
+                          transition: Transition.cupertino,
+                          duration: Duration(milliseconds: 500)
+                      );
                     },
                     buttonColor: Colors.white,
-                    // borderColor: Colors.pinkAccent,
                     borderRadius: 50,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-                    height: 40,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    height: 35,
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Mid Term',
+                          'Final Exam',
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 12,
+                            fontWeight: FontWeight.w500,
                             color: EColors.textColorPrimary1,
                           ),
                         ),
                         Icon(
-                          Iconsax.send_2,
+                          Iconsax.arrow_right_3,
+                          color: EColors.primary,
                           size: 20,
                         ),
-                        /*
-                IconButton(
-                  onPressed: () {
-                    Get.to(() => SemesterDetail(
-                      semester: result.semester,
-                      universitySubjects:
-                      result.universitySubjects,
-                      midtermSubjects:
-                      result.midtermSubjects,
-                      practicalSubjects:
-                      result.practicalSubjects,
-                      isUniversityTab: false,
-                    ));
-                  },
-                  icon: const Icon(Iconsax.arrow_right_4),
-                 */
                       ],
-                    ))
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
+          const SizedBox(height: 8),
+
+          /// Mid Term Button
+          Padding(
+            padding: const EdgeInsets.only(left: 15, top: 2, right: 15),
+            child: Row(
+              children: [
+                Expanded(
+                  child: CustomAnimatedButton(
+                      onNavigate: () {
+                        Get.to(() => SemesterDetail(
+                              semester: result.semester,
+                              universitySubjects: result.universitySubjects,
+                              midtermSubjects: result.midtermSubjects,
+                              practicalSubjects: result.practicalSubjects,
+                              isUniversityTab: false,
+                            ),
+                          transition: Transition.cupertino,
+                          duration: Duration(milliseconds: 500)
+                        );
+                      },
+                      buttonColor: Colors.white,
+                      borderRadius: 50,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 2),
+                      height: 35,
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Mid Term',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                              color: EColors.textColorPrimary1,
+                            ),
+                          ),
+                          Icon(
+                            Iconsax.arrow_right_3,
+                            color: EColors.primary,
+                            size: 20,
+                          ),
+                        ],
+                      )),
+                )
+              ],
+            ),
+          ),
+
         ],
       ),
     );
