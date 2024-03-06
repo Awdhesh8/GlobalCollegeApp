@@ -1,5 +1,233 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/exam_result.dart';
+import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../utils/constants/colors.dart';
+import 'controller/controller.dart';
+import 'model/model.dart';
+
+class Result extends StatelessWidget {
+  final StudentController studentController = Get.put(StudentController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: const GAppBar(
+        backgroundColor: Colors.transparent,
+        showBackArrow: true,
+        title: Text(
+          'Your Results',
+          style: TextStyle(
+            fontSize: 24.0,
+            fontFamily: 'Inter',
+            color: EColors.textColorPrimary1,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            Obx(
+              () {
+                final List<OverallStatus> overallStatusList =
+                    studentController.studentModel.value.overallStatus;
+
+                OverallStatus overallStatus = OverallStatus(
+                  currentSemester: 0,
+                  currentSemesterSgpa: '',
+                  currentSemesterStatus: '',
+                  midTermStatus: '',
+                  finalStatus: '',
+                );
+
+                if (overallStatusList.isNotEmpty) {
+                  overallStatus = overallStatusList.first;
+                }
+
+                return Container(
+                  padding: const EdgeInsets.all(20.0),
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 20.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Current Semester: ${overallStatus.currentSemester}',
+                        style: const TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Text('SGPA: ${overallStatus.currentSemesterSgpa}'),
+                      const SizedBox(height: 10.0),
+                      Text(
+                          'Current Semester Status: ${overallStatus.currentSemesterStatus}'),
+                      const SizedBox(height: 10.0),
+                      Text('Mid Term Status: ${overallStatus.midTermStatus}'),
+                      const SizedBox(height: 10.0),
+                      Text('Final Status: ${overallStatus.finalStatus}'),
+                    ],
+                  ),
+                );
+              },
+            ),
+            const Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Text(
+                'Semesters',
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Obx(
+              () {
+                final List<Semester> semesters =
+                    studentController.studentModel.value.semesters;
+
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
+                  itemCount: semesters.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        // Navigate to the semester result screen passing the semester data
+                        // Get.to(() => SemesterResultScreen(semester: semesters[index]));
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Semester ${semesters[index].semesterNumber}',
+                              style: const TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 10.0),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // Navigate to the final exam result screen passing the final exam data
+                                    Get.to(() => ExamResultScreen(
+                                        exam: semesters[index].finalExam,
+                                        semester: semesters[index],
+                                        examType: 'Final Exam'));
+                                  },
+                                  child: const Text('Final Exam'),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // Navigate to the mid term exam result screen passing the mid term exam data
+                                    Get.to(() => ExamResultScreen(
+                                        exam: semesters[index].midTermExam,
+                                        semester: semesters[index],
+                                        examType: 'Mid Term Exam'));
+                                  },
+                                  child: const Text('Mid Term Exam'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// https://jsonlint.com
+
+
+///
+// class ExamResultScreen extends StatelessWidget {
+//   final Exam exam;
+//   final Semester semester;
+//   final String examType;
+//
+//   ExamResultScreen({required this.exam, required this.semester, required this.examType});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: GAppBar(
+//         title: Text(examType),
+//         showBackArrow: true,
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text('Semester ${semester.semesterNumber} Results'),
+//             Text('Result: ${exam.result}'),
+//             Text('Theoretical Result: ${exam.theoreticalResult.result}'),
+//             Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: exam.theoreticalResult.subjects.map((subject) {
+//                 return Text('${subject.name}: ${subject.grade}');
+//               }).toList(),
+//             ),
+//             Text('Practical Result: ${exam.practicalResult.result}'),
+//             Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: exam.practicalResult.subjects.map((subject) {
+//                 return Text('${subject.name}: ${subject.status}');
+//               }).toList(),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+///
+/*
+// class SemesterResultScreen extends StatelessWidget {
+//   final Semester semester;
+//
+//   SemesterResultScreen({required this.semester});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     // Implement your UI to display semester results using the 'semester' object
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Semester ${semester.semesterNumber} Results'),
+//       ),
+//       body: Center(
+//         child: Text('Semester ${semester.semesterNumber} Results'),
+//       ),
+//     );
+//   }
+// }
+ */
+
+/*
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animation.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/sem_container.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
@@ -106,5 +334,4 @@ class Result extends StatelessWidget {
     );
   }
 }
-
-
+ */

@@ -199,7 +199,7 @@ class _LeftSideCircularScrollingBoxesState
 
         case 4:
       case 14:
-        screen = () => const Result();
+        screen = () => Result();
         break;
         case 5:
         screen = () => const GatePass();
