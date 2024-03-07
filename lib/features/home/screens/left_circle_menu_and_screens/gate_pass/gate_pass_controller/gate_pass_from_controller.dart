@@ -14,7 +14,6 @@ class GatePassFormController extends GetxController {
   RxBool reasonError = false.obs;
   RxBool toError = false.obs;
   RxBool fromError = false.obs;
-
   RxBool goWithError = false.obs;
   RxBool remarkError = false.obs;
 
@@ -26,5 +25,11 @@ class GatePassFormController extends GetxController {
   // RxList to store the history of leave applications
   RxList<String> gatePassHistory = <String>[].obs;
 
+
+  var isExpanded = false.obs;
+
+  void toggleExpand() {
+    isExpanded.value = !isExpanded.value;
+  }
 
 }

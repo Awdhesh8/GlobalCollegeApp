@@ -2,28 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:globalcollegeapp/data/api/api_services.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../../../utils/constants/colors.dart';
 import '../../../../../../../utils/constants/sizes.dart';
 import '../../gate_pass_controller/gate_pass_from_controller.dart';
 import '../BottomSheetContainerDecoration/bottom_sheet_container.dart';
-/*
-class GatePassController extends GetxController {
-  var selectedTime = ''.obs;
-  // var selectedReason = ''.obs;
-  var applicationText = ''.obs;
-  //final TextEditingController reasonController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final RxString selectedReason = ''.obs;
-  //Rx<GatePassReason?> reasonController = Rx<GatePassReason?>(null);
-}
-
- */
-
 
 class GatePassForm extends StatelessWidget {
-  // final GatePassController controller = Get.put(GatePassController());
   final GatePassFormController controller = Get.put(GatePassFormController());
 
   // List of reasons for the gate pass
@@ -47,22 +34,15 @@ class GatePassForm extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-
               /// Pick From Time
               InkWell(
                 onTap: () async {
-                  TimeOfDay? pickedTime = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.now(),
-                  );
-
-                  if (pickedTime != null) {
-                    controller.fromTimeController.value = pickedTime.format(context);
-                  }
+                  _selectTime(
+                      context, false, controller.fromTimeController);
                 },
                 child: Obx(
                   () => AnimatedContainer(
-                    width: 190,
+                    width: 150,
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     decoration: const BoxDecoration(),
@@ -84,15 +64,8 @@ class GatePassForm extends StatelessWidget {
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.timer_outlined),
                           onPressed: () async {
-                            TimeOfDay? pickedTime = await showTimePicker(
-                              context: context,
-                              initialTime: TimeOfDay.now(),
-                            );
-
-                            if (pickedTime != null) {
-                              controller.fromTimeController.value =
-                                  pickedTime.format(context);
-                            }
+                            _selectTime(
+                                context, false, controller.fromTimeController);
                           },
                         ),
                         labelText: 'From Time',
@@ -101,6 +74,9 @@ class GatePassForm extends StatelessWidget {
                           fontSize: 13,
                           fontFamily: 'Inter',
                         ),
+                        errorText: controller.fromError.value
+                            ? 'Please Select From Time'
+                            : null,
                       ),
                     ),
                   ),
@@ -110,18 +86,12 @@ class GatePassForm extends StatelessWidget {
               /// Pick To Time
               InkWell(
                 onTap: () async {
-                  TimeOfDay? pickedTime = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.now(),
-                  );
-
-                  if (pickedTime != null) {
-                    controller.toTimeController.value = pickedTime.format(context);
-                  }
+                  _selectTime(
+                      context, false, controller.toTimeController);
                 },
                 child: Obx(
                       () => AnimatedContainer(
-                    width: 190,
+                    width: 150,
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     decoration: const BoxDecoration(),
@@ -143,15 +113,8 @@ class GatePassForm extends StatelessWidget {
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.timer_outlined),
                           onPressed: () async {
-                            TimeOfDay? pickedTime = await showTimePicker(
-                              context: context,
-                              initialTime: TimeOfDay.now(),
-                            );
-
-                            if (pickedTime != null) {
-                              controller.toTimeController.value =
-                                  pickedTime.format(context);
-                            }
+                            _selectTime(
+                                context, false, controller.toTimeController);
                           },
                         ),
                         labelText: 'To Time',
@@ -160,6 +123,9 @@ class GatePassForm extends StatelessWidget {
                           fontSize: 13,
                           fontFamily: 'Inter',
                         ),
+                        errorText: controller.toError.value
+                            ? 'Please Select To Time'
+                            : null,
                       ),
                     ),
                   ),
@@ -228,6 +194,7 @@ class GatePassForm extends StatelessWidget {
           ),
 
           ///Gate Pass Reasons
+          //Obx(() =>
           AnimatedContainer(
              duration: const Duration(milliseconds: 300),
              curve: Curves.easeInOut,
@@ -255,17 +222,19 @@ class GatePassForm extends StatelessWidget {
                       // If data is fetched successfully
                       return _buildGatePassReasonDropdown(snapshot.data!);
                     } else {
-                      return Text('No data available'); // Handle the case when there is no data
+                      return const Text('No data available'); // Handle the case when there is no data
                     }
                   },
                 ),
               ),
-
+          //),
           const SizedBox(
             height: ESizes.spaceBtwItems,
           ),
 
           /// Student gow With (Text Field)
+          Obx(
+            () =>
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
@@ -282,27 +251,32 @@ class GatePassForm extends StatelessWidget {
               onChanged: (value) {
                 controller.goWithController.value = value;
               },
-              decoration: const InputDecoration(
+              decoration:  InputDecoration(
                 isDense: true,
-                suffixIcon: Icon(Iconsax.text_block),
-                labelText: 'Gow with (Person Name)',
-                labelStyle: TextStyle(
+                suffixIcon: const Icon(Iconsax.text_block),
+                labelText: 'Go with (Person Name)',
+                labelStyle: const TextStyle(
                   color: Colors.black54,
                   fontSize: 13,
                   fontFamily: 'Inter',
                 ),
+                errorText: controller.goWithError.value
+                    ? 'Please write Go with Person Name'
+                    : null,
               ),
               minLines: 1,
               // maxLength: 250,
               maxLines: null,
             ),
           ),
-
+          ),
           const SizedBox(
             height: ESizes.spaceBtwItems,
           ),
 
           /// Application
+          Obx(
+                () =>
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
@@ -319,22 +293,25 @@ class GatePassForm extends StatelessWidget {
               onChanged: (value) {
                 controller.remarkController.value = value;
               },
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 isDense: true,
-                suffixIcon: Icon(Iconsax.document_text_1),
-                labelText: 'Gate Pass Application',
-                labelStyle: TextStyle(
+                suffixIcon: const Icon(Iconsax.document_text_1),
+                labelText: 'Gate Pass Remark',
+                labelStyle: const TextStyle(
                   color: Colors.black54,
                   fontSize: 13,
                   fontFamily: 'Inter',
                 ),
+                errorText: controller.remarkError.value
+                    ? 'Please write a Remark'
+                    : null,
               ),
               minLines: 3,
               maxLength: 250,
               maxLines: null,
             ),
           ),
-
+          ),
           /// Submit button
           ElevatedButton(
             onPressed: () async {
@@ -403,22 +380,6 @@ class GatePassForm extends StatelessWidget {
             child: const Text('Submit'),
           ),
 
-          /// Divider to separate current Gate Pass application and history
-          const Divider(),
-
-          /// Leave application history
-          const TopHeading(
-            text: 'History',
-          ),
-
-          SingleChildScrollView(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: EColors.backgroundColor,
-              ),
-              child: Text('History Container'),
-            ),
-          ),
         ],
       ),
     );
@@ -436,9 +397,13 @@ class GatePassForm extends StatelessWidget {
     return DropdownButtonFormField<String>(
       isDense: true,
       value: initialValue, // Set initial value here
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         //labelText: 'Gate Pass Reasons',
-        labelStyle: TextStyle(color: EColors.textColorPrimary1),
+        labelStyle: const TextStyle(color: EColors.textColorPrimary1),
+        errorText: controller.reasonError.value
+            ? 'Please Select Gate Pass Reason'
+            : '',
+            // : gatePassReasons.firstWhere((group) => group.id == null,
       ),
       onChanged: (String? newValue) {
         controller.reasonController
@@ -457,7 +422,7 @@ class GatePassForm extends StatelessWidget {
         ...gatePassReasons.map<DropdownMenuItem<String>>((GatePassReason group) {
           return DropdownMenuItem<String>(
             value: group.id,
-            child: Text(group.name, style: TextStyle(
+            child: Text(group.name, style: const TextStyle(
               fontSize: 12
             )),
           );
@@ -465,6 +430,7 @@ class GatePassForm extends StatelessWidget {
       ],
     );
   }
+
 /*
   void _showReasonBottomSheet(BuildContext context) {
     Get.bottomSheet(
@@ -492,15 +458,36 @@ class GatePassForm extends StatelessWidget {
 
  */
 
+  Future<void> _selectTime(
+      BuildContext context, bool isFromTime, RxString controller1) async {
+
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      controller1.value = pickedTime.format(context);
+      //controller1.value = _formatTime(pickedTime);
+      print("Time selected: ${controller1.value}");
+    }else {
+      print("Time selection canceled");
+    }
+  }
+
+  String _formatTime(TimeOfDay time) {
+    return '${time.hour.toString()}:${time.minute.toString()}';
+  }
   bool _isValidForm(GatePassFormController controller) {
     if (controller.fromTimeController.value.isEmpty ||
         controller.toTimeController.value.isEmpty ||
-        controller.reasonController.value!.id.isEmpty||
+        //controller.reasonController.value!.id.isEmpty||
         controller.goWithController.value.isEmpty ||
-        controller.remarkController.value.isEmpty ) {
-      controller.reasonError.value = controller.reasonController.value!.id.isEmpty;
-      controller.toError.value = controller.toTimeController.value.isEmpty;
+        controller.remarkController.value.isEmpty )
+    {
       controller.fromError.value = controller.fromTimeController.value.isEmpty;
+      controller.toError.value = controller.toTimeController.value.isEmpty;
+     // controller.reasonError.value = controller.reasonController.value!.id.isEmpty;
       controller.goWithError.value = controller.goWithController.value.isEmpty;
       controller.remarkError.value = controller.remarkController.value.isEmpty;
 

@@ -886,8 +886,8 @@ class ApiService {
       request.fields.addAll({
         'APIKEY': 'GNCS0225',
         'USER_ID': userId,
-        'applyfrom': applyFrom,
-        'applyto': applyTo,
+        'applyFrom': applyFrom,
+        'applyTo': applyTo,
         'reason': reason,
         'goWith':goWith,
         'applyRemark':applyRemark,

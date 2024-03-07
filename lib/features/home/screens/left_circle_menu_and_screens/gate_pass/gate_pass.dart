@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/gate_pass/widgets/gate_pass_form_widget/gate_pass_form.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/gate_pass/widgets/gate_pass_history/gate_pass_history.dart';
 import '../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../utils/constants/colors.dart';
 
@@ -41,9 +42,30 @@ class GatePass extends StatelessWidget {
 
                 /// Form
                 GatePassForm(),
+
+                /// Divider to separate current Gate Pass application and history
+                const Divider(),
+
+                /// Leave application history
+                const TopHeading(
+                  text: 'History',
+                ),
+
+                SingleChildScrollView(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: EColors.backgroundColor,
+                    ),
+                    child: GatePassHistory(),
+                  ),
+                ),
               ],
             ),
           ),
         ));
   }
+
+
+
+
 }
