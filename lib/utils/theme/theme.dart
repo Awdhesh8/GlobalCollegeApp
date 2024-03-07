@@ -8,15 +8,14 @@ import 'custom_themes/outlined_button_theme.dart';
 import 'custom_themes/text_field_theme.dart';
 import 'custom_themes/text_theme.dart';
 
-
-class EAppTheme{
+class EAppTheme {
   EAppTheme._();
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
-    fontFamily: 'poppins',
-    brightness: Brightness.light,
+    fontFamily: 'Intel',
     primaryColor: Colors.blue,
+    brightness: Brightness.light,
     textTheme: ETextTheme.lightTextTheme,
     chipTheme: EChipTheme.lightChipTheme,
     scaffoldBackgroundColor: Colors.white,
@@ -26,14 +25,13 @@ class EAppTheme{
     elevatedButtonTheme: EElevatedButtonTheme.lightElevatedButtonTheme,
     outlinedButtonTheme: EOutlinedButtonTheme.lightOutlinedButtonTheme,
     inputDecorationTheme: ETextFormFieldTheme.lightInputDecorationTheme,
-
   );
 
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
-    fontFamily: 'poppins',
-    brightness: Brightness.dark,
+    fontFamily: 'Intel',
     primaryColor: Colors.blue,
+    brightness: Brightness.dark,
     textTheme: ETextTheme.darkTextTheme,
     chipTheme: EChipTheme.darkChipTheme,
     scaffoldBackgroundColor: Colors.black,
@@ -44,5 +42,4 @@ class EAppTheme{
     outlinedButtonTheme: EOutlinedButtonTheme.darkOutlinedButtonTheme,
     inputDecorationTheme: ETextFormFieldTheme.darkInputDecorationTheme,
   );
-
 }

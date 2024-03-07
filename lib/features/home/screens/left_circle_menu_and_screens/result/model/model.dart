@@ -15,40 +15,43 @@ class StudentModel {
   }
 }
 
-class Semester {
-  final int semesterNumber;
-  final Exam finalExam;
-  final Exam midTermExam;
-
-  Semester({
-    required this.semesterNumber,
-    required this.finalExam,
-    required this.midTermExam,
-  });
-
-  factory Semester.fromJson(Map<String, dynamic> json) {
-    return Semester(
-      semesterNumber: json['semester_number']?? '',
-      finalExam: Exam.fromJson(json['final_exam'] ?? ''),
-      midTermExam: Exam.fromJson(json['mid_term_exam']?? ''),
-    );
-  }
-}
+// class Semester {
+//   final int semesterNumber;
+//   final Exam finalExam;
+//   final Exam midTermExam;
+//
+//   Semester({
+//     required this.semesterNumber,
+//     required this.finalExam,
+//     required this.midTermExam,
+//   });
+//
+//   factory Semester.fromJson(Map<String, dynamic> json) {
+//     return Semester(
+//       semesterNumber: json['semester_number']?? '',
+//       finalExam: Exam.fromJson(json['final_exam'] ?? ''),
+//       midTermExam: Exam.fromJson(json['mid_term_exam']?? ''),
+//     );
+//   }
+// }
 
 class Exam {
   final String result;
   final ExamResult theoreticalResult;
   final ExamResult practicalResult;
+  final String sgpa;
 
   Exam({
     required this.result,
     required this.theoreticalResult,
     required this.practicalResult,
+    required this.sgpa,
   });
 
   factory Exam.fromJson(Map<String, dynamic> json) {
     return Exam(
       result: json['result']?? '',
+      sgpa: json['current_semester_sgpa']?? '',
       theoreticalResult: ExamResult.fromJson(json['theoretical_result']?? ''),
       practicalResult: ExamResult.fromJson(json['practical_result']?? ''),
     );
@@ -58,15 +61,17 @@ class Exam {
 class ExamResult {
   final String result;
   final List<Subject> subjects;
+  final String sgpa;
 
   ExamResult({
     required this.result,
-    required this.subjects,
+    required this.subjects, required this.sgpa,
   });
 
   factory ExamResult.fromJson(Map<String, dynamic> json) {
     return ExamResult(
       result: json['result']?? '',
+      sgpa: json['current_semester_sgpa']?? '',
       subjects: List<Subject>.from(json['subjects'].map((x) => Subject.fromJson(x))),
     );
   }
@@ -92,16 +97,36 @@ class Subject {
   }
 }
 
+class Semester {
+  final String semesterNumber;
+  final Exam finalExam;
+  final Exam midTermExam;
+
+  Semester({
+    required this.semesterNumber,
+    required this.finalExam,
+    required this.midTermExam,
+  });
+
+  factory Semester.fromJson(Map<String, dynamic> json) {
+    return Semester(
+      semesterNumber: json['semester_number'].toString(),
+      finalExam: Exam.fromJson(json['final_exam'] ?? {}),
+      midTermExam: Exam.fromJson(json['mid_term_exam'] ?? {}),
+    );
+  }
+}
+
 class OverallStatus {
-  final int currentSemester;
-  final String currentSemesterSgpa;
+  final String currentSemester;
+  final double currentSemesterCgpa;
   final String currentSemesterStatus;
   final String midTermStatus;
   final String finalStatus;
 
   OverallStatus({
     required this.currentSemester,
-    required this.currentSemesterSgpa,
+    required this.currentSemesterCgpa,
     required this.currentSemesterStatus,
     required this.midTermStatus,
     required this.finalStatus,
@@ -109,14 +134,18 @@ class OverallStatus {
 
   factory OverallStatus.fromJson(Map<String, dynamic> json) {
     return OverallStatus(
-      currentSemester: json['current_semester']?? '',
-      currentSemesterSgpa: json['current_semester_sgpa']?? '',
-      currentSemesterStatus: json['current_semester_status']?? '',
-      midTermStatus: json['mid_term_status']?? '',
-      finalStatus: json['final_status']?? '',
+      currentSemester: json['current_semester'].toString(),
+      currentSemesterCgpa: (json['current_semester_cgpa'] is num)
+          ? (json['current_semester_cgpa'] as num).toDouble()
+          : double.tryParse(json['current_semester_cgpa'].toString()) ?? 0.0,
+      currentSemesterStatus: json['current_semester_status'].toString(),
+      midTermStatus: json['mid_term_status'].toString(),
+      finalStatus: json['final_status'].toString(),
     );
   }
 }
+
+
 
 
 

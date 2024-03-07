@@ -36,8 +36,8 @@ class Result extends StatelessWidget {
                     studentController.studentModel.value.overallStatus;
 
                 OverallStatus overallStatus = OverallStatus(
-                  currentSemester: 0,
-                  currentSemesterSgpa: '',
+                  currentSemester: '',
+                  currentSemesterCgpa: 0,
                   currentSemesterStatus: '',
                   midTermStatus: '',
                   finalStatus: '',
@@ -64,7 +64,7 @@ class Result extends StatelessWidget {
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 10.0),
-                      Text('SGPA: ${overallStatus.currentSemesterSgpa}'),
+                      Text('SGPA: ${overallStatus.currentSemesterCgpa}'),
                       const SizedBox(height: 10.0),
                       Text(
                           'Current Semester Status: ${overallStatus.currentSemesterStatus}'),
@@ -94,6 +94,7 @@ class Result extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
+                    childAspectRatio: .98,
                   ),
                   itemCount: semesters.length,
                   itemBuilder: (context, index) {
@@ -121,25 +122,54 @@ class Result extends StatelessWidget {
                             Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    // Navigate to the final exam result screen passing the final exam data
-                                    Get.to(() => ExamResultScreen(
-                                        exam: semesters[index].finalExam,
-                                        semester: semesters[index],
-                                        examType: 'Final Exam'));
-                                  },
-                                  child: const Text('Final Exam'),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          // Navigate to the final exam result screen passing the final exam data
+                                          Get.to(
+                                            () => ExamResultScreen(
+                                              exam: semesters[index].finalExam,
+                                              semester: semesters[index],
+                                              examType: 'Final Exam',
+                                              sgpa: 'fdff',
+                                            ),
+                                          );
+                                        },
+                                        child: const Text(
+                                          'Final',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    // Navigate to the mid term exam result screen passing the mid term exam data
-                                    Get.to(() => ExamResultScreen(
-                                        exam: semesters[index].midTermExam,
-                                        semester: semesters[index],
-                                        examType: 'Mid Term Exam'));
-                                  },
-                                  child: const Text('Mid Term Exam'),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          // Navigate to the mid term exam result screen passing the mid term exam data
+                                          Get.to(() => ExamResultScreen(
+                                                exam: semesters[index]
+                                                    .midTermExam,
+                                                semester: semesters[index],
+                                                examType: 'Mid Term Exam',
+                                                sgpa: '',
+                                              ));
+                                        },
+                                        child: const Text(
+                                          'Mid Sem',
+                                          style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -159,7 +189,6 @@ class Result extends StatelessWidget {
 }
 
 // https://jsonlint.com
-
 
 ///
 // class ExamResultScreen extends StatelessWidget {

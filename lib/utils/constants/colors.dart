@@ -35,6 +35,7 @@ class EColors {
   static const Color textPrimaryHeading = Color.fromRGBO(227, 30, 37, 1);
   static const Color textSecondaryTitle = Color(0xFF686868);
   static const Color textWhite = Colors.white;
+  static const Color textDarkMode = Colors.white70;
   static const Color textColorPrimary = Color.fromRGBO(0, 0, 120, 1);
   // static const Color textColorPrimary1 = Color.fromRGBO(0,0,0, 1); // Black
   static const Color textColorPrimary1 = Color.fromRGBO(54, 69, 79, 1); // charcoal

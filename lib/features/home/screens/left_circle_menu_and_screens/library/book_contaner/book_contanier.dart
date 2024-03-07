@@ -53,7 +53,6 @@ class _BookContainerState extends State<BookContainer> {
           Container(
             width: 120,
             height: 120,
-            margin: EdgeInsets.only(right: 8),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
               image: DecorationImage(
@@ -90,7 +89,7 @@ class _BookContainerState extends State<BookContainer> {
                   ),
                   SizedBox(height: 6),
                   Text(
-                    'Available: ${widget.availableQty} copies',
+                    'Available: ${widget.availableQty}',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 13,

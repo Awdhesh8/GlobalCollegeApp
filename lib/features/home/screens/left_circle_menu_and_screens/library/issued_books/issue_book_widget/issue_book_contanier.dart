@@ -43,62 +43,68 @@ class _IssuedBookDetailsContainerState
         ),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
+              Row(
                 children: [
+                  Column(
+                    children: [
+                      Container(
+                        width: 120.0,
+                        height: 120,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: Image.network(
+                            widget.imageUrl,
+                            errorBuilder: (context, error, stackTrace) {
+                              print('Error loading image: $error');
+                              return Container(
+                                width: 130.0,
+                                height: 144.69,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Colors.black),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Book cover not available',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
 
-                  Container(
-                    width: 130.0,
-                    height: 144.69,
-                    child: Image.network(
-                      widget.imageUrl,
-                      errorBuilder: (context, error, stackTrace) {
-                        print('Error loading image: $error');
-                        return Container(
-                          width: 130.0,
-                          height: 144.69,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.black),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Book cover not available',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        );
-                      },
+
+                    ],
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        BookTitleWidget(title: widget.title),
+                        const SizedBox(
+                          height: ESizes.spaceBtwItemsHeadings,
+                        ),
+                        // AuthorLabelWidget(),
+                        // const SizedBox(height: 4),
+                        AuthorNameWidget(author: widget.author),
+                        const SizedBox(
+                          height: ESizes.spaceBtwItemsHeadings,
+                        ),
+                        IssueDate(
+                          issueDate: widget.issueDateTime,
+                        ),
+                        const SizedBox(
+                          height: ESizes.spaceBtwItemsHeadings,
+                        ),
+                      ],
                     ),
                   ),
-
-
                 ],
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    BookTitleWidget(title: widget.title),
-                    const SizedBox(
-                      height: ESizes.spaceBtwItems,
-                    ),
-                    AuthorLabelWidget(),
-                    const SizedBox(height: 4),
-                    AuthorNameWidget(author: widget.author),
-                    const SizedBox(
-                      height: ESizes.spaceBtwItems,
-                    ),
-                    IssueDate(
-                      issueDate: widget.issueDateTime,
-                    ),
-                    const SizedBox(
-                      height: ESizes.spaceBtwItems,
-                    ),
-                  ],
-                ),
               ),
             ],
           ),

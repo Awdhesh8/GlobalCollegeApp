@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/library/book_data/book_data_class.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../../common/widgets/texts/top_first_heading.dart';
@@ -35,7 +34,8 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
       var result = await ApiService.libraryHistory();
 
       if (result['status'] == '1') {
-        List<Map<String, dynamic>> responseData = List<Map<String, dynamic>>.from(result['response'] ?? []);
+        List<Map<String, dynamic>> responseData =
+            List<Map<String, dynamic>>.from(result['response'] ?? []);
         print(responseData);
 
         setState(() {
@@ -70,7 +70,6 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
         centerTitle: true,
         showBackArrow: true,
       ),
-
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
@@ -98,34 +97,35 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
             /// Container with Book Data
             isLoading
                 ? Center(
-              child: ShimmerLoadingWidget(),
-            )
+                    child: ShimmerLoadingWidget(),
+                  )
                 : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: historyBook.length,
-                itemBuilder: (context, index) {
-                  var book = historyBook[index];
-                  return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: BookHistoryContainer(
-                      imageUrl: book['cover_image'] ?? '',
-                      title: book['book_title'] ?? 'NA',
-                      author: book['author'] ?? '',
-                      issueDateTime: book['issued_date'] ?? '',
-                      returnDateTime: book['return_date'] ?? '',
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: historyBook.length,
+                      itemBuilder: (context, index) {
+                        var book = historyBook[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: BookHistoryContainer(
+                            imageUrl: book['cover_image'] ?? '',
+                            title: book['book_title'] ?? 'NA',
+                            author: book['author'] ?? '',
+                            issueDateTime: book['issued_date'] ?? '',
+                            returnDateTime: book['return_date'] ?? '',
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
           ],
         ),
       ),
     );
   }
+
   Widget ShimmerLoadingWidget() {
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
@@ -147,7 +147,6 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
     );
   }
 }
-
 
 /// -->
 // import 'package:flutter/material.dart';

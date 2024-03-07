@@ -1,4 +1,149 @@
 import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import '../../../../../../../common/widgets/book_contanier/book_contanier.dart';
+import '../../../../../../../utils/constants/sizes.dart';
+import '../book_widget/e_book_widget.dart';
+
+class EBookDetailsContainer extends StatefulWidget {
+  // final Map<String, dynamic> bookData;
+  final String imageUrl;
+  final String title;
+  final String author;
+  final String downloadEBook;
+
+  const EBookDetailsContainer({
+    Key? key,
+    required this.title,
+    required this.author,
+    required this.downloadEBook,
+    required this.imageUrl,
+  }) : super(key: key);
+
+  @override
+  State<EBookDetailsContainer> createState() => _EBookDetailsContainerState();
+}
+
+class _EBookDetailsContainerState extends State<EBookDetailsContainer> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /*
+
+
+                         Container(
+                        width: 120.69,
+                        height: 120.69,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              widget.imageUrl,
+                            ),
+                            fit: BoxFit.cover,
+                          )
+                        ),
+                      ),
+                       */
+
+                      Container(
+                        width: 120.0,
+                        height: 120,
+                        decoration: ShapeDecoration(
+                          shape: ContinuousRectangleBorder(
+                            borderRadius: BorderRadius.circular(75),
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: Image.network(
+                            widget.imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              print('Error loading image: $error');
+                              return Container(
+                                width: 130.0,
+                                height: 144.69,
+                                decoration: ShapeDecoration(
+                                  shape: ContinuousRectangleBorder(
+                                    borderRadius: BorderRadius.circular(75),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Book cover not available',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+
+
+                    ],
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BookTitleWidget(title: widget.title),
+                        const SizedBox(
+                          height: ESizes.spaceBtwItemsHeadings,
+                        ),
+
+                        // AuthorLabelWidget(),
+                        // const SizedBox(height: 4),
+                        AuthorNameWidget(author: widget.author),
+                        const SizedBox(
+                          height: ESizes.spaceBtwItemsHeadings,
+                        ),
+                         DownloadPDFButtonWidget(downloadLink: widget.downloadEBook),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              // Divider(),
+              // DownloadPDFButtonWidget(downloadLink: widget.downloadEBook),
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+/// Correct Code with Fetching api's
+/*
+import 'package:flutter/material.dart';
 import '../../../../../../../common/widgets/book_contanier/book_contanier.dart';
 import '../../../../../../../utils/constants/sizes.dart';
 import '../book_widget/e_book_widget.dart';
@@ -144,7 +289,9 @@ class _EBookDetailsContainerState extends State<EBookDetailsContainer> {
     );
   }
 }
+*/
 
+/// Other Random code
 /*
 import 'package:flutter/material.dart';
 import '../../../../../../../common/widgets/book_contanier/book_contanier.dart';

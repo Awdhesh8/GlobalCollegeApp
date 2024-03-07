@@ -1,5 +1,86 @@
 import 'package:get/get.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import '../model/model.dart'; // For json decoding
+
+class StudentController extends GetxController {
+  var studentModel = StudentModel(
+    semesters: [],
+    overallStatus: [],
+    // message: '',
+    // status: '',
+  ).obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchStudentData();
+  }
+
+  void fetchStudentData() async {
+    var headers = {
+      'Cookie': 'ci_session=mouu69ekloinnhq9jlocqet74205i237'
+    };
+
+    // Get USER_ID from local storage
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+
+    var request = http.MultipartRequest('POST', Uri.parse('http://myglobalapp.in/global/Web0001/get_all_result'));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+    });
+
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        String responseData = await response.stream.bytesToString();
+
+        // Decode JSON string to Map
+        Map<String, dynamic> decodedJson = json.decode(responseData);
+        print(userId);
+        print(response);
+        print(request);
+        print(response.request);
+        // Parsing semesters
+        List<dynamic> semestersJson = decodedJson['response']['semesters'];
+        List<Semester> semesters =
+        semestersJson.map((json) => Semester.fromJson(json)).toList();
+        // print(overallStatus);
+        print(semesters);
+        // Parsing overallStatus
+        List<dynamic> overallStatusJson = decodedJson['response']['overallStatus'];
+        OverallStatus overallStatus =
+        OverallStatus.fromJson(overallStatusJson[0]); // Get the first element
+        print(overallStatus);
+        print(semesters);
+        // Updating studentModel
+        studentModel.value = StudentModel(
+          semesters: semesters,
+          overallStatus: [overallStatus],
+          // message: decodedJson['message'],
+          // status: decodedJson['status'],
+        );
+      } else {
+        print('Failed to fetch data. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error during API request: $error');
+    }
+  }
+}
+
+
+
+/// Correct code without API integration
+/*
+import 'package:get/get.dart';
+import 'dart:convert';
 
 import '../model/model.dart'; // For json decoding
 
@@ -29,6 +110,7 @@ class StudentController extends GetxController {
             "result": "Pass",
             "theoretical_result": {
               "result": "Pass",
+               "current_semester_sgpa": "1.1",
               "subjects": [
                 {"name": "Mathematics", "grade": "A", "status": "Pass"},
                 {"name": "Physics", "grade": "B+", "status": "Pass"},
@@ -37,6 +119,7 @@ class StudentController extends GetxController {
             },
             "practical_result": {
               "result": "Pass",
+              "current_semester_sgpa": "1.2",
               "subjects": [
                 {"name": "Mathematics Practical", "status": "Pass"},
                 {"name": "Physics Practical", "status": "Pass"},
@@ -48,6 +131,7 @@ class StudentController extends GetxController {
             "result": "Pass",
             "theoretical_result": {
               "result": "Pass",
+               "current_semester_sgpa": "2.2",
               "subjects": [
                 {"name": "Mathematics", "grade": "A", "status": "Pass"},
                 {"name": "Physics", "grade": "B+", "status": "Pass"},
@@ -56,6 +140,7 @@ class StudentController extends GetxController {
             },
             "practical_result": {
               "result": "Pass",
+               "current_semester_sgpa": "2.3",
               "subjects": [
                 {"name": "Mathematics Practical", "status": "Pass"},
                 {"name": "Physics Practical", "status": "Pass"},
@@ -70,6 +155,7 @@ class StudentController extends GetxController {
             "result": "Pass",
             "theoretical_result": {
               "result": "Pass",
+              "current_semester_sgpa": "4.7",
               "subjects": [
                 {"name": "Biology", "grade": "A", "status": "Pass"},
                 {"name": "Computer Science", "grade": "B", "status": "Pass"},
@@ -78,6 +164,7 @@ class StudentController extends GetxController {
             },
             "practical_result": {
               "result": "Pass",
+              "current_semester_sgpa": "4.7",
               "subjects": [
                 {"name": "Biology Practical", "status": "Pass"},
                 {"name": "Computer Science Practical", "status": "Pass"},
@@ -89,6 +176,7 @@ class StudentController extends GetxController {
             "result": "Pass",
             "theoretical_result": {
               "result": "Pass",
+               "current_semester_sgpa": "3.7",
               "subjects": [
                 {"name": "Biology", "grade": "A", "status": "Pass"},
                 {"name": "Computer Science", "grade": "B", "status": "Pass"},
@@ -97,6 +185,7 @@ class StudentController extends GetxController {
             },
             "practical_result": {
               "result": "Pass",
+              "current_semester_sgpa": "7.6",
               "subjects": [
                 {"name": "Biology Practical", "status": "Pass"},
                 {"name": "Computer Science Practical", "status": "Pass"},
@@ -124,11 +213,14 @@ class StudentController extends GetxController {
 
     // Parsing semesters
     List<dynamic> semestersJson = decodedJson['response']['semesters'];
-    List<Semester> semesters = semestersJson.map((json) => Semester.fromJson(json)).toList();
+    List<Semester> semesters =
+        semestersJson.map((json) => Semester.fromJson(json)).toList();
+
 
     // Parsing overallStatus
     List<dynamic> overallStatusJson = decodedJson['response']['overallStatus'];
-    OverallStatus overallStatus = OverallStatus.fromJson(overallStatusJson[0]); // Get the first element
+    OverallStatus overallStatus =
+        OverallStatus.fromJson(overallStatusJson[0]); // Get the first element
 
     // Updating studentModel
     studentModel.value = StudentModel(
@@ -140,6 +232,10 @@ class StudentController extends GetxController {
   }
 }
 
+
+ */
+
+/// Random code
 /*
 
 import 'dart:convert';

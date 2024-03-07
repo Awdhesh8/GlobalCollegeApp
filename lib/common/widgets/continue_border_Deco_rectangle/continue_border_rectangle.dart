@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 
@@ -27,6 +26,7 @@ class CustomDeco {
     );
   }
 
+  ///
   static ShapeDecoration decoRectangle2() {
     return ShapeDecoration(
       shape: ContinuousRectangleBorder(

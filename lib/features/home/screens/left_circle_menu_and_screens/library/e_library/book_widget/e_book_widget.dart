@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:slide_to_act/slide_to_act.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../../../common/widgets/book_contanier/book_contanier.dart';
 import '../../../../../../../utils/constants/sizes.dart';
@@ -17,11 +20,11 @@ class BookTitleWidget extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w500,
+            style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: EColors.textColorPrimary1
             ),
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
@@ -87,11 +90,11 @@ class AuthorLabelWidget extends StatelessWidget {
     return const Row(
       children: [
         Text(
-          'Author :',
+          'By :',
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 14,
             fontFamily: 'Inter',
+            fontSize: 11,
+            color: Colors.black38,
           ),
         ),
       ],
@@ -110,12 +113,11 @@ class AuthorNameWidget extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            author,
+            'By: $author',
             style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14,
               fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
+              fontSize: 11,
+              color: Colors.black38,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -172,7 +174,7 @@ class IssueDate extends StatelessWidget {
     return Row(
       children: [
         const Text(
-          'Issue Date :',
+          'Issue:',
           style: TextStyle(
             color: Colors.black,
             fontSize: 14,
@@ -186,7 +188,7 @@ class IssueDate extends StatelessWidget {
             issueDate,
             style: const TextStyle(
               color: Colors.black,
-              fontSize: 14,
+              fontSize: 12,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
             ),
@@ -211,7 +213,7 @@ class IssueTime extends StatelessWidget {
     return Row(
       children: [
         const Text(
-          'Issue Time :',
+          'Issue:',
           style: TextStyle(
             color: Colors.black,
             fontSize: 14,
@@ -224,7 +226,7 @@ class IssueTime extends StatelessWidget {
           issueTime,
           style: const TextStyle(
             color: Colors.black,
-            fontSize: 14,
+            fontSize: 12,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
           ),
@@ -246,7 +248,7 @@ class ReturnDate extends StatelessWidget {
     return Row(
       children: [
         const Text(
-          'Return Date :',
+          'Return:',
           style: TextStyle(
             color: Colors.black,
             fontSize: 14,
@@ -260,7 +262,7 @@ class ReturnDate extends StatelessWidget {
             returnDate,
             style: const TextStyle(
               color: Colors.black,
-              fontSize: 14,
+              fontSize: 12,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
             ),
@@ -285,7 +287,7 @@ class ReturnTime extends StatelessWidget {
     return Row(
       children: [
         const Text(
-          'Return Time :',
+          'Return:',
           style: TextStyle(
             color: Colors.black,
             fontSize: 14,
@@ -307,6 +309,7 @@ class ReturnTime extends StatelessWidget {
     );
   }
 }
+
 
 class DownloadPDFButtonWidget extends StatelessWidget {
   final String downloadLink;
@@ -339,3 +342,81 @@ class DownloadPDFButtonWidget extends StatelessWidget {
     );
   }
 }
+/*
+
+
+class DownloadPDFButtonWidget extends StatelessWidget {
+  final String downloadLink;
+
+  DownloadPDFButtonWidget({required this.downloadLink});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      // mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Expanded(
+          child: Container(
+              // width: 250,
+              height: 60,
+              child: SlideAction(
+                innerColor: EColors.backgroundColor2,
+                outerColor: EColors.white,
+                elevation: 0,
+                height: 40,
+                sliderButtonIconSize: 18,
+                borderRadius: 8,
+                // text: 'Download',
+                child: Shimmer.fromColors(
+                  baseColor: EColors.textColorPrimary1,
+                  highlightColor: EColors.lightContainer1,
+                  child: Text(
+                    'Download Now',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: EColors.textColorPrimary1
+                  ),
+                  ),
+                ),
+                // alignment: Alignment.centerRight,
+                sliderButtonIconPadding: 8,
+                animationDuration: const Duration(milliseconds: 300),
+                // sliderButtonIcon: Icon(Iconsax.document_download),
+                sliderButtonYOffset: -4,
+                onSubmit: () async {
+                  // Open the link in the default web browser
+                  await launch(downloadLink);
+                },
+              ),
+              ),
+        ),
+
+        /*
+        const Text(
+          'Download: Read Anytime',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 8,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        // const SizedBox(width: 10),
+        IconButton(
+          onPressed: () async {
+            // Open the link in the default web browser
+            await launch(downloadLink);
+          },
+          icon: const Icon(Iconsax.document_download),
+        ),
+
+         */
+
+      ],
+    );
+  }
+}
+
+ */

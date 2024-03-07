@@ -1,32 +1,28 @@
 import 'dart:io';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../features/authentication/screens/entryPoint/components/animated_bar.dart';
 import '../features/home/screens/home_page.dart';
 import '../features/notice/notice.dart';
 import '../features/personalization/screens/settings/settings.dart';
 import '../features/time_table/time_table.dart';
-import '../model/menu.dart';
 import '../utils/constants/colors.dart';
 import '../utils/helpers/helper_functions.dart';
-import 'package:rive/rive.dart'; // Import Rive package
-import '../utils/rive/rive_utils.dart';
 
 class NavigationMenu extends StatelessWidget {
   const NavigationMenu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final darkMode = EHelperFunctions.isDarkMode(context);
     return GetBuilder<NavigationController>(
       init: NavigationController(),
       builder: (controller) {
         Color getIconColor(int index) {
           return controller.selectedIndex.value == index
               ? const Color(0xFFFE0037) // Selected icon color
-              : Colors.white; // Unselected icon color
+              :  darkMode ?  Colors.white70 : EColors.white; // Unselected icon color
         }
 
         return WillPopScope(
@@ -40,8 +36,8 @@ class NavigationMenu extends StatelessWidget {
                 index: controller.selectedIndex.value,
                 onTap: (index) => controller.selectedIndex.value = index,
                 backgroundColor: Colors.transparent,
-                color: EColors.primary,
-                buttonBackgroundColor: Colors.transparent,
+                color:  darkMode ? EColors.black : EColors.primary,
+                buttonBackgroundColor: Colors.transparent ,
                 animationCurve: Curves.easeInOut,
                 animationDuration: const Duration(milliseconds: 500),
                 items: [
@@ -92,7 +88,6 @@ class NavigationController extends GetxController {
     const MyHomePage(),
     TimeTable(),
     const Notice(),
-    // ProfileScreen(),
     SettingsScreen(),
   ];
 }

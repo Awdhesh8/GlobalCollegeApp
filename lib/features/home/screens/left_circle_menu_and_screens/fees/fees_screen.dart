@@ -154,9 +154,10 @@ class ProfileDetail extends StatelessWidget {
             style: const TextStyle(
               fontSize: 16,
               fontFamily: 'Inter',
-              fontWeight: FontWeight.w500,
+               fontWeight: FontWeight.w500,
+              //style: Theme.of(context).textTheme.labelSmall!.apply(color: EColors.textColorPrimary1, fontFamily: 'Inter', ),
               color: EColors.textColorPrimary1,
-            ),
+          ),
           ),
         ],
       ),

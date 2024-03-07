@@ -34,7 +34,8 @@ class _IssuedBooksScreenState extends State<IssuedBooksScreen> {
       var result = await ApiService.issuedBooks();
 
       if (result['status'] == '1') {
-        List<Map<String, dynamic>> responseData = List<Map<String, dynamic>>.from(result['response'] ?? []);
+        List<Map<String, dynamic>> responseData =
+            List<Map<String, dynamic>>.from(result['response'] ?? []);
         print(responseData);
 
         setState(() {
@@ -88,28 +89,28 @@ class _IssuedBooksScreenState extends State<IssuedBooksScreen> {
             ),
             isLoading
                 ? Center(
-              child: ShimmerLoadingWidget(),
-            )
+                    child: ShimmerLoadingWidget(),
+                  )
                 : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: issuedBook.length,
-                itemBuilder: (context, index) {
-                  var book = issuedBook[index];
-                  return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: IssuedBookDetailsContainer(
-                      imageUrl: book['cover_image'] ?? '',
-                      title: book['book_title'] ?? 'NA',
-                      author: book['author'] ?? '',
-                      issueDateTime: book['issued_date'] ?? '',
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: issuedBook.length,
+                      itemBuilder: (context, index) {
+                        var book = issuedBook[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: IssuedBookDetailsContainer(
+                            imageUrl: book['cover_image'] ?? '',
+                            title: book['book_title'] ?? 'NA',
+                            author: book['author'] ?? '',
+                            issueDateTime: book['issued_date'] ?? '',
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
           ],
         ),
       ),
@@ -137,8 +138,6 @@ class _IssuedBooksScreenState extends State<IssuedBooksScreen> {
     );
   }
 }
-
-
 
 // import 'package:flutter/material.dart';
 // import '../../../../../../common/widgets/appbar/appbar.dart';

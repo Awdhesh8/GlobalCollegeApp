@@ -1,16 +1,12 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:globalcollegeapp/common/widgets/custom_shapes/containers/search_container.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/custom_container_button/custom_container_button.dart';
 import '../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../data/api/api_services.dart';
-import '../../../../../utils/constants/api_constants.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
 import 'book_contaner/book_contanier.dart';

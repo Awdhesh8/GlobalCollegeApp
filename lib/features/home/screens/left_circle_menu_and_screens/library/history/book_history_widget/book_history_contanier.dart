@@ -50,27 +50,34 @@ class _BookHistoryContainerState extends State<BookHistoryContainer> {
               Column(
                 children: [
                   Container(
-                    width: 130.0,
-                    height: 144.69,
-                    child: Image.network(
-                      widget.imageUrl,
-                      errorBuilder: (context, error, stackTrace) {
-                        print('Error loading image: $error');
-                        return Container(
-                          width: 130.0,
-                          height: 144.69,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.black),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Book cover not available',
-                              textAlign: TextAlign.center,
+                    width: 120,
+                    height: 120,
+                    // decoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.circular(30),
+                    // ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: Image.network(
+                        widget.imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          print('Error loading image: $error');
+                          return Container(
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              //border: Border.all(color: Colors.black),
                             ),
-                          ),
-                        );
-                      },
+                            child: Center(
+                              child: Text(
+                                'Book cover not available',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -88,11 +95,11 @@ class _BookHistoryContainerState extends State<BookHistoryContainer> {
                     // const SizedBox(
                     //   height: ESizes.spaceBtwItems,
                     // ),
-                    AuthorLabelWidget(),
-                    const SizedBox(height: 4),
+                    // AuthorLabelWidget(),
+                    // const SizedBox(height: 4),
                     AuthorNameWidget(author: widget.author),
                     const SizedBox(
-                      height: ESizes.spaceBtwItems,
+                      height: ESizes.spaceBtwItemsHeadings,
                     ),
                     // AvailableQuantityWidget(
                     //     availableQty: bookData['availableQty']),
@@ -103,7 +110,7 @@ class _BookHistoryContainerState extends State<BookHistoryContainer> {
                       issueDate: widget.issueDateTime,
                     ),
                     const SizedBox(
-                      height: ESizes.spaceBtwItems,
+                      height: ESizes.spaceBtwItemsHeadings,
                     ),
                     // IssueTime(issueTime: bookData['issueTime'],
                     // ),
@@ -114,7 +121,7 @@ class _BookHistoryContainerState extends State<BookHistoryContainer> {
                       returnDate: widget.returnDateTime,
                     ),
                     const SizedBox(
-                      height: ESizes.spaceBtwItems,
+                      height: ESizes.spaceBtwItemsHeadings,
                     ),
                     // ReturnTime(returnTime: bookData['returnTime'],
                     // ),

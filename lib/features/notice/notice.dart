@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
 import '../../common/widgets/appbar/appbar.dart';
-import '../../common/widgets/texts/top_first_heading.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/sizes.dart';
-import '../personalization/screens/settings/settings.dart';
+import '../../utils/helpers/helper_functions.dart';
 
-class Notice extends StatefulWidget {
+class Notice extends StatelessWidget {
   const Notice({Key? key}) : super(key: key);
 
   @override
-  _NoticeState createState() => _NoticeState();
-}
-
-class _NoticeState extends State<Notice> {
-  @override
   Widget build(BuildContext context) {
+    final darkMode = EHelperFunctions.isDarkMode(context);
+
     return Scaffold(
-      backgroundColor: EColors.backgroundColor,
+      backgroundColor: darkMode ? EColors.black : EColors.backgroundColor,
       /// App Bar
-      appBar: const GAppBar(
-        backgroundColor: Colors.transparent,
+      appBar: GAppBar(
+        backgroundColor: Colors.transparent ,
         showBackArrow: false,
         title: Text(
           'Notice',
           style: TextStyle(
               fontSize: ESizes.appTitle,
-              color: EColors.textPrimaryHeading,
-              fontWeight: FontWeight.w500),
+              fontFamily: 'Inter',
+              color: EColors.primary,
+              fontWeight: FontWeight.w500,
+          ),
         ),
         centerTitle: false,
       ),
@@ -44,18 +42,26 @@ class _NoticeState extends State<Notice> {
                 // width: 373,
                 // height: 179,
                 decoration: ShapeDecoration(
-                  color: Colors.white,
+                  color:  darkMode ? EColors.black : EColors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  shadows: const [
+                  shadows: [
                     BoxShadow(
-                      color: Color(0x26000000),
-                      blurRadius: 10.90,
-                      offset: Offset(0, 0),
-                      spreadRadius: 0,
-                    )
+                      color: Colors.red.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 4,
+                      offset: const Offset(2, 2),
+                    ),
+                    const BoxShadow(
+                      color: Colors.white12,
+                      spreadRadius: .5,
+                      blurRadius: 4,
+                      offset: Offset(-2, -2),
+                    ),
+
                   ],
+
                 ),
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
