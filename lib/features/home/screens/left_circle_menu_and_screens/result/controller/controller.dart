@@ -1,3 +1,39 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../model/model.dart';
+
+import 'package:get/get.dart';
+
+class StudentController extends GetxController {
+  var result = ResultModel().obs;
+
+  void updateResult(ResultModel newResult) {
+    result.value = newResult;
+  }
+}
+
+class ApiService1 extends GetxService {
+  Future<ResultModel> getResult() async {
+    var headers = {'Cookie': 'ci_session=mg7hkaufqnp2fh9ohevf61pcdnqcu320'};
+    var data = {'APIKEY': 'GNCS0225', 'USER_ID': '1044'};
+    print(data);
+    final response = await http.post(
+      Uri.parse('http://myglobalapp.in/global/Web0001/get_all_result'),
+      headers: headers,
+      body: data,
+    );
+    print(data);
+    if (response.statusCode == 200) {
+      return ResultModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+}
+
+
+
+/*
 import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -23,6 +59,7 @@ class StudentController extends GetxController {
       'Cookie': 'ci_session=mouu69ekloinnhq9jlocqet74205i237'
     };
 
+    // Get USER_ID from local storage
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
 
@@ -40,20 +77,32 @@ class StudentController extends GetxController {
       if (response.statusCode == 200) {
         String responseData = await response.stream.bytesToString();
 
+        // Decode JSON string to Map
         Map<String, dynamic> decodedJson = json.decode(responseData);
+        print(userId);
+        print(response);
+        print(request);
+        print(response.request);
+        print('API Response: $responseData');
 
         // Parsing semesters
-        List<dynamic> semestersJson = decodedJson['response'];
-        List<Semester> semesters = semestersJson.map((json) => Semester.fromJson(json)).toList();
-
+        List<dynamic> semestersJson = decodedJson['response']['semesters'];
+        List<Semester> semesters =
+        semestersJson.map((json) => Semester.fromJson(json)).toList();
+        // print(overallStatus);
+        print(semesters);
         // Parsing overallStatus
-        Map<String, dynamic>? overallStatusJson = decodedJson['overallStatus'];
-        OverallStatus overallStatus = OverallStatus.fromJson(overallStatusJson ?? {});
-
+        List<dynamic> overallStatusJson = decodedJson['response']['overallStatus'];
+        OverallStatus overallStatus =
+        OverallStatus.fromJson(overallStatusJson[0]); // Get the first element
+        print(overallStatus);
+        print(semesters);
         // Updating studentModel
         studentModel.value = StudentModel(
           semesters: semesters,
           overallStatus: [overallStatus],
+          // message: decodedJson['message'],
+          // status: decodedJson['status'],
         );
       } else {
         print('Failed to fetch data. Status code: ${response.statusCode}');
@@ -64,6 +113,8 @@ class StudentController extends GetxController {
   }
 }
 
+
+ */
 
 
 /// Correct code without API integration

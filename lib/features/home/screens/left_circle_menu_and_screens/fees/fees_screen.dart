@@ -5,6 +5,7 @@ import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_scre
 import 'package:shimmer/shimmer.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
+import '../../../../../utils/helpers/helper_functions.dart';
 
 class FeesController extends GetxController {
   RxList<Map<String, dynamic>> data = <Map<String, dynamic>>[].obs;
@@ -54,9 +55,9 @@ class FeesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    final darkMode = EHelperFunctions.isDarkMode(context);
     return Scaffold(
-      backgroundColor: EColors.backgroundColor,
+      backgroundColor: darkMode ? EColors.black : EColors.backgroundColor,
       appBar: const GAppBar(
         backgroundColor: Colors.transparent,
         showBackArrow: true,
@@ -213,11 +214,13 @@ class SemesterDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final darkMode = EHelperFunctions.isDarkMode(context);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFE0E5),
+          color:  darkMode ? EColors.black : const Color(0xFFFFE0E5),
+        // color: const Color(0xFFFFE0E5),
         // color: EColors.backgroundColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: const [

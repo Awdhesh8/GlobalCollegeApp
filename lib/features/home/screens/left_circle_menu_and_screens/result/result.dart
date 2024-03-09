@@ -1,5 +1,206 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../utils/constants/colors.dart';
+import 'controller/controller.dart';
+import 'model/model.dart';
+
+class Result extends StatelessWidget {
+  final StudentController studentController = Get.put<StudentController>(StudentController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: const GAppBar(
+        backgroundColor: Colors.transparent,
+        showBackArrow: true,
+        title: Text(
+          'Your Results',
+          style: TextStyle(
+            fontSize: 24.0,
+            fontFamily: 'Inter',
+            color: EColors.textColorPrimary1,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            // Display overallStatus
+            Obx(() {
+              final overallStatus = studentController.result.value.overallStatus;
+              return Container(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Current Semester: ${overallStatus?.currentSemester ?? 'N/A'}',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text('CGPA: ${overallStatus?.currentSemesterCgpa ?? 'N/A'}'),
+                    Text('Current Semester Status: ${overallStatus?.currentSemesterStatus ?? 'N/A'}'),
+                    Text('Mid Term Status: ${overallStatus?.midTermStatus ?? 'N/A'}'),
+                    Text('Final Status: ${overallStatus?.finalStatus ?? 'N/A'}'),
+                  ],
+                ),
+              );
+            }),
+            // Display Semester Buttons
+            GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 8.0,
+                mainAxisSpacing: 8.0,
+              ),
+              itemCount: studentController.result.value.response?.semesters?.length ?? 0,
+              itemBuilder: (context, index) {
+                String semesterNumber = studentController.result.value.response!.semesters![index].semesterNumber ?? '';
+                return SemesterButton(semesterNumber: semesterNumber);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SemesterButton extends StatelessWidget {
+  final String semesterNumber;
+
+  SemesterButton({required this.semesterNumber});
+
+  @override
+  Widget build(BuildContext context) {
+    final StudentController studentController = Get.find<StudentController>();
+    return GestureDetector(
+      onTap: () {
+        // Navigate to DetailsScreen with data
+        Get.to(DetailsScreen(
+          studentController: studentController,
+          semesterNumber: semesterNumber,
+          theoreticalResult: studentController.result.value.response?.semesters
+              ?.firstWhere((semester) => semester.semesterNumber == semesterNumber)
+              .theoreticalResult,
+          practicalResult: studentController.result.value.response?.semesters
+              ?.firstWhere((semester) => semester.semesterNumber == semesterNumber)
+              .practicalResult, examType: '',
+        ));
+      },
+      child: Container(
+        margin: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Colors.blueGrey,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Semester $semesterNumber',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ExamButton(title: 'Final Exam', semesterNumber: semesterNumber, ),
+                ExamButton(title: 'Mid Term Exam', semesterNumber: semesterNumber, ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ExamButton extends StatelessWidget {
+  final String title;
+  final String semesterNumber;
+
+  ExamButton({required this.title, required this.semesterNumber});
+
+  @override
+  Widget build(BuildContext context) {
+    final StudentController studentController = Get.find<StudentController>();
+
+    return Container(
+      child: ElevatedButton(
+        onPressed: () {
+          // Navigate to DetailsScreen with data
+          Get.to(DetailsScreen(
+            studentController: studentController,
+            semesterNumber: semesterNumber,
+            examType: title,
+            theoreticalResult: studentController.result.value.response?.semesters
+                ?.firstWhere((semester) => semester.semesterNumber == semesterNumber)
+                .theoreticalResult,
+            practicalResult: studentController.result.value.response?.semesters
+                ?.firstWhere((semester) => semester.semesterNumber == semesterNumber)
+                .practicalResult,
+          ));
+        },
+        child: Text(title),
+      ),
+    );
+  }
+}
+
+class DetailsScreen extends StatelessWidget {
+  final String semesterNumber;
+  final String? examType;
+  final TheoreticalResultModel? theoreticalResult;
+  final PracticalResultModel? practicalResult;
+  final StudentController studentController;
+
+  DetailsScreen({
+    required this.studentController,
+    required this.semesterNumber,
+    required this.examType,
+    required this.theoreticalResult,
+    required this.practicalResult,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('$examType Details - Semester $semesterNumber'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Semester $semesterNumber Details'),
+            if (examType != null) Text('$examType Details'),
+            if (theoreticalResult != null) Text('Theoretical Result: ${theoreticalResult!.result}'),
+            if (practicalResult != null) Text('Practical Result: ${practicalResult!.result}'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+/*
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/exam_result.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
@@ -187,6 +388,9 @@ class Result extends StatelessWidget {
     );
   }
 }
+
+
+ */
 
 // https://jsonlint.com
 

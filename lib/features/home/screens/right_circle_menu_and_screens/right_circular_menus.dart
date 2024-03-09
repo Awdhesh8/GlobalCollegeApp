@@ -184,8 +184,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
+import 'package:globalcollegeapp/features/home/screens/right_circle_menu_and_screens/vt_letter/vt_letter.dart';
 import '../../../../routes_pages_navigation/named_routes_screens.dart';
 import '../../../../utils/constants/colors.dart';
+import 'activity/activity.dart';
 import 'assessment_test/assessment_test_screen.dart';
 import 'cv_resume/cv_resume_screen.dart';
 
@@ -367,11 +369,13 @@ class _RightSideCircularScrollingBoxesState
   void _navigateToScreenRightMenus(int index) {
     Widget Function() screen;
     switch (index) {
-      case 0:
-        screen = () => const CVResumeScreen();
+      case 7:
+      case 17:
+        screen = () => const Activity();
         break;
-      case 1:
-        screen = () => const AssessmentTestScreen();
+      case 6:
+      case 16:
+        screen = () => const VTLetter();
         break;
     // Add cases for other indices/screens as needed
       default:
@@ -412,7 +416,7 @@ class _RightSideCircularScrollingBoxesState
 
   bool isUnderDevelopmentRightMenus(int index) {
     // Add the indices of screens that are under development
-    List<int> underDevelopmentIndices = [2 , 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+    List<int> underDevelopmentIndices = [0, 1, 2 , 3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 18];
 
     return underDevelopmentIndices.contains(index);
   }
