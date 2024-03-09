@@ -155,7 +155,7 @@ class Result extends StatelessWidget {
                                           // Navigate to the mid term exam result screen passing the mid term exam data
                                           Get.to(() => ExamResultScreen(
                                                 exam: semesters[index]
-                                                    .midTermExam,
+                                                    .finalExam,
                                                 semester: semesters[index],
                                                 examType: 'Mid Term Exam',
                                                 sgpa: '',

@@ -100,19 +100,16 @@ class Subject {
 class Semester {
   final String semesterNumber;
   final Exam finalExam;
-  final Exam midTermExam;
 
   Semester({
     required this.semesterNumber,
     required this.finalExam,
-    required this.midTermExam,
   });
 
   factory Semester.fromJson(Map<String, dynamic> json) {
     return Semester(
-      semesterNumber: json['semester_number'].toString(),
-      finalExam: Exam.fromJson(json['final_exam'] ?? {}),
-      midTermExam: Exam.fromJson(json['mid_term_exam'] ?? {}),
+      semesterNumber: json['semesters']['semester_number'].toString(),
+      finalExam: Exam.fromJson(json['semesters']['final_exam'] ?? {}),
     );
   }
 }
@@ -135,15 +132,14 @@ class OverallStatus {
   factory OverallStatus.fromJson(Map<String, dynamic> json) {
     return OverallStatus(
       currentSemester: json['current_semester'].toString(),
-      currentSemesterCgpa: (json['current_semester_cgpa'] is num)
-          ? (json['current_semester_cgpa'] as num).toDouble()
-          : double.tryParse(json['current_semester_cgpa'].toString()) ?? 0.0,
+      currentSemesterCgpa: json['current_semester_cgpa'] != null ? double.tryParse(json['current_semester_cgpa'].toString()) ?? 0.0 : 0.0,
       currentSemesterStatus: json['current_semester_status'].toString(),
       midTermStatus: json['mid_term_status'].toString(),
       finalStatus: json['final_status'].toString(),
     );
   }
 }
+
 
 
 

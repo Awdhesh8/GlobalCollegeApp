@@ -23,7 +23,6 @@ class StudentController extends GetxController {
       'Cookie': 'ci_session=mouu69ekloinnhq9jlocqet74205i237'
     };
 
-    // Get USER_ID from local storage
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
 
@@ -41,30 +40,20 @@ class StudentController extends GetxController {
       if (response.statusCode == 200) {
         String responseData = await response.stream.bytesToString();
 
-        // Decode JSON string to Map
         Map<String, dynamic> decodedJson = json.decode(responseData);
-        print(userId);
-        print(response);
-        print(request);
-        print(response.request);
+
         // Parsing semesters
-        List<dynamic> semestersJson = decodedJson['response']['semesters'];
-        List<Semester> semesters =
-        semestersJson.map((json) => Semester.fromJson(json)).toList();
-        // print(overallStatus);
-        print(semesters);
+        List<dynamic> semestersJson = decodedJson['response'];
+        List<Semester> semesters = semestersJson.map((json) => Semester.fromJson(json)).toList();
+
         // Parsing overallStatus
-        List<dynamic> overallStatusJson = decodedJson['response']['overallStatus'];
-        OverallStatus overallStatus =
-        OverallStatus.fromJson(overallStatusJson[0]); // Get the first element
-        print(overallStatus);
-        print(semesters);
+        Map<String, dynamic>? overallStatusJson = decodedJson['overallStatus'];
+        OverallStatus overallStatus = OverallStatus.fromJson(overallStatusJson ?? {});
+
         // Updating studentModel
         studentModel.value = StudentModel(
           semesters: semesters,
           overallStatus: [overallStatus],
-          // message: decodedJson['message'],
-          // status: decodedJson['status'],
         );
       } else {
         print('Failed to fetch data. Status code: ${response.statusCode}');
