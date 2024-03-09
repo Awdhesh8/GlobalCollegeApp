@@ -48,7 +48,7 @@ class GatePass extends StatelessWidget {
 
                 /// Leave application history
                 const TopHeading(
-                  text: 'History',
+                  text: 'Gate Pass History',
                 ),
 
                 SingleChildScrollView(

@@ -915,5 +915,85 @@ class ApiService {
     }
   }
 
+  /// Get Gate Pass History
+  static Future<List<Map<String, dynamic>>> getGatePassHistory() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('user_id') ?? '';
+
+      var headers = {
+        'Cookie': 'ci_session=9918717oip21ucg7572uevf8cn0e3f5u',
+      };
+
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://myglobalapp.in/global/API005/gatepass_history'),
+      );
+
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'USER_ID': userId,
+      });
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        String responseBody = await response.stream.bytesToString();
+        Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+        print(responseBody);
+        print(response.request);
+        if (jsonResponse['status'] == '1') {
+          // Successful API response
+          List<dynamic> GatePassHistoryData = jsonResponse['response'];
+          List<Map<String, dynamic>> GatePassHistoryList = [];
+          for (var gatePassData in GatePassHistoryData) {
+            GatePassHistoryList.add(Map<String, dynamic>.from(gatePassData));
+          }
+          return GatePassHistoryList;
+        } else {
+          // Error in API response
+          print('Error in API response: ${jsonResponse['message']}');
+          return [];
+        }
+      } else {
+        print(response.reasonPhrase);
+        return [];
+      }
+    } catch (e) {
+      print('Error getting Gate Pass history: $e');
+      return [];
+    }
+  }
+
+
+  ///  Cancel Leave
+  static Future<void> cancelGatePass(String leaveId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+    var headers = {
+      'Cookie': 'ci_session=5a5e359s108tlmsgdfsnevd9s51pns27'
+    };
+    var body = {
+      'APIKEY': 'GNCS0225',
+      'USER_ID': userId,
+      'leav_id': leaveId,
+    };
+
+    var response = await http.post(
+      Uri.parse('http://myglobalapp.in/global/API005/cancelgatepass'),
+      headers: headers,
+      body: body,
+    );
+    print(body);
+    print(response);
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+
 
 }
