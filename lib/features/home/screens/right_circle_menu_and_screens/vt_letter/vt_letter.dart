@@ -21,7 +21,7 @@ class VTLetter extends StatelessWidget {
         backgroundColor: Colors.transparent,
         showBackArrow: true,
         title: Text(
-          'VT Letter',
+          'Vocational Training',
           style: TextStyle(
             fontSize: ESizes.appTitle,
             fontFamily: 'Inter',
@@ -70,17 +70,19 @@ class VTLetter extends StatelessWidget {
                 children: [
                   RichText(
                     text: const TextSpan(
-                      text: 'Check Your History Status',
+                      text: 'Check History Status',
                       style: CustomTextStyle.inputText1,
                       children: [
-                        TextSpan(text: ' of '),
+                        TextSpan(text: ' for '),
                         TextSpan(
-                          text: '\nVocational Training',
+                          text: '\nVT Application',
                           style: CustomTextStyle.heading22,
                         ),
                       ],
                     ),
                   ),
+
+
                 ],
               ),
             ],

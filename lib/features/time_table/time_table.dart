@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../common/widgets/appbar/appbar.dart';
@@ -30,7 +28,6 @@ class _TimeTableState extends State<TimeTable> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: EColors.backgroundColor,
-      // backgroundColor: EColors.backgroundColor,
       appBar: const GAppBar(
         title: Text(
           'Time Table',

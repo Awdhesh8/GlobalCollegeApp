@@ -4,7 +4,6 @@ import 'colors.dart';
 
 class CustomTextStyle {
 
-
   static const TextStyle heading28 = TextStyle(
     fontFamily: 'Inter',
     fontSize: ESizes.appTitle2,

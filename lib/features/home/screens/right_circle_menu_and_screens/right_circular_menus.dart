@@ -371,7 +371,7 @@ class _RightSideCircularScrollingBoxesState
     switch (index) {
       case 7:
       case 17:
-        screen = () => const Activity();
+        screen = () => Activity();
         break;
       case 6:
       case 16:
