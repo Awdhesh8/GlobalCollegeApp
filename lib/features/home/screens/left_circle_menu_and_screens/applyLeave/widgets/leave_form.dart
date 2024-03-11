@@ -59,7 +59,8 @@ class LeaveForm extends StatelessWidget {
                             : null,
                       ),
                     ),
-                  )),
+                  ),
+              ),
               const SizedBox(
                 width: ESizes.spaceBtwItems,
               ),

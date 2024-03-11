@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:globalcollegeapp/common/widgets/texts/top_first_heading.dart';
+import 'package:globalcollegeapp/features/home/screens/right_circle_menu_and_screens/vt_letter/widgets/vt_letter_form.dart';
+import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
@@ -13,7 +14,9 @@ class VTLetter extends StatelessWidget {
     final darkMode = EHelperFunctions.isDarkMode(context);
 
     return Scaffold(
-      backgroundColor: darkMode ? Colors.black : EColors.backgroundColor ,
+      backgroundColor: darkMode ? Colors.black : EColors.backgroundColor,
+
+      /// App Bar
       appBar: const GAppBar(
         backgroundColor: Colors.transparent,
         showBackArrow: true,
@@ -28,34 +31,57 @@ class VTLetter extends StatelessWidget {
         ),
         centerTitle: false,
       ),
+
+      /// Body
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
           child: Column(
             children: [
-
               /// Top heading
-              const TopHeading(text: 'Ignite Your Journey\nwith Vocational Excellence!',),
-              RichText(
-                text: const TextSpan(
-                  text: 'Ignite Your Journey ',
-                  children: [
-                    TextSpan(text: ' world!'),
-                    TextSpan(text: 'bold', style: TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(text: ' world!'),
-
-                  ],
-                ),
+              Row(
+                children: [
+                  RichText(
+                    text: const TextSpan(
+                      text: 'Ignite Your Journey',
+                      style: CustomTextStyle.heading24,
+                      children: [
+                        TextSpan(text: ' with '),
+                        TextSpan(
+                          text: '\nVocational Excellence!',
+                          style: CustomTextStyle.heading22,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              const Text(
-                'Ignite Your Journey',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontFamily: 'Inter',
-                  color: EColors.textSecondaryTitle,
-                  fontWeight: FontWeight.w500,
-                ),
+
+              const SizedBox(height: ESizes.spaceBtwSections),
+
+              /// VT Letter Form
+              VTLetterForm(),
+              const SizedBox(height: ESizes.spaceBtwSections),
+              const Divider(),
+
+              /// history heading
+              Row(
+                children: [
+                  RichText(
+                    text: const TextSpan(
+                      text: 'Check Your History Status',
+                      style: CustomTextStyle.inputText1,
+                      children: [
+                        TextSpan(text: ' of '),
+                        TextSpan(
+                          text: '\nVocational Training',
+                          style: CustomTextStyle.heading22,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -64,4 +90,3 @@ class VTLetter extends StatelessWidget {
     );
   }
 }
-
