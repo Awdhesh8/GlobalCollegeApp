@@ -121,7 +121,7 @@ class Activity extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                        constraints: const BoxConstraints.expand(height: 50, width: 400),
+                        constraints: const BoxConstraints.expand(height: 50, width: double.maxFinite),
                         child: const TabBar(
                           isScrollable: true,
                           dividerColor: Colors.transparent,
