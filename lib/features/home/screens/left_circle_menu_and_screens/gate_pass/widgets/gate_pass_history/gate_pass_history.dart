@@ -250,9 +250,7 @@ class GatePassItemWidget extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(
-                     width: ESizes.spaceBtwItems,
-                    ),
+                    Text(' - '),
                     Text(
                       'In Time: ${gatePassData['gpass_intime']}',
                       style: TextStyle(

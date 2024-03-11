@@ -42,7 +42,7 @@ class GatePassForm extends StatelessWidget {
                 },
                 child: Obx(
                   () => AnimatedContainer(
-                    width: 175,
+                    width: 165,
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     decoration: const BoxDecoration(),
@@ -92,7 +92,7 @@ class GatePassForm extends StatelessWidget {
                 },
                 child: Obx(
                       () => AnimatedContainer(
-                    width: 175,
+                    width: 165,
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     decoration: const BoxDecoration(),
