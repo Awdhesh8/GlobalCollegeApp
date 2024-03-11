@@ -10,10 +10,8 @@ import '../../../applyLeave/widgets/shimmer/leave_shimmer_contanier.dart';
 class GatePassHistory extends StatelessWidget {
   final controller = Get.find<GatePassFormController>();
 
-
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: ApiService.getGatePassHistory(),
       builder: (context, snapshot) {
@@ -29,7 +27,7 @@ class GatePassHistory extends StatelessWidget {
         } else {
           // Convert dynamic list to List<Map<String, dynamic>>
           List<Map<String, dynamic>> gatePassHistoryList =
-          List<Map<String, dynamic>>.from(snapshot.data!);
+              List<Map<String, dynamic>>.from(snapshot.data!);
 
           // Display leave application history using ListView.builder
           controller.gatePassHistory.clear();
@@ -78,41 +76,41 @@ class GatePassHistory extends StatelessWidget {
                 background: isApproved || isCancelled || isVerify
                     ? null
                     : Container(
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade300,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  alignment: Alignment.centerRight,
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 12.0, horizontal: 12.0),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Align(
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        SizedBox(
-                          width: 10,
+                        decoration: BoxDecoration(
+                          color: Colors.red.shade300,
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        Expanded(
-                          child: Text(
-                            'Cancel Application....   ',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 26,
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 12.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'Cancel Application....   ',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 26,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Inter'),
+                                ),
+                              ),
+                              Icon(
+                                Icons.cancel,
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Inter'),
+                              ),
+                            ],
                           ),
                         ),
-                        Icon(
-                          Icons.cancel,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
                 confirmDismiss: (direction) async {
                   if (isApproved || isCancelled || isVerify) {
                     // Show an alert dialog indicating that cancellation is not allowed
@@ -180,10 +178,8 @@ class GatePassHistory extends StatelessWidget {
         }
       },
     );
-
   }
 }
-
 
 class GatePassItemWidget extends StatelessWidget {
   final Map<String, dynamic> gatePassData;
@@ -239,23 +235,23 @@ class GatePassItemWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 8), // Add some spacing
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  // mainAxisAlignment: MainAxisAlignment.,
                   children: [
                     Text(
-                      'Out Time: ${gatePassData['gpass_outtime']}',
+                      'Out: ${gatePassData['gpass_outtime']}',
                       style: TextStyle(
                         color: Colors.grey.shade600,
-                        fontSize: 14,
+                        fontSize: 13,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Text(' - '),
+                    SizedBox(width: ESizes.spaceBtwSections,),
                     Text(
-                      'In Time: ${gatePassData['gpass_intime']}',
+                      'In: ${gatePassData['gpass_intime']}',
                       style: TextStyle(
                         color: Colors.grey.shade600,
-                        fontSize: 14,
+                        fontSize: 13,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w500,
                       ),
@@ -284,7 +280,7 @@ class GatePassItemWidget extends StatelessWidget {
                           '${gatePassData['status']}',
                           style: TextStyle(
                             color:
-                            statusTextColor, // Text color for all status colors
+                                statusTextColor, // Text color for all status colors
                             fontSize: 13,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.bold,
@@ -323,4 +319,3 @@ class GatePassItemWidget extends StatelessWidget {
     );
   }
 }
-
