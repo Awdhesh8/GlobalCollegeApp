@@ -399,8 +399,15 @@ class GatePassForm extends StatelessWidget {
         controller.reasonController.value =
             gatePassReasons.firstWhere((group) => group.id == newValue);
       },
+      // validator:(reasonController) {
+      //   if(reasonController == null || reasonController.isEmpty) {
+      //     return "Please Select any Reasons";
+      //   }else {
+      //     return null;
+      //   }
+      // },
       items: [
-        const DropdownMenuItem<String>(
+         const DropdownMenuItem<String>(
           value: 'Select Your Gate Pass Reasons',
           child: Text('Select Your Gate Pass Reasons',
               style: TextStyle(fontSize: 12)),
