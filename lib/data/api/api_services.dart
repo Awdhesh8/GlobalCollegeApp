@@ -968,7 +968,7 @@ class ApiService {
 
 
   ///  Cancel Leave
-  static Future<void> cancelGatePass(String leaveId) async {
+  static Future<void> cancelGatePass(String gatePassId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
     var headers = {
@@ -977,7 +977,7 @@ class ApiService {
     var body = {
       'APIKEY': 'GNCS0225',
       'USER_ID': userId,
-      'leav_id': leaveId,
+      'gpas_id': gatePassId,
     };
 
     var response = await http.post(

@@ -12,6 +12,7 @@ import '../BottomSheetContainerDecoration/bottom_sheet_container.dart';
 
 class GatePassForm extends StatelessWidget {
   final GatePassFormController controller = Get.put(GatePassFormController());
+  final String initialValue = '';
 
   // List of reasons for the gate pass
   /*
@@ -470,7 +471,7 @@ class GatePassForm extends StatelessWidget {
         controller.remarkController.value.isEmpty) {
       controller.fromError.value = controller.fromTimeController.value.isEmpty;
       controller.toError.value = controller.toTimeController.value.isEmpty;
-      // controller.reasonError.value = controller.reasonController.value!.id.isEmpty;
+      //controller.reasonError.value = controller.reasonController.value;
       controller.goWithError.value = controller.goWithController.value.isEmpty;
       controller.remarkError.value = controller.remarkController.value.isEmpty;
 
