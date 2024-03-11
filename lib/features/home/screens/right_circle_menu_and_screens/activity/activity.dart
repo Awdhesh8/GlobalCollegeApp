@@ -10,7 +10,7 @@ class Activity extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: EColors.backgroundColor,
-      appBar: const GAppBar(
+      appBar: GAppBar(
         backgroundColor: Colors.transparent,
         showBackArrow: true,
         title: Text(
@@ -22,17 +22,6 @@ class Activity extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        bottom: TabBar(
-          tabs: [
-            Tab(text: 'Category 1'),
-            Tab(text: 'Category 2'),
-            Tab(text: 'Category 3'),
-            Tab(text: 'Category 4'),
-            Tab(text: 'Category 5'),
-            // Add more tabs as needed
-          ],
-          indicatorColor: EColors.primary, // Set the indicator color
-        ),
       ),
       body: DefaultTabController(
         length: 5,
@@ -41,13 +30,12 @@ class Activity extends StatelessWidget {
             Flexible(
               child: Row(
                 children: [
-
                   Flexible(
                     child: TabBarView(
                       children: [
                         // Content for Category 1
                         SingleChildScrollView(
-                           physics: const BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           child: Column(
                             children: [
                               ClipRRect(
@@ -58,7 +46,9 @@ class Activity extends StatelessWidget {
                                   color: Colors.blue.shade50,
                                 ),
                               ),
-                              SizedBox(height: 15,),
+                              SizedBox(
+                                height: 15,
+                              ),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: Container(
@@ -67,7 +57,9 @@ class Activity extends StatelessWidget {
                                   color: Colors.red.shade50,
                                 ),
                               ),
-                              SizedBox(height: 15,),
+                              SizedBox(
+                                height: 15,
+                              ),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: Container(
@@ -76,7 +68,9 @@ class Activity extends StatelessWidget {
                                   color: Colors.blue.shade50,
                                 ),
                               ),
-                              SizedBox(height: 15,),
+                              SizedBox(
+                                height: 15,
+                              ),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: Container(
@@ -121,24 +115,43 @@ class Activity extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                        constraints: const BoxConstraints.expand(height: 50, width: double.maxFinite),
-                        child: const TabBar(
+                        constraints: const BoxConstraints.expand(
+                            height: 50, width: double.maxFinite),
+                        child: TabBar(
                           isScrollable: true,
                           dividerColor: Colors.transparent,
+                          splashBorderRadius: BorderRadius.circular(20),
                           tabs: [
-                            Tab(text: 'Category 1'),
-                            Tab(text: 'Category 2'),
-                            Tab(text: 'Category 3'),
-                            Tab(text: 'Category 4'),
-                            Tab(text: 'Category 5'),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Tab(text: 'Category 1'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Tab(text: 'Category 2'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Tab(text: 'Category 3'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Tab(text: 'Category 4'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                              child: Tab(text: 'Category 5'),
+                            ),
                             // Add more tabs as needed
                           ],
-                          indicatorColor: EColors.primary,
+                          indicator:  BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20)
+                        ),
                         ),
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -148,12 +161,6 @@ class Activity extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
 
 // import 'package:flutter/material.dart';
 // import '../../../../../common/widgets/appbar/appbar.dart';
@@ -190,12 +197,6 @@ class Activity extends StatelessWidget {
 //   }
 // }
 //
-
-
-
-
-
-
 
 /*
 import 'package:flutter/material.dart';
@@ -393,8 +394,6 @@ class Activity extends StatelessWidget {
 
 }
  */
-
-
 
 /*
 
