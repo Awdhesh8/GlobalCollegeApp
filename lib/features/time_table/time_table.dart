@@ -14,16 +14,16 @@ class TimeTable extends StatefulWidget {
 
 class _TimeTableState extends State<TimeTable> {
 
-  int getcurrt_tbl_day(){
-    int currDay = DateTime.now().weekday;
-    if(currDay == 6){
+  int getCurrentTimeTableDay(){
+    int currentDay = DateTime.now().weekday;
+    if(currentDay == 6){    // For Saturday
       return 0;
     }else
-    if(currDay == 7){
+    if(currentDay == 7){    // For Sunday
       return 0;
     }
     else{
-      return currDay-1;
+      return currentDay-1;
     }
   }
   @override
@@ -54,7 +54,7 @@ class _TimeTableState extends State<TimeTable> {
             Map<String, dynamic> responseData = snapshot.data!;
             List<dynamic> timetableData = responseData['response'] ?? [];
             return DefaultTabController(
-              initialIndex: getcurrt_tbl_day(),
+              initialIndex: getCurrentTimeTableDay(),
               length: timetableData.length,
               child: Column(
                 children: [

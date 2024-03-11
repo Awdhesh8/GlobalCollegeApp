@@ -42,7 +42,7 @@ class GatePassForm extends StatelessWidget {
                 },
                 child: Obx(
                   () => AnimatedContainer(
-                    width: 150,
+                    width: 175,
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     decoration: const BoxDecoration(),
@@ -83,6 +83,7 @@ class GatePassForm extends StatelessWidget {
                 ),
               ),
 
+
               /// Pick To Time
               InkWell(
                 onTap: () async {
@@ -91,7 +92,7 @@ class GatePassForm extends StatelessWidget {
                 },
                 child: Obx(
                       () => AnimatedContainer(
-                    width: 150,
+                    width: 175,
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     decoration: const BoxDecoration(),
@@ -133,9 +134,7 @@ class GatePassForm extends StatelessWidget {
               ),
 
 
-              const SizedBox(
-                width: ESizes.spaceBtwItems,
-              ),
+
 
               /// Reasons (In Bottom Sheet)
               /*

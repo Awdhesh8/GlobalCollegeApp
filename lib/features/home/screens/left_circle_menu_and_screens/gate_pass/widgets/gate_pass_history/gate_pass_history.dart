@@ -4,6 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/gate_pass/gate_pass_controller/gate_pass_from_controller.dart';
 import '../../../../../../../data/api/api_services.dart';
+import '../../../../../../../utils/constants/sizes.dart';
 import '../../../applyLeave/widgets/shimmer/leave_shimmer_contanier.dart';
 
 class GatePassHistory extends StatelessWidget {
@@ -192,7 +193,6 @@ class GatePassItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final purpose = gatePassData['category'] as String;
-    //final leaveItemController = Get.put(LeaveItemController());
     final gPassController = Get.find<GatePassFormController>();
 
     Color statusColor = Colors.grey.shade500;
@@ -239,7 +239,7 @@ class GatePassItemWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 8), // Add some spacing
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       'Out Time: ${gatePassData['gpass_outtime']}',
@@ -249,6 +249,9 @@ class GatePassItemWidget extends StatelessWidget {
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w500,
                       ),
+                    ),
+                    const SizedBox(
+                     width: ESizes.spaceBtwItems,
                     ),
                     Text(
                       'In Time: ${gatePassData['gpass_intime']}',
