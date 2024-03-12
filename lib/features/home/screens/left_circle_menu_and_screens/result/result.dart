@@ -86,14 +86,14 @@ class Result extends StatelessWidget {
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 4.0,
-                    mainAxisSpacing: 6.0,
+                    mainAxisSpacing: 8.0,
                   ),
                   itemCount: apiResponse['semesters'].length,
                   itemBuilder: (context, index) {
                     var semester = apiResponse['semesters'][index];
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: BouncyAnimation(
+                    return BouncyAnimation(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Container(
                           decoration: CustomDeco.decoRectangle(),
                           child: InkWell(
