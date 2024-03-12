@@ -78,34 +78,29 @@ class _ResultState extends State<Result> {
               itemCount: _apiResponse!['semesters'].length,
               itemBuilder: (context, index) {
                 var semester = _apiResponse!['semesters'][index];
-                return GestureDetector(
-                  onTap: () {
-                    // This part will be handled by the ElevatedButtons
-                  },
-                  child: Container(
-                    color: Colors.grey[200],
-                    padding: EdgeInsets.all(16.0),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            'Semester ${semester["semester_number"] ?? "NA"}',
-                            style: TextStyle(fontSize: 18.0),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              navigateToExamDetailsScreen(semester, 'Final Exam');
-                            },
-                            child: Text('Final Exam'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              navigateToExamDetailsScreen(semester, 'Mid-Term Exam');
-                            },
-                            child: Text('Mid-Term Exam'),
-                          ),
-                        ],
-                      ),
+                return Container(
+                  color: Colors.grey[200],
+                  padding: EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          'Semester ${semester["semester_number"] ?? "NA"}',
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            navigateToExamDetailsScreen(semester, 'Final Exam');
+                          },
+                          child: Text('Final Exam'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            navigateToExamDetailsScreen(semester, 'Mid-Term Exam');
+                          },
+                          child: Text('Mid-Term Exam'),
+                        ),
+                      ],
                     ),
                   ),
                 );
@@ -172,6 +167,8 @@ class ExamDetailsScreen extends StatelessWidget {
     );
   }
 }
+
+
 
 // import 'package:flutter/material.dart';
 // import '../../../../../data/api/api_services.dart';

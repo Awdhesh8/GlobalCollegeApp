@@ -4,7 +4,7 @@ import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
 
 class Activity extends StatelessWidget {
-  const Activity({super.key});
+  const Activity({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -117,37 +117,36 @@ class Activity extends StatelessWidget {
                       child: Container(
                         constraints: const BoxConstraints.expand(
                             height: 50, width: double.maxFinite),
-                        child: TabBar(
+                        child: const TabBar(
                           isScrollable: true,
                           dividerColor: Colors.transparent,
-                          splashBorderRadius: BorderRadius.circular(20),
-                          tabs: const [
+                          indicator: DotTabIndicator(
+                            color: Colors.redAccent,
+                            radius: 4,
+                          ),
+                          tabs: [
                             Padding(
                               padding: EdgeInsets.all(8.0),
-                              child: Tab(text: 'Category 1'),
+                              child: Tab(text: 'Global Youth Fest 2023'),
                             ),
                             Padding(
                               padding: EdgeInsets.all(8.0),
-                              child: Tab(text: 'Category 2'),
+                              child: Tab(text: 'Global College Yoga Day'),
                             ),
                             Padding(
                               padding: EdgeInsets.all(8.0),
-                              child: Tab(text: 'Category 3'),
+                              child: Tab(text: 'Engineering'),
                             ),
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Tab(text: 'Category 4'),
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                               child: Tab(text: 'Category 5'),
                             ),
                             // Add more tabs as needed
                           ],
-                          indicator:  BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius  .circular(20)
-                        ),
                         ),
                       ),
                     ),
@@ -161,6 +160,35 @@ class Activity extends StatelessWidget {
     );
   }
 }
+
+class DotTabIndicator extends Decoration {
+  final Color color;
+  final double radius;
+
+  const DotTabIndicator({required this.color, required this.radius});
+
+  @override
+  _DotPainter createBoxPainter([VoidCallback? onChanged]) {
+    return _DotPainter(this, onChanged);
+  }
+}
+
+class _DotPainter extends BoxPainter {
+  final DotTabIndicator decoration;
+
+  _DotPainter(this.decoration, VoidCallback? onChanged) : super(onChanged);
+
+  @override
+  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
+    final Paint paint = Paint()..color = decoration.color;
+    final Rect rect = offset & configuration.size!;
+    final double centerX = rect.center.dx;
+    final double bottom = rect.bottom - 6; // Adjust the value based on your preference
+
+    canvas.drawCircle(Offset(centerX, bottom), decoration.radius, paint);
+  }
+}
+
 
 // import 'package:flutter/material.dart';
 // import '../../../../../common/widgets/appbar/appbar.dart';
