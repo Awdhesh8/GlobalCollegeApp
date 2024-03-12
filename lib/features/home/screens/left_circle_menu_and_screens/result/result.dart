@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animation.dart';
+import 'package:globalcollegeapp/utils/constants/sizes.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import '../../../../../common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
+import '../../../../../common/widgets/texts/top_first_heading.dart';
 import 'controller/controller.dart';
 
 class Result extends StatelessWidget {
@@ -26,103 +28,125 @@ class Result extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              decoration: CustomDeco.decoRectangle(),
-              padding: EdgeInsets.all(16.0),
-              margin: EdgeInsets.all(16),
-              // color: Colors.blue,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Current Sem: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester"] ?? "NA" : "NA"}',
-                    style: CustomTextStyle.bodyText3,
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: 'CGPA: ',
-                      style: CustomTextStyle.heading24,
-                      children: [
-                        // TextSpan(text: ' with '),
-                        TextSpan(
-                          text:  '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
-                          style: CustomTextStyle.bodyText3,
-                          // style: CustomTextStyle.heading22,
-                        ),
-                      ],
+            BouncyAnimation(
+              child: Container(
+                decoration: CustomDeco.decoRectangle(),
+                padding: EdgeInsets.all(16.0),
+                margin: EdgeInsets.all(16),
+                // color: Colors.blue,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const TopHeading(
+                      fontSize: 26,
+                      text: 'Overall Performance',
                     ),
-                  ),
-                  Text(
-                    'Current CGPA: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
-                    style: CustomTextStyle.bodyText3,
-                  ),
-                  Text(
-                    'Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_status"] ?? "NA" : "NA"}',
-                    style: CustomTextStyle.bodyText3,
-                  ),
-                  Text(
-                    'Mid-Term Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["mid_term_status"] ?? "NA" : "NA"}',
-                    style: CustomTextStyle.bodyText3,
-                  ),
-                  Text(
-                    'Final Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["final_status"] ?? "NA" : "NA"}',
-                    style: CustomTextStyle.bodyText3,
-                  ),
-                ],
+                    Text(
+                      'Current Sem: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester"] ?? "NA" : "NA"}',
+                      style: CustomTextStyle.bodyText3,
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: 'CGPA: ',
+                        style: CustomTextStyle.heading24,
+                        children: [
+                          // TextSpan(text: ' with '),
+                          TextSpan(
+                            text:  '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                            style: CustomTextStyle.bodyText3,
+                            // style: CustomTextStyle.heading22,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      'Current CGPA: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                      style: CustomTextStyle.bodyText3,
+                    ),
+                    Text(
+                      'Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_status"] ?? "NA" : "NA"}',
+                      style: CustomTextStyle.bodyText3,
+                    ),
+                    Text(
+                      'Mid-Term Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["mid_term_status"] ?? "NA" : "NA"}',
+                      style: CustomTextStyle.bodyText3,
+                    ),
+                    Text(
+                      'Final Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["final_status"] ?? "NA" : "NA"}',
+                      style: CustomTextStyle.bodyText3,
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 8.0,
-                ),
-                itemCount: apiResponse['semesters'].length,
-                itemBuilder: (context, index) {
-                  var semester = apiResponse['semesters'][index];
-                  return BouncyAnimation(
-                    child: Card(
-                      elevation: 4.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: InkWell(
-                        onTap: () {
-                          navigateToExamDetailsScreen(semester, 'Final Exam');
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Semester ${semester["semester_number"] ?? "NA"}',
-                                style: TextStyle(
-                                    fontSize: 18.0, fontWeight: FontWeight.bold),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 4.0,
+                    mainAxisSpacing: 6.0,
+                  ),
+                  itemCount: apiResponse['semesters'].length,
+                  itemBuilder: (context, index) {
+                    var semester = apiResponse['semesters'][index];
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: BouncyAnimation(
+                        child: Container(
+                          decoration: CustomDeco.decoRectangle(),
+                          child: InkWell(
+                            onTap: () {
+                              navigateToExamDetailsScreen(semester, 'Final Exam');
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Semester ${semester["semester_number"] ?? "NA"}',
+                                    style: TextStyle(
+                                        fontSize: 18.0, fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 8.0),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            navigateToExamDetailsScreen(
+                                                semester, 'Final Exam');
+                                          },
+                                          child: Text('Final Exam'),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: ESizes.spaceBtwItemsHeadings,),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            navigateToExamDetailsScreen(
+                                                semester, 'Mid-Term Exam');
+                                          },
+                                          child: Text('Mid-Term Exam'),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 8.0),
-                              ElevatedButton(
-                                onPressed: () {
-                                  navigateToExamDetailsScreen(
-                                      semester, 'Final Exam');
-                                },
-                                child: Text('Final Exam'),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  navigateToExamDetailsScreen(
-                                      semester, 'Mid-Term Exam');
-                                },
-                                child: Text('Mid-Term Exam'),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -140,6 +164,8 @@ class Result extends StatelessWidget {
 class ExamDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> semester;
   final String examType;
+  final CustomAnimationController animationController = Get.put(CustomAnimationController());
+
 
   ExamDetailsScreen(this.semester, this.examType);
 

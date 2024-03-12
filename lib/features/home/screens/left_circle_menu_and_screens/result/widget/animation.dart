@@ -16,11 +16,11 @@ class CustomAnimationController extends GetxController with SingleGetTickerProvi
   void initializeAnimation() {
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1800),
     );
 
     fadeAnimation = Tween<double>(begin: 3, end: 1).animate(controller);
-    bouncyAnimation = Tween<double>(begin: -30, end: 30).animate(
+    bouncyAnimation = Tween<double>(begin: -100, end: 0).animate(
       CurvedAnimation(parent: controller, curve: Curves.elasticOut),
     );
     curvyAnimation = Tween<double>(begin: 1, end: 1).animate(
