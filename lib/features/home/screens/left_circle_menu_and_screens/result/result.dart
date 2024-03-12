@@ -1,4 +1,202 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
+import '../../../../../common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
+import 'controller/controller.dart';
+
+class Result extends StatelessWidget {
+  final ResultController resultController = Get.put(ResultController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Result Screen'),
+      ),
+      body: Obx(() {
+        if (resultController.apiResponse.value == null) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        var apiResponse = resultController.apiResponse.value!;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              decoration: CustomDeco.decoRectangle(),
+              padding: EdgeInsets.all(16.0),
+              margin: EdgeInsets.all(16),
+              // color: Colors.blue,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Current Sem: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester"] ?? "NA" : "NA"}',
+                    style: CustomTextStyle.bodyText3,
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: 'CGPA: ',
+                      style: CustomTextStyle.heading24,
+                      children: [
+                        // TextSpan(text: ' with '),
+                        TextSpan(
+                          text:  '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                          style: CustomTextStyle.bodyText3,
+                          // style: CustomTextStyle.heading22,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    'Current CGPA: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                    style: CustomTextStyle.bodyText3,
+                  ),
+                  Text(
+                    'Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_status"] ?? "NA" : "NA"}',
+                    style: CustomTextStyle.bodyText3,
+                  ),
+                  Text(
+                    'Mid-Term Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["mid_term_status"] ?? "NA" : "NA"}',
+                    style: CustomTextStyle.bodyText3,
+                  ),
+                  Text(
+                    'Final Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["final_status"] ?? "NA" : "NA"}',
+                    style: CustomTextStyle.bodyText3,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                ),
+                itemCount: apiResponse['semesters'].length,
+                itemBuilder: (context, index) {
+                  var semester = apiResponse['semesters'][index];
+                  return Card(
+                    elevation: 4.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        navigateToExamDetailsScreen(semester, 'Final Exam');
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Semester ${semester["semester_number"] ?? "NA"}',
+                              style: TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 8.0),
+                            ElevatedButton(
+                              onPressed: () {
+                                navigateToExamDetailsScreen(
+                                    semester, 'Final Exam');
+                              },
+                              child: Text('Final Exam'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                navigateToExamDetailsScreen(
+                                    semester, 'Mid-Term Exam');
+                              },
+                              child: Text('Mid-Term Exam'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  void navigateToExamDetailsScreen(
+      Map<String, dynamic> semester, String examType) {
+    Get.to(() => ExamDetailsScreen(semester, examType));
+  }
+}
+
+class ExamDetailsScreen extends StatelessWidget {
+  final Map<String, dynamic> semester;
+  final String examType;
+
+  ExamDetailsScreen(this.semester, this.examType);
+
+  @override
+  Widget build(BuildContext context) {
+    Map<String, dynamic> examData;
+
+    if (examType == 'Final Exam') {
+      examData = semester['final_exam'];
+    } else {
+      examData = semester['mid_term_exam'];
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('$examType Details'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Result: ${examData["result"] ?? "NA"}',
+                style: TextStyle(fontSize: 18.0)),
+            SizedBox(height: 8.0),
+            Text(
+                'SGPA: ${examData["theoretical_result"]["current_semester_sgpa"] ?? "NA"}',
+                style: TextStyle(fontSize: 18.0)),
+            SizedBox(height: 8.0),
+            Text('Subjects:',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+            for (var subject
+                in examData["theoretical_result"]["subjects"] ?? [])
+              Text(
+                '${subject["name"]}: ${subject["grade"]} (${subject["status"]})',
+                style: TextStyle(fontSize: 16.0),
+              ),
+            SizedBox(height: 16),
+            Text(
+                'Practical Result: ${examData["practical_result"]["result"] ?? "NA"}',
+                style: TextStyle(fontSize: 18.0)),
+            SizedBox(height: 8.0),
+            Text(
+                'SGPA: ${examData["practical_result"]["current_semester_sgpa"] ?? "NA"}',
+                style: TextStyle(fontSize: 18.0)),
+            SizedBox(height: 8.0),
+            Text('Practical Subjects:',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+            for (var subject in examData["practical_result"]["subjects"] ?? [])
+              Text(
+                '${subject["name"]}: ${subject["status"]}',
+                style: TextStyle(fontSize: 16.0),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/*
+import 'package:flutter/material.dart';
 import '../../../../../data/api/api_services.dart';
 import 'dart:convert';
 
@@ -33,86 +231,90 @@ class _ResultState extends State<Result> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Result Screen'),
+        title: const Text('Result Screen'),
       ),
       body: _apiResponse == null
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            padding: EdgeInsets.all(16.0),
-            color: Colors.blue,
-            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  'Overall Status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["current_semester"] ?? "NA" : "NA"}',
-                  style: TextStyle(color: Colors.white),
+                Container(
+                  padding: const EdgeInsets.all(16.0),
+                  color: Colors.blue,
+                  child: Column(
+                    children: [
+                      Text(
+                        'Overall Status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["current_semester"] ?? "NA" : "NA"}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        'Overall Status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        'current sem status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["current_semester_status"] ?? "NA" : "NA"}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        'Mid Term status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["mid_term_status"] ?? "NA" : "NA"}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        'Final status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["final_status"] ?? "NA" : "NA"}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  'Overall Status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
-                  style: TextStyle(color: Colors.white),
-                ),
-                Text(
-                  'current sem status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["current_semester_status"] ?? "NA" : "NA"}',
-                  style: TextStyle(color: Colors.white),
-                ),
-                Text(
-                  'Mid Term status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["mid_term_status"] ?? "NA" : "NA"}',
-                  style: TextStyle(color: Colors.white),
-                ),
-                Text(
-                  'Final status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["final_status"] ?? "NA" : "NA"}',
-                  style: TextStyle(color: Colors.white),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 8.0,
+                      mainAxisSpacing: 8.0,
+                    ),
+                    itemCount: _apiResponse!['semesters'].length,
+                    itemBuilder: (context, index) {
+                      var semester = _apiResponse!['semesters'][index];
+                      return Container(
+                        color: Colors.grey[200],
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Text(
+                                'Semester ${semester["semester_number"] ?? "NA"}',
+                                style: const TextStyle(fontSize: 18.0),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  navigateToExamDetailsScreen(
+                                      semester, 'Final Exam');
+                                },
+                                child: const Text('Final Exam'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  navigateToExamDetailsScreen(
+                                      semester, 'Mid-Term Exam');
+                                },
+                                child: const Text('Mid-Term Exam'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
-          ),
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-              ),
-              itemCount: _apiResponse!['semesters'].length,
-              itemBuilder: (context, index) {
-                var semester = _apiResponse!['semesters'][index];
-                return Container(
-                  color: Colors.grey[200],
-                  padding: EdgeInsets.all(16.0),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Text(
-                          'Semester ${semester["semester_number"] ?? "NA"}',
-                          style: TextStyle(fontSize: 18.0),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            navigateToExamDetailsScreen(semester, 'Final Exam');
-                          },
-                          child: Text('Final Exam'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            navigateToExamDetailsScreen(semester, 'Mid-Term Exam');
-                          },
-                          child: Text('Mid-Term Exam'),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
     );
   }
 
-  void navigateToExamDetailsScreen(Map<String, dynamic> semester, String examType) {
+  void navigateToExamDetailsScreen(
+      Map<String, dynamic> semester, String examType) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -147,16 +349,20 @@ class ExamDetailsScreen extends StatelessWidget {
         children: [
           ...[
             Text('Result: ${examData["result"] ?? "NA"}'),
-            Text('SGPA: ${examData["theoretical_result"]["current_semester_sgpa"] ?? "NA"}'),
-            Text('Subjects:'),
-            for (var subject in examData["theoretical_result"]["subjects"] ?? [])
+            Text(
+                'SGPA: ${examData["theoretical_result"]["current_semester_sgpa"] ?? "NA"}'),
+            const Text('Subjects:'),
+            for (var subject
+                in examData["theoretical_result"]["subjects"] ?? [])
               Text(
                 '${subject["name"]}: ${subject["grade"]} (${subject["status"]})',
               ),
-            SizedBox(height: 16),
-            Text('Practical Result: ${examData["practical_result"]["result"] ?? "NA"}'),
-            Text('SGPA: ${examData["practical_result"]["current_semester_sgpa"] ?? "NA"}'),
-            Text('Practical Subjects:'),
+            const SizedBox(height: 16),
+            Text(
+                'Practical Result: ${examData["practical_result"]["result"] ?? "NA"}'),
+            Text(
+                'SGPA: ${examData["practical_result"]["current_semester_sgpa"] ?? "NA"}'),
+            const Text('Practical Subjects:'),
             for (var subject in examData["practical_result"]["subjects"] ?? [])
               Text(
                 '${subject["name"]}: ${subject["status"]}',
@@ -167,8 +373,7 @@ class ExamDetailsScreen extends StatelessWidget {
     );
   }
 }
-
-
+*/
 
 // import 'package:flutter/material.dart';
 // import '../../../../../data/api/api_services.dart';

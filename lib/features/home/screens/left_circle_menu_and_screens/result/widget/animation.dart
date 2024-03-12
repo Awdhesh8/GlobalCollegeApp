@@ -37,10 +37,10 @@ class CustomAnimationController extends GetxController with SingleGetTickerProvi
   }
 }
 
-class CustomAnimation extends GetWidget<CustomAnimationController> {
+class BouncyAnimation extends GetWidget<CustomAnimationController> {
   final Widget child;
 
-  const CustomAnimation({Key? key, required this.child}) : super(key: key);
+  const BouncyAnimation({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

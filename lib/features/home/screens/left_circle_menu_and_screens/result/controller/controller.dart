@@ -31,8 +31,29 @@
 //
 // final resultController = ResultController();
 // final resultDetailController = ResultDetailController();
+import 'dart:convert';
+import '../../../../../../data/api/api_services.dart';
+import 'package:get/get.dart';
+class ResultController extends GetxController {
+  Rx<Map<String, dynamic>?> apiResponse = Rx<Map<String, dynamic>?>(null);
 
+  @override
+  void onInit() {
+    super.onInit();
+    fetchResults();
+  }
 
+  Future<void> fetchResults() async {
+    try {
+      String result = await ApiService.getAllResults();
+      Map<String, dynamic> jsonResponse = json.decode(result);
+      apiResponse.value = jsonResponse['response'];
+    } catch (error) {
+      print("Error fetching results: $error");
+      // Handle error gracefully
+    }
+  }
+}
 
 
 /*

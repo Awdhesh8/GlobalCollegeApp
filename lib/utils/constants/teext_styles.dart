@@ -23,6 +23,7 @@ class CustomTextStyle {
     fontSize: ESizes.fontSizeLg,
     color: EColors.textSecondaryTitle,
   );
+
   static const TextStyle heading3 = TextStyle(
     fontFamily: 'Inter',
     fontSize: 20.0,
@@ -57,6 +58,21 @@ class CustomTextStyle {
     fontWeight: FontWeight.normal,
     color: Colors.grey,
   );
+
+  static const TextStyle bodyText2 = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 14.0,
+    fontWeight: FontWeight.normal,
+    color: EColors.textSecondaryTitle,
+  );
+
+  static const TextStyle bodyText3 = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 14.0,
+    fontWeight: FontWeight.normal,
+    color: EColors.textColorPrimary1,
+  );
+
 
    static const TextStyle labelText1 = TextStyle(
      color: Colors.black54,

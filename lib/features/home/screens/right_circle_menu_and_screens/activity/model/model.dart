@@ -1,6 +1,4 @@
 
-
-
 /// Sample data in JSON format -->
 final List<Map<String, dynamic>> eventData = [
   {
