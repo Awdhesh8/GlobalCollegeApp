@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animation.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import '../../../../../common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
 import 'controller/controller.dart';
 
 class Result extends StatelessWidget {
   final ResultController resultController = Get.put(ResultController());
+  final CustomAnimationController animationController = Get.put(CustomAnimationController());
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,41 +81,43 @@ class Result extends StatelessWidget {
                 itemCount: apiResponse['semesters'].length,
                 itemBuilder: (context, index) {
                   var semester = apiResponse['semesters'][index];
-                  return Card(
-                    elevation: 4.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        navigateToExamDetailsScreen(semester, 'Final Exam');
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Semester ${semester["semester_number"] ?? "NA"}',
-                              style: TextStyle(
-                                  fontSize: 18.0, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 8.0),
-                            ElevatedButton(
-                              onPressed: () {
-                                navigateToExamDetailsScreen(
-                                    semester, 'Final Exam');
-                              },
-                              child: Text('Final Exam'),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                navigateToExamDetailsScreen(
-                                    semester, 'Mid-Term Exam');
-                              },
-                              child: Text('Mid-Term Exam'),
-                            ),
-                          ],
+                  return BouncyAnimation(
+                    child: Card(
+                      elevation: 4.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          navigateToExamDetailsScreen(semester, 'Final Exam');
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Semester ${semester["semester_number"] ?? "NA"}',
+                                style: TextStyle(
+                                    fontSize: 18.0, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 8.0),
+                              ElevatedButton(
+                                onPressed: () {
+                                  navigateToExamDetailsScreen(
+                                      semester, 'Final Exam');
+                                },
+                                child: Text('Final Exam'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  navigateToExamDetailsScreen(
+                                      semester, 'Mid-Term Exam');
+                                },
+                                child: Text('Mid-Term Exam'),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
