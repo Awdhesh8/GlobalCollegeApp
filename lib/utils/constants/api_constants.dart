@@ -19,6 +19,7 @@ class APIConstants {
   static const String feesDetails = 'feesummary';
   static const String cancelLeave = 'cancelleave';
   static const String getGatePassReasons = 'get_gpassreason';
+  static const String getResult = 'get_all_result';
 
 
 

@@ -1,152 +1,174 @@
-class ResultModel {
-  ResponseModel? response;
-  String? message;
-  String? status;
+class ApiResponse {
+  Response response;
+  String message;
+  String status;
 
-  ResultModel({this.response, this.message, this.status});
-
-  ResultModel.fromJson(Map<String, dynamic> json) {
-    response = json['response'] != null ? ResponseModel.fromJson(json['response']) : null;
-    message = json['message'];
-    status = json['status'];
-  }
-
-  OverallStatusModel? get overallStatus => response?.overallStatus;
-}
-
-class ResponseModel {
-  List<SemesterModel>? semesters;
-  OverallStatusModel? overallStatus;
-
-  ResponseModel({this.semesters, this.overallStatus});
-
-  ResponseModel.fromJson(Map<String, dynamic> json) {
-    if (json['semesters'] != null) {
-      semesters = [];
-      json['semesters'].forEach((semester) {
-        semesters!.add(SemesterModel.fromJson(semester));
-      });
-    }
-    overallStatus = json['overallStatus'] != null ? OverallStatusModel.fromJson(json['overallStatus']) : null;
-  }
-}
-
-class SemesterModel {
-  String? semesterNumber;
-  ExamModel? finalExam;
-  ExamModel? midTermExam;
-  TheoreticalResultModel? theoreticalResult; // Add theoreticalResult property
-  PracticalResultModel? practicalResult; // Add practicalResult property
-
-  SemesterModel({
-    this.semesterNumber,
-    this.finalExam,
-    this.midTermExam,
-    this.theoreticalResult,
-    this.practicalResult,
+  ApiResponse({
+    required this.response,
+    required this.message,
+    required this.status,
   });
 
-  SemesterModel.fromJson(Map<String, dynamic> json) {
-    semesterNumber = json['semester_number'];
-    finalExam = json['final_exam'] != null ? ExamModel.fromJson(json['final_exam']) : null;
-    midTermExam = json['mid_term_exam'] != null ? ExamModel.fromJson(json['mid_term_exam']) : null;
-    theoreticalResult = json['theoretical_result'] != null
-        ? TheoreticalResultModel.fromJson(json['theoretical_result'])
-        : null;
-    practicalResult = json['practical_result'] != null
-        ? PracticalResultModel.fromJson(json['practical_result'])
-        : null;
+  factory ApiResponse.fromJson(Map<String, dynamic> json) {
+    return ApiResponse(
+      response: Response.fromJson(json['response']),
+      message: json['message'],
+      status: json['status'],
+    );
   }
 }
 
-class ExamModel {
-  String? result;
-  TheoreticalResultModel? theoreticalResult;
-  PracticalResultModel? practicalResult;
+class Response {
+  List<Semester> semesters;
+  List<OverallStatus> overallStatus;
 
-  ExamModel({this.result, this.theoreticalResult, this.practicalResult});
+  Response({
+    required this.semesters,
+    required this.overallStatus,
+  });
 
-  ExamModel.fromJson(Map<String, dynamic> json) {
-    result = json['result'];
-    theoreticalResult = json['theoretical_result'] != null
-        ? TheoreticalResultModel.fromJson(json['theoretical_result'])
-        : null;
-    practicalResult = json['practical_result'] != null
-        ? PracticalResultModel.fromJson(json['practical_result'])
-        : null;
+  factory Response.fromJson(Map<String, dynamic> json) {
+    return Response(
+      semesters: List<Semester>.from(
+        json['semesters'].map((semester) => Semester.fromJson(semester)),
+      ),
+      overallStatus: List<OverallStatus>.from(
+        json['overallStatus'].map((status) => OverallStatus.fromJson(status)),
+      ),
+    );
   }
 }
 
-class TheoreticalResultModel {
-  String? result;
-  String? currentSemesterSgpa;
-  List<SubjectModel>? subjects;
+class Semester {
+  int semesterNumber;
+  Exam finalExam;
+  Exam midTermExam;
 
-  TheoreticalResultModel({this.result, this.currentSemesterSgpa, this.subjects});
+  Semester({
+    required this.semesterNumber,
+    required this.finalExam,
+    required this.midTermExam,
+  });
 
-  TheoreticalResultModel.fromJson(Map<String, dynamic> json) {
-    result = json['result'];
-    currentSemesterSgpa = json['current_semester_sgpa'];
-    if (json['subjects'] != null) {
-      subjects = [];
-      json['subjects'].forEach((subject) {
-        subjects!.add(SubjectModel.fromJson(subject));
-      });
-    }
+  factory Semester.fromJson(Map<String, dynamic> json) {
+    return Semester(
+      semesterNumber: json['semester_number'],
+      finalExam: Exam.fromJson(json['final_exam']),
+      midTermExam: Exam.fromJson(json['mid_term_exam']),
+    );
   }
 }
 
-class PracticalResultModel {
-  String? result;
-  String? currentSemesterSgpa;
-  List<SubjectModel>? subjects;
+class Exam {
+  String result;
+  TheoreticalResult theoreticalResult;
+  PracticalResult practicalResult;
 
-  PracticalResultModel({this.result, this.currentSemesterSgpa, this.subjects});
+  Exam({
+    required this.result,
+    required this.theoreticalResult,
+    required this.practicalResult,
+  });
 
-  PracticalResultModel.fromJson(Map<String, dynamic> json) {
-    result = json['result'];
-    currentSemesterSgpa = json['current_semester_sgpa'];
-    if (json['subjects'] != null) {
-      subjects = [];
-      json['subjects'].forEach((subject) {
-        subjects!.add(SubjectModel.fromJson(subject));
-      });
-    }
+  factory Exam.fromJson(Map<String, dynamic> json) {
+    return Exam(
+      result: json['result'],
+      theoreticalResult: TheoreticalResult.fromJson(json['theoretical_result']),
+      practicalResult: PracticalResult.fromJson(json['practical_result']),
+    );
   }
 }
 
-class SubjectModel {
-  String? name;
+class TheoreticalResult {
+  String result;
+  double? currentSemesterSgpa;
+  List<Subject> subjects;
+
+  TheoreticalResult({
+    required this.result,
+    this.currentSemesterSgpa,
+    required this.subjects,
+  });
+
+  factory TheoreticalResult.fromJson(Map<String, dynamic> json) {
+    return TheoreticalResult(
+      result: json['result'],
+      currentSemesterSgpa: json['current_semester_sgpa']?.toDouble(),
+      subjects: List<Subject>.from(
+        json['subjects'].map((subject) => Subject.fromJson(subject)),
+      ),
+    );
+  }
+}
+
+class PracticalResult {
+  String result;
+  double? currentSemesterSgpa;
+  List<Subject> subjects;
+
+  PracticalResult({
+    required this.result,
+    this.currentSemesterSgpa,
+    required this.subjects,
+  });
+
+  factory PracticalResult.fromJson(Map<String, dynamic> json) {
+    return PracticalResult(
+      result: json['result'],
+      currentSemesterSgpa: json['current_semester_sgpa']?.toDouble(),
+      subjects: List<Subject>.from(
+        json['subjects'].map((subject) => Subject.fromJson(subject)),
+      ),
+    );
+  }
+}
+
+class Subject {
+  String name;
   String? grade;
-  String? status;
+  String status;
 
-  SubjectModel({this.name, this.grade, this.status});
+  Subject({
+    required this.name,
+    this.grade,
+    required this.status,
+  });
 
-  SubjectModel.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    grade = json['grade'];
-    status = json['status'];
+  factory Subject.fromJson(Map<String, dynamic> json) {
+    return Subject(
+      name: json['name'],
+      grade: json['grade'],
+      status: json['status'],
+    );
   }
 }
 
-class OverallStatusModel {
-  String? currentSemester;
-  String? currentSemesterCgpa;
-  String? currentSemesterStatus;
-  String? midTermStatus;
-  String? finalStatus;
+class OverallStatus {
+  int currentSemester;
+  double? currentSemesterSgpa;
+  String currentSemesterStatus;
+  String midTermStatus;
+  String finalStatus;
 
-  OverallStatusModel(
-      {this.currentSemester, this.currentSemesterCgpa, this.currentSemesterStatus, this.midTermStatus, this.finalStatus});
+  OverallStatus({
+    required this.currentSemester,
+    this.currentSemesterSgpa,
+    required this.currentSemesterStatus,
+    required this.midTermStatus,
+    required this.finalStatus,
+  });
 
-  OverallStatusModel.fromJson(Map<String, dynamic> json) {
-    currentSemester = json['current_semester'];
-    currentSemesterCgpa = json['current_semester_cgpa'];
-    currentSemesterStatus = json['current_semester_status'];
-    midTermStatus = json['mid_term_status'];
-    finalStatus = json['final_status'];
+  factory OverallStatus.fromJson(Map<String, dynamic> json) {
+    return OverallStatus(
+      currentSemester: json['current_semester'],
+      currentSemesterSgpa: json['current_semester_sgpa']?.toDouble(),
+      currentSemesterStatus: json['current_semester_status'],
+      midTermStatus: json['mid_term_status'],
+      finalStatus: json['final_status'],
+    );
   }
 }
+
 
 
 

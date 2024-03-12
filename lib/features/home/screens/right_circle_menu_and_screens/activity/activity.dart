@@ -121,32 +121,32 @@ class Activity extends StatelessWidget {
                           isScrollable: true,
                           dividerColor: Colors.transparent,
                           splashBorderRadius: BorderRadius.circular(20),
-                          tabs: [
+                          tabs: const [
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: Tab(text: 'Category 1'),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: Tab(text: 'Category 2'),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: Tab(text: 'Category 3'),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: Tab(text: 'Category 4'),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
                               child: Tab(text: 'Category 5'),
                             ),
                             // Add more tabs as needed
                           ],
                           indicator:  BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(20)
+                            borderRadius: BorderRadius  .circular(20)
                         ),
                         ),
                       ),

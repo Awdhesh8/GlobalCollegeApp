@@ -994,6 +994,40 @@ class ApiService {
     }
   }
 
+  /// Result
+
+  static Future<String> getAllResults() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userId = prefs.getString('user_id') ?? '';
+
+    var headers = {
+      'Cookie': 'ci_session=h2t5hogqm5qno7mjgfbspmok2j1t0mjb',
+    };
+
+    // var request = http.MultipartRequest('POST', Uri.parse('$baseUrl2/get_all_result'));
+    var request = http.MultipartRequest('POST',
+        Uri.parse(APIConstants.getFullUrl(APIConstants.getResult)));
+    request.fields.addAll({
+      'APIKEY': 'GNCS0225',
+      'USER_ID': '1044',
+    });
+    print(request);
+    print(userId);
+
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+        print(response);
+      if (response.statusCode == 200) {
+        return await response.stream.bytesToString();
+      } else {
+        return 'Error: ${response.reasonPhrase}';
+      }
+    } catch (e) {
+      return 'Error: $e';
+    }
+  }
 
 
 }

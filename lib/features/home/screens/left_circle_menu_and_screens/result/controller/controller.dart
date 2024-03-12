@@ -1,35 +1,37 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../model/model.dart';
+// import '../../../../../../data/api/api_services.dart';
+// import '../model/model.dart';
+// import 'package:get/get.dart';
+//
+// class ResultController extends GetxController {
+//   var isLoading = true.obs;
+//   var apiResponse = ApiResponse(semesters: [], overallStatus: [], response: null, message: '', status: '').obs;
+//
+//   @override
+//   void onInit() {
+//     fetchData();
+//     super.onInit();
+//   }
+//
+//   Future<void> fetchData() async {
+//     try {
+//       isLoading(true);
+//       var response = await ApiService.getAllResults();
+//       apiResponse(ApiResponse.fromJson(response));
+//     } catch (error) {
+//       print('Error fetching data: $error');
+//     } finally {
+//       isLoading(false);
+//     }
+//   }
+// }
+//
+// class ResultDetailController extends GetxController {
+//   // Controller for ResultDetailScreen if needed
+// }
+//
+// final resultController = ResultController();
+// final resultDetailController = ResultDetailController();
 
-import 'package:get/get.dart';
-
-class StudentController extends GetxController {
-  var result = ResultModel().obs;
-
-  void updateResult(ResultModel newResult) {
-    result.value = newResult;
-  }
-}
-
-class ApiService1 extends GetxService {
-  Future<ResultModel> getResult() async {
-    var headers = {'Cookie': 'ci_session=mg7hkaufqnp2fh9ohevf61pcdnqcu320'};
-    var data = {'APIKEY': 'GNCS0225', 'USER_ID': '1044'};
-    print(data);
-    final response = await http.post(
-      Uri.parse('http://myglobalapp.in/global/Web0001/get_all_result'),
-      headers: headers,
-      body: data,
-    );
-    print(data);
-    if (response.statusCode == 200) {
-      return ResultModel.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
-}
 
 
 

@@ -1,12 +1,399 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import '../../../../../data/api/api_services.dart';
+import 'dart:convert';
+
+class Result extends StatefulWidget {
+  @override
+  _ResultState createState() => _ResultState();
+}
+
+class _ResultState extends State<Result> {
+  Map<String, dynamic>? _apiResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchResults();
+  }
+
+  Future<void> fetchResults() async {
+    try {
+      String result = await ApiService.getAllResults();
+      Map<String, dynamic> jsonResponse = json.decode(result);
+      setState(() {
+        _apiResponse = jsonResponse['response'];
+      });
+    } catch (error) {
+      print("Error fetching results: $error");
+      // Handle error gracefully
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Result Screen'),
+      ),
+      body: _apiResponse == null
+          ? Center(child: CircularProgressIndicator())
+          : Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: EdgeInsets.all(16.0),
+            color: Colors.blue,
+            child: Column(
+              children: [
+                Text(
+                  'Overall Status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["current_semester"] ?? "NA" : "NA"}',
+                  style: TextStyle(color: Colors.white),
+                ),
+                Text(
+                  'Overall Status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                  style: TextStyle(color: Colors.white),
+                ),
+                Text(
+                  'current sem status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["current_semester_status"] ?? "NA" : "NA"}',
+                  style: TextStyle(color: Colors.white),
+                ),
+                Text(
+                  'Mid Term status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["mid_term_status"] ?? "NA" : "NA"}',
+                  style: TextStyle(color: Colors.white),
+                ),
+                Text(
+                  'Final status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["final_status"] ?? "NA" : "NA"}',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 8.0,
+                mainAxisSpacing: 8.0,
+              ),
+              itemCount: _apiResponse!['semesters'].length,
+              itemBuilder: (context, index) {
+                var semester = _apiResponse!['semesters'][index];
+                return GestureDetector(
+                  onTap: () {
+                    // This part will be handled by the ElevatedButtons
+                  },
+                  child: Container(
+                    color: Colors.grey[200],
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            'Semester ${semester["semester_number"] ?? "NA"}',
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              navigateToExamDetailsScreen(semester, 'Final Exam');
+                            },
+                            child: Text('Final Exam'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              navigateToExamDetailsScreen(semester, 'Mid-Term Exam');
+                            },
+                            child: Text('Mid-Term Exam'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void navigateToExamDetailsScreen(Map<String, dynamic> semester, String examType) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExamDetailsScreen(semester, examType),
+      ),
+    );
+  }
+}
+
+class ExamDetailsScreen extends StatelessWidget {
+  final Map<String, dynamic> semester;
+  final String examType;
+
+  ExamDetailsScreen(this.semester, this.examType);
+
+  @override
+  Widget build(BuildContext context) {
+    Map<String, dynamic> examData;
+
+    if (examType == 'Final Exam') {
+      examData = semester['final_exam'];
+    } else {
+      examData = semester['mid_term_exam'];
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('$examType Details'),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ...[
+            Text('Result: ${examData["result"] ?? "NA"}'),
+            Text('SGPA: ${examData["theoretical_result"]["current_semester_sgpa"] ?? "NA"}'),
+            Text('Subjects:'),
+            for (var subject in examData["theoretical_result"]["subjects"] ?? [])
+              Text(
+                '${subject["name"]}: ${subject["grade"]} (${subject["status"]})',
+              ),
+            SizedBox(height: 16),
+            Text('Practical Result: ${examData["practical_result"]["result"] ?? "NA"}'),
+            Text('SGPA: ${examData["practical_result"]["current_semester_sgpa"] ?? "NA"}'),
+            Text('Practical Subjects:'),
+            for (var subject in examData["practical_result"]["subjects"] ?? [])
+              Text(
+                '${subject["name"]}: ${subject["status"]}',
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+// import 'package:flutter/material.dart';
+// import '../../../../../data/api/api_services.dart';
+// import 'dart:convert';
+//
+// class Result extends StatefulWidget {
+//   @override
+//   _ResultState createState() => _ResultState();
+// }
+//
+// class _ResultState extends State<Result> {
+//   Map<String, dynamic>? _apiResponse;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     fetchResults();
+//   }
+//
+//   Future<void> fetchResults() async {
+//     try {
+//       String result =
+//           await ApiService.getAllResults();
+//       Map<String, dynamic> jsonResponse = json.decode(result);
+//       setState(() {
+//         _apiResponse = jsonResponse['response'];
+//       });
+//     } catch (error) {
+//       print("Error fetching results: $error");
+//       // Handle error gracefully
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Result Screen'),
+//       ),
+//       body: _apiResponse == null
+//           ? Center(child: CircularProgressIndicator())
+//           : Column(
+//         crossAxisAlignment: CrossAxisAlignment.stretch,
+//         children: [
+//           Container(
+//             padding: EdgeInsets.all(16.0),
+//             color: Colors.blue,
+//             child: Column(
+//               children: [
+//                 Text(
+//                   'Overall Status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["current_semester"] ?? "NA" : "NA"}',
+//                   style: TextStyle(color: Colors.white),
+//                 ),
+//                  Text(
+//                   'Overall Status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+//                   style: TextStyle(color: Colors.white),
+//                 ),
+//                  Text(
+//                   'current sem status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["current_semester_status"] ?? "NA" : "NA"}',
+//                   style: TextStyle(color: Colors.white),
+//                 ),
+//                 Text(
+//                   'Mid Term status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["mid_term_status"] ?? "NA" : "NA"}',
+//                   style: TextStyle(color: Colors.white),
+//                 ),
+//                 Text(
+//                   'Final status: ${_apiResponse!["overallStatus"].isNotEmpty ? _apiResponse!["overallStatus"][0]["final_status"] ?? "NA" : "NA"}',
+//                   style: TextStyle(color: Colors.white),
+//                 ),
+//
+//               ],
+//             ),
+//           ),
+//           Expanded(
+//             child: GridView.builder(
+//               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                 crossAxisCount: 2,
+//                 crossAxisSpacing: 8.0,
+//                 mainAxisSpacing: 8.0,
+//               ),
+//               itemCount: _apiResponse!['semesters'].length,
+//               itemBuilder: (context, index) {
+//                 if (_apiResponse!['semesters'].isNotEmpty) {
+//                   var semester = _apiResponse!['semesters'][index];
+//                   return GestureDetector(
+//                     onTap: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (context) => SemesterDetailsScreen(semester),
+//                         ),
+//                       );
+//                     },
+//                     child: Container(
+//                       color: Colors.grey[200],
+//                       padding: EdgeInsets.all(16.0),
+//                       child: Center(
+//                         child: Text(
+//                           'Semester ${semester["semester_number"] ?? "NA"}',
+//                           style: TextStyle(fontSize: 18.0),
+//                         ),
+//                       ),
+//                     ),
+//                   );
+//                 } else {
+//                   return Container(); // Return an empty container if the list is empty
+//                 }
+//               },
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
+// class SemesterDetailsScreen extends StatelessWidget {
+//   final Map<String, dynamic> semesterData;
+//
+//   SemesterDetailsScreen(this.semesterData);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Semester ${semesterData["semester_number"]} Details'),
+//       ),
+//       body: Column(
+//         children: [
+//           ElevatedButton(
+//             onPressed: () {
+//               showDialog(
+//                 context: context,
+//                 builder: (BuildContext context) {
+//                   return AlertDialog(
+//                     title: Text('Final Exam Details'),
+//                     content: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Text('Result: ${semesterData["final_exam"]["result"]}'),
+//                         Text(
+//                             'SGPA: ${semesterData["final_exam"]["theoretical_result"]["current_semester_sgpa"]}'),
+//                         Text('Subjects:'),
+//                         // Display details for each subject
+//                         for (var subject in semesterData["final_exam"]["theoretical_result"]["subjects"])
+//                           Text(
+//                             '${subject["name"]}: ${subject["grade"]} (${subject["status"]})',
+//                           ),
+//                         SizedBox(height: 16),
+//                         Text('Practical Result: ${semesterData["final_exam"]["practical_result"]["result"]}'),
+//                         Text(
+//                             'SGPA: ${semesterData["final_exam"]["practical_result"]["current_semester_sgpa"]}'),
+//                         Text('Practical Subjects:'),
+//                         // Display details for each practical subject
+//                         for (var subject in semesterData["final_exam"]["practical_result"]["subjects"])
+//                           Text(
+//                             '${subject["name"]}: ${subject["status"]}',
+//                           ),
+//                       ],
+//                     ),
+//                     actions: [
+//                       TextButton(
+//                         onPressed: () {
+//                           Navigator.pop(context);
+//                         },
+//                         child: Text('Close'),
+//                       ),
+//                     ],
+//                   );
+//                 },
+//               );
+//             },
+//             child: Text('Final Exam'),
+//           ),
+//           ElevatedButton(
+//             onPressed: () {
+//               showDialog(
+//                 context: context,
+//                 builder: (BuildContext context) {
+//                   return AlertDialog(
+//                     title: Text('Mid-Term Exam Details'),
+//                     content: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Text(
+//                             'Result: ${semesterData["mid_term_exam"]["result"]}'),
+//                         Text(
+//                             'SGPA: ${semesterData["mid_term_exam"]["theoretical_result"]["current_semester_sgpa"]}'),
+//                         Text('Subjects:'),
+//                         // Display details for each subject
+//                         for (var subject in semesterData["mid_term_exam"]["theoretical_result"])
+//                           Text(
+//                             '${subject["name"]}: ${subject["grade"]} (${subject["status"]})',
+//                           ),
+//                       ],
+//                     ),
+//                     actions: [
+//                       TextButton(
+//                         onPressed: () {
+//                           Navigator.pop(context);
+//                         },
+//                         child: Text('Close'),
+//                       ),
+//                     ],
+//                   );
+//                 },
+//               );
+//             },
+//             child: Text('Mid-Term Exam'),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+/*
+import 'package:flutter/material.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
-import 'controller/controller.dart';
-import 'model/model.dart';
 
 class Result extends StatelessWidget {
-  final StudentController studentController = Get.put<StudentController>(StudentController());
 
   @override
   Widget build(BuildContext context) {
@@ -29,44 +416,9 @@ class Result extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            // Display overallStatus
-            Obx(() {
-              final overallStatus = studentController.result.value.overallStatus;
-              return Container(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Current Semester: ${overallStatus?.currentSemester ?? 'N/A'}',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text('CGPA: ${overallStatus?.currentSemesterCgpa ?? 'N/A'}'),
-                    Text('Current Semester Status: ${overallStatus?.currentSemesterStatus ?? 'N/A'}'),
-                    Text('Mid Term Status: ${overallStatus?.midTermStatus ?? 'N/A'}'),
-                    Text('Final Status: ${overallStatus?.finalStatus ?? 'N/A'}'),
-                  ],
-                ),
-              );
-            }),
-            // Display Semester Buttons
-            GridView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-              ),
-              itemCount: studentController.result.value.response?.semesters?.length ?? 0,
-              itemBuilder: (context, index) {
-                String semesterNumber = studentController.result.value.response!.semesters![index].semesterNumber ?? '';
-                return SemesterButton(semesterNumber: semesterNumber);
-              },
-            ),
+            /// Display overallStatus
+
+
           ],
         ),
       ),
@@ -74,129 +426,7 @@ class Result extends StatelessWidget {
   }
 }
 
-class SemesterButton extends StatelessWidget {
-  final String semesterNumber;
-
-  SemesterButton({required this.semesterNumber});
-
-  @override
-  Widget build(BuildContext context) {
-    final StudentController studentController = Get.find<StudentController>();
-    return GestureDetector(
-      onTap: () {
-        // Navigate to DetailsScreen with data
-        Get.to(DetailsScreen(
-          studentController: studentController,
-          semesterNumber: semesterNumber,
-          theoreticalResult: studentController.result.value.response?.semesters
-              ?.firstWhere((semester) => semester.semesterNumber == semesterNumber)
-              .theoreticalResult,
-          practicalResult: studentController.result.value.response?.semesters
-              ?.firstWhere((semester) => semester.semesterNumber == semesterNumber)
-              .practicalResult, examType: '',
-        ));
-      },
-      child: Container(
-        margin: EdgeInsets.all(8.0),
-        padding: EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Colors.blueGrey,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Semester $semesterNumber',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ExamButton(title: 'Final Exam', semesterNumber: semesterNumber, ),
-                ExamButton(title: 'Mid Term Exam', semesterNumber: semesterNumber, ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ExamButton extends StatelessWidget {
-  final String title;
-  final String semesterNumber;
-
-  ExamButton({required this.title, required this.semesterNumber});
-
-  @override
-  Widget build(BuildContext context) {
-    final StudentController studentController = Get.find<StudentController>();
-
-    return Container(
-      child: ElevatedButton(
-        onPressed: () {
-          // Navigate to DetailsScreen with data
-          Get.to(DetailsScreen(
-            studentController: studentController,
-            semesterNumber: semesterNumber,
-            examType: title,
-            theoreticalResult: studentController.result.value.response?.semesters
-                ?.firstWhere((semester) => semester.semesterNumber == semesterNumber)
-                .theoreticalResult,
-            practicalResult: studentController.result.value.response?.semesters
-                ?.firstWhere((semester) => semester.semesterNumber == semesterNumber)
-                .practicalResult,
-          ));
-        },
-        child: Text(title),
-      ),
-    );
-  }
-}
-
-class DetailsScreen extends StatelessWidget {
-  final String semesterNumber;
-  final String? examType;
-  final TheoreticalResultModel? theoreticalResult;
-  final PracticalResultModel? practicalResult;
-  final StudentController studentController;
-
-  DetailsScreen({
-    required this.studentController,
-    required this.semesterNumber,
-    required this.examType,
-    required this.theoreticalResult,
-    required this.practicalResult,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('$examType Details - Semester $semesterNumber'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Semester $semesterNumber Details'),
-            if (examType != null) Text('$examType Details'),
-            if (theoreticalResult != null) Text('Theoretical Result: ${theoreticalResult!.result}'),
-            if (practicalResult != null) Text('Practical Result: ${practicalResult!.result}'),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
+ */
 
 /*
 import 'package:flutter/material.dart';
