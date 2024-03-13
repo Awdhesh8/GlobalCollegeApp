@@ -1011,8 +1011,7 @@ class ApiService {
       // 'USER_ID': userId,
       'USER_ID': '1044',
     });
-    print(userId);
-    print(request);
+    print('Current User ID => USER_ID ' ' 1044');
     print(userId);
 
 

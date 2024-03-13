@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/sem_details.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animation.dart';
 import 'package:globalcollegeapp/utils/constants/sizes.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
@@ -9,8 +10,8 @@ import 'controller/controller.dart';
 
 class Result extends StatelessWidget {
   final ResultController resultController = Get.put(ResultController());
-  final CustomAnimationController animationController = Get.put(CustomAnimationController());
-
+  final CustomAnimationController animationController =
+      Get.put(CustomAnimationController());
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +53,8 @@ class Result extends StatelessWidget {
                         children: [
                           // TextSpan(text: ' with '),
                           TextSpan(
-                            text:  '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                            text:
+                                '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
                             style: CustomTextStyle.bodyText3,
                             // style: CustomTextStyle.heading22,
                           ),
@@ -98,7 +100,8 @@ class Result extends StatelessWidget {
                           decoration: CustomDeco.decoRectangle(),
                           child: InkWell(
                             onTap: () {
-                              navigateToExamDetailsScreen(semester, 'Final Exam');
+                              navigateToExamDetailsScreen(
+                                  semester, 'Final Exam');
                             },
                             child: Padding(
                               padding: EdgeInsets.all(16.0),
@@ -108,7 +111,8 @@ class Result extends StatelessWidget {
                                   Text(
                                     'Semester ${semester["semester_number"] ?? "NA"}',
                                     style: TextStyle(
-                                        fontSize: 18.0, fontWeight: FontWeight.bold),
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(height: 8.0),
                                   Row(
@@ -124,7 +128,9 @@ class Result extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: ESizes.spaceBtwItemsHeadings,),
+                                  SizedBox(
+                                    height: ESizes.spaceBtwItemsHeadings,
+                                  ),
                                   Row(
                                     children: [
                                       Expanded(
@@ -161,11 +167,15 @@ class Result extends StatelessWidget {
   }
 }
 
+
+
+/// Correct Code ----- for Exam details screen
+/*
 class ExamDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> semester;
   final String examType;
-  final CustomAnimationController animationController = Get.put(CustomAnimationController());
-
+  final CustomAnimationController animationController =
+      Get.put(CustomAnimationController());
 
   ExamDetailsScreen(this.semester, this.examType);
 
@@ -188,21 +198,21 @@ class ExamDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Result: ${examData["result"] ?? "NA"}',
-                style: TextStyle(fontSize: 18.0)),
-            SizedBox(height: 8.0),
-            Text(
-                'SGPA: ${examData["theoretical_result"]["current_semester_sgpa"] ?? "NA"}',
-                style: TextStyle(fontSize: 18.0)),
-            SizedBox(height: 8.0),
-            Text('Subjects:',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-            for (var subject
-                in examData["theoretical_result"]["subjects"] ?? [])
-              Text(
-                '${subject["name"]}: ${subject["grade"]} (${subject["status"]})',
-                style: TextStyle(fontSize: 16.0),
-              ),
+           Text('Result: ${examData["result"] ?? "NA"}',
+               style: TextStyle(fontSize: 18.0)),
+           SizedBox(height: 8.0),
+           Text(
+               'SGPA: ${examData["theoretical_result"]["current_semester_sgpa"] ?? "NA"}',
+               style: TextStyle(fontSize: 18.0)),
+           SizedBox(height: 8.0),
+           Text('Subjects:',
+               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+           for (var subject
+           in examData["theoretical_result"]["subjects"] ?? [])
+             Text(
+               '${subject["name"]}: ${subject["grade"]} (${subject["status"]})',
+               style: TextStyle(fontSize: 16.0),
+             ),
             SizedBox(height: 16),
             Text(
                 'Practical Result: ${examData["practical_result"]["result"] ?? "NA"}',
@@ -225,6 +235,9 @@ class ExamDetailsScreen extends StatelessWidget {
     );
   }
 }
+ */
+
+
 
 /*
 import 'package:flutter/material.dart';
