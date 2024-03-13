@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/sem_details.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animation.dart';
 import 'package:globalcollegeapp/utils/constants/sizes.dart';
@@ -16,12 +17,16 @@ class Result extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Result Screen'),
+      appBar: const GAppBar(
+        showBackArrow: true,
+        surfaceTintColor: Colors.transparent,
+        title: Text('Result',
+        style: TextStyleClass.appBarTextStyle,
+        ),
       ),
       body: Obx(() {
         if (resultController.apiResponse.value == null) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         var apiResponse = resultController.apiResponse.value!;
@@ -32,8 +37,8 @@ class Result extends StatelessWidget {
             BouncyAnimation(
               child: Container(
                 decoration: CustomDeco.decoRectangle(),
-                padding: EdgeInsets.all(16.0),
-                margin: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16.0),
+                margin: const EdgeInsets.all(16),
                 // color: Colors.blue,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,18 +49,18 @@ class Result extends StatelessWidget {
                     ),
                     Text(
                       'Current Sem: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester"] ?? "NA" : "NA"}',
-                      style: CustomTextStyle.bodyText3,
+                      style: TextStyleClass.bodyText3,
                     ),
                     RichText(
                       text: TextSpan(
                         text: 'CGPA: ',
-                        style: CustomTextStyle.heading24,
+                        style: TextStyleClass.heading24,
                         children: [
                           // TextSpan(text: ' with '),
                           TextSpan(
                             text:
                                 '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
-                            style: CustomTextStyle.bodyText3,
+                            style: TextStyleClass.bodyText3,
                             // style: CustomTextStyle.heading22,
                           ),
                         ],
@@ -63,19 +68,19 @@ class Result extends StatelessWidget {
                     ),
                     Text(
                       'Current CGPA: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
-                      style: CustomTextStyle.bodyText3,
+                      style: TextStyleClass.bodyText3,
                     ),
                     Text(
                       'Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_status"] ?? "NA" : "NA"}',
-                      style: CustomTextStyle.bodyText3,
+                      style: TextStyleClass.bodyText3,
                     ),
                     Text(
                       'Mid-Term Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["mid_term_status"] ?? "NA" : "NA"}',
-                      style: CustomTextStyle.bodyText3,
+                      style: TextStyleClass.bodyText3,
                     ),
                     Text(
                       'Final Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["final_status"] ?? "NA" : "NA"}',
-                      style: CustomTextStyle.bodyText3,
+                      style: TextStyleClass.bodyText3,
                     ),
                   ],
                 ),
@@ -85,7 +90,7 @@ class Result extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 4.0,
                     mainAxisSpacing: 8.0,
@@ -104,17 +109,17 @@ class Result extends StatelessWidget {
                                   semester, 'Final Exam');
                             },
                             child: Padding(
-                              padding: EdgeInsets.all(16.0),
+                              padding: const EdgeInsets.all(16.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'Semester ${semester["semester_number"] ?? "NA"}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 18.0,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  SizedBox(height: 8.0),
+                                  const SizedBox(height: 8.0),
                                   Row(
                                     children: [
                                       Expanded(
@@ -123,12 +128,12 @@ class Result extends StatelessWidget {
                                             navigateToExamDetailsScreen(
                                                 semester, 'Final Exam');
                                           },
-                                          child: Text('Final Exam'),
+                                          child: const Text('Final Exam'),
                                         ),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: ESizes.spaceBtwItemsHeadings,
                                   ),
                                   Row(
@@ -139,7 +144,7 @@ class Result extends StatelessWidget {
                                             navigateToExamDetailsScreen(
                                                 semester, 'Mid-Term Exam');
                                           },
-                                          child: Text('Mid-Term Exam'),
+                                          child: const Text('Mid-Term Exam'),
                                         ),
                                       ),
                                     ],

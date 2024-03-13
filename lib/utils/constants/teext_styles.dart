@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/utils/constants/sizes.dart';
 import 'colors.dart';
 
-class CustomTextStyle {
-
+class TextStyleClass {
   static const TextStyle heading28 = TextStyle(
     fontFamily: 'Inter',
     fontSize: ESizes.appTitle2,
@@ -73,17 +72,23 @@ class CustomTextStyle {
     color: EColors.textColorPrimary1,
   );
 
-
-   static const TextStyle labelText1 = TextStyle(
-     color: Colors.black54,
-     fontSize: 12,
-     fontFamily: 'Inter',
+  static const TextStyle labelText1 = TextStyle(
+    color: Colors.black54,
+    fontSize: 12,
+    fontFamily: 'Inter',
   );
 
-   static const TextStyle inputText1 = TextStyle(
-     color: EColors.textColorPrimary1,
-     fontSize: 12,
-     fontFamily: 'Inter',
+  static const TextStyle inputText1 = TextStyle(
+    color: EColors.textColorPrimary1,
+    fontSize: 12,
+    fontFamily: 'Inter',
+  );
+
+  static const TextStyle appBarTextStyle = TextStyle(
+    color: EColors.textColorPrimary1,
+    fontWeight: FontWeight.w500,
+    fontSize: ESizes.appTitle,
+    fontFamily: 'Inter'
   );
 
 

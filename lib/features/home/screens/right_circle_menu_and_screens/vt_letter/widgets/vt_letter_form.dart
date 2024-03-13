@@ -33,7 +33,7 @@ class VTLetterForm extends StatelessWidget {
                         text: controller.fromController.value),
                     // text: 'Text here',
                     // controller: TextEditingController(text: controller.fromController.value.isEmpty ? 'From' : controller.fromController.value),
-                    style: CustomTextStyle.inputText1,
+                    style: TextStyleClass.inputText1,
                     onChanged: (value) {},
 
                     decoration: InputDecoration(
@@ -48,7 +48,7 @@ class VTLetterForm extends StatelessWidget {
                         },
                       ),
                       labelText: 'From',
-                      labelStyle: CustomTextStyle.labelText1,
+                      labelStyle: TextStyleClass.labelText1,
                       errorText: controller.fromError.value
                           ? 'Please Select init Date'
                           : null,
@@ -76,7 +76,7 @@ class VTLetterForm extends StatelessWidget {
                       child: TextFormField(
                         controller: TextEditingController(
                             text: controller.toController.value),
-                        style: CustomTextStyle.inputText1,
+                        style: TextStyleClass.inputText1,
                         onChanged: (value) {
                           // controller.toController.value.isEmpty
                           //     ? 'To'
@@ -96,7 +96,7 @@ class VTLetterForm extends StatelessWidget {
                             },
                           ),
                           labelText: 'To',
-                          labelStyle: CustomTextStyle.labelText1,
+                          labelStyle: TextStyleClass.labelText1,
                           errorText: controller.toError.value
                               ? 'Please Select to date'
                               : null,
@@ -123,10 +123,10 @@ class VTLetterForm extends StatelessWidget {
                   controller.toController.value,
                 ),
               ),
-              style: CustomTextStyle.inputText1,
+              style: TextStyleClass.inputText1,
               decoration: const InputDecoration(
                 labelText: 'Duration (Days)',
-                labelStyle: CustomTextStyle.labelText1,
+                labelStyle: TextStyleClass.labelText1,
               ),
             ),
           ),

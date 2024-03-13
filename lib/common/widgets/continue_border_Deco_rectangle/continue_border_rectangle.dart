@@ -44,5 +44,23 @@ class CustomDeco {
     );
   }
 
+  ///
+  static ShapeDecoration decoRectangle3() {
+    return ShapeDecoration(
+      shape: ContinuousRectangleBorder(
+        borderRadius: BorderRadius.circular(40.0),
+      ),
+      color: EColors.white, // Set color to transparent to make gradient visible
+      shadows: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.2),
+          spreadRadius: 1,
+          blurRadius: 2,
+          offset: const Offset(0, 0),
+        ),
+      ],
+    );
+  }
+
 
 }

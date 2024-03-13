@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animation.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
+import 'package:iconsax/iconsax.dart';
+import '../../../../../common/widgets/animations/custom_animations/custom_animations_widgets.dart';
 
 class ExamDetailsController extends GetxController {
   var selectedTabIndex = 0.obs;
@@ -31,9 +36,17 @@ class ExamDetailsScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('$examType Details'),
+      backgroundColor: EColors.backgroundColor,
+      appBar: GAppBar(
+        title: Text('$examType',
+          style: TextStyleClass.appBarTextStyle,
+        ),
+        showBackArrow: true,
+        backgroundColor: Colors.transparent,
       ),
+      // appBar: AppBar(
+      //   title: Text('$examType'),
+      // ),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,8 +54,9 @@ class ExamDetailsScreen extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width * 0.2,
             decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.only(
+              color: Colors.red.shade50,
+              // color: Colors.red.shade50,
+              borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(32),
                 bottomRight: Radius.circular(32),
               ),
@@ -56,12 +70,12 @@ class ExamDetailsScreen extends StatelessWidget {
                       controller.changeTabIndex(index);
                       // Add animation here
                       Get.to(
-                            () => ExamDetailsScreen(
+                        () => ExamDetailsScreen(
                           semester,
                           examType,
                         ),
                         transition: Transition.rightToLeft,
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
                       );
                     },
@@ -77,19 +91,21 @@ class ExamDetailsScreen extends StatelessWidget {
           // Details section
           Expanded(
             child: Container(
-              padding: EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${examType.toUpperCase()} DETAILS',
-                    style: TextStyle(
+                    'Semester: ${semester["semester_number"] ?? "NA"}',
+                    // '${examType.toUpperCase()} DETAILS',
+                    style: const TextStyle(
                       fontSize: 24.0,
+                      fontFamily: 'Inter',
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+                      color: EColors.textSecondaryTitle,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Expanded(
                     child: Obx(() {
                       return getContentForTab(examData, controller);
@@ -129,90 +145,29 @@ class TabItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
       decoration: BoxDecoration(
-        color: isSelected ? Colors.blue : Colors.transparent,
-        borderRadius: BorderRadius.only(
+        color: isSelected ? Colors.white: Colors.transparent,
+        borderRadius: const BorderRadius.only(
           topRight: Radius.circular(32),
           bottomRight: Radius.circular(32),
         ),
       ),
       child: RotatedBox(
         quarterTurns: -1,
-        child: Text(
-          text,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 16.0,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Text(
+            text,
+            style: TextStyle(
+              color: isSelected ? EColors.textSecondaryTitle : Colors.black,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Inter',
+              fontSize: 16.0,
+            ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class AnimatedText extends StatelessWidget {
-  final String? text;
-  final double? fontSize;
-  final FontWeight? fontWeight;
-  final Color? color;
-
-  const AnimatedText({
-    this.text,
-    this.fontSize,
-    this.fontWeight,
-    this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: -1.0, end: 0.0), // Start from off-screen (-1.0) to original position (0.0)
-      duration: Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-      builder: (context, value, child) {
-        return Transform.translate(
-          offset: Offset(value * -100, 0.0), // Translate horizontally based on value
-          // offset: Offset(0.0, value * 100), // Translate vertically based on value
-          child: Opacity(
-            opacity: 1 + value, // Adjust opacity based on value to fade in
-            child: child,
-          ),
-        );
-      },
-      child: Text(
-        text!,
-        style: TextStyle(
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          color: color,
-        ),
-      ),
-    );
-  }
-}
-class AnimatedContainer extends StatelessWidget {
-  final Widget child;
-
-  AnimatedContainer({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: -1.0, end: 0.0),
-      duration: Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-      builder: (context, value, child) {
-        return Transform.translate(
-          offset: Offset(value * -100, 0.0),
-          child: Opacity(
-            opacity: 1 + value,
-            child: child,
-          ),
-        );
-      },
-      child: child,
     );
   }
 }
@@ -220,94 +175,94 @@ class AnimatedContainer extends StatelessWidget {
 class TheoreticalContent extends StatelessWidget {
   final Map<String, dynamic> examData;
   final CustomAnimationController animationController =
-  Get.put(CustomAnimationController());
+      Get.put(CustomAnimationController());
   TheoreticalContent({required this.examData});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AnimatedContainer(
-         child: Container(
-           decoration: CustomDeco.decoRectangle(),
-           width: double.infinity,
-           padding: EdgeInsets.all(15),
-           child: Column(
-             mainAxisAlignment: MainAxisAlignment.start,
-             crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
-               AnimatedText(
-                 text: 'Result: ${examData["result"] ?? "NA"}',
-                 fontSize: 18.0,
-                 fontWeight: FontWeight.normal,
-                 color: Colors.black,
-               ),
-               SizedBox(height: 8.0),
-               AnimatedText(
-                 text:
-                 'SGPA: ${examData["theoretical_result"]["current_semester_sgpa"] ?? "NA"}',
-                 fontSize: 18.0,
-                 fontWeight: FontWeight.normal,
-                 color: Colors.black,
-               ),
-             ],
-           ),
-         ),
-       ),
-          SizedBox(height: 8.0),
-          AnimatedContainer(
-           child: Container(
-             decoration: CustomDeco.decoRectangle(),
-             width: double.infinity,
-             padding: EdgeInsets.all(15),
-             child: Column(
-               mainAxisAlignment: MainAxisAlignment.start,
-               crossAxisAlignment: CrossAxisAlignment.start,
-               children: [
-               AnimatedText(
-                 text: 'Subjects:',
-                 fontSize: 18.0,
-                 fontWeight: FontWeight.bold,
-                 color: Colors.black,
-               ),
-               SizedBox(height: 8.0),
-               if (examData["theoretical_result"]["subjects"] != null)
-                 Column(
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     for (var subject in examData["theoretical_result"]["subjects"])
-                       Padding(
-                         padding: const EdgeInsets.symmetric(vertical: 4.0),
-                         child: Row(
-                           children: [
-                             Icon(
-                               FontAwesomeIcons.book,
-                               size: 16.0,
-                               color: Colors.black,
-                             ),
-                             SizedBox(width: 8.0),
-                             Expanded(
-                               child: AnimatedText(
-                                 text:
-                                 '${subject["name"]}: ${subject["grade"]} (${subject["status"]})',
-                                 fontSize: 16.0,
-                                 fontWeight: FontWeight.normal,
-                                 color: Colors.black,
-                               ),
-                             ),
-                           ],
-                         ),
-                       ),
-                   ],
-                 ),
-             ],),
-           ),
-         ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomAnimatedContainer(
+          child: Container(
+            decoration: CustomDeco.decoRectangle(),
+            width: double.infinity,
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomAnimatedText(
+                  text: 'Result: ${examData["result"] ?? "NA"}',
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black,
+                ),
+                const SizedBox(height: 8.0),
+                CustomAnimatedText(
+                  text:
+                      'SGPA: ${examData["theoretical_result"]["current_semester_sgpa"] ?? "NA"}',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black,
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 8.0),
+        CustomAnimatedContainer(
+          child: Container(
+            decoration: CustomDeco.decoRectangle(),
+            width: double.infinity,
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CustomAnimatedText(
+                  text: 'Subjects:',
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                const SizedBox(height: 8.0),
+                if (examData["theoretical_result"]["subjects"] != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (var subject in examData["theoretical_result"]
+                          ["subjects"])
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.book,
+                                // FontAwesomeIcons.book,
+                                size: 16.0,
+                                color: Colors.black,
+                              ),
+                              const SizedBox(width: 8.0),
+                              Expanded(
+                                child: CustomAnimatedText(
+                                  text:
+                                      '${subject["name"]}: ${subject["grade"]} (${subject["status"]})',
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -322,68 +277,71 @@ class PracticalContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AnimatedContainer(
-         child: Container(
-           decoration: CustomDeco.decoRectangle(),
-           width: double.infinity,
-           padding: EdgeInsets.all(15),
-           child: Column(
-             crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
-               AnimatedText(
-                 text:
-                 'Practical Result: ${examData["practical_result"]["result"] ?? "NA"}',
-                 fontSize: 18.0,
-                 fontWeight: FontWeight.normal,
-                 color: Colors.black,
-               ),
-               SizedBox(height: 8.0),
-               AnimatedText(
-                 text:
-                 'SGPA: ${examData["practical_result"]["current_semester_sgpa"] ?? "NA"}',
-                 fontSize: 18.0,
-                 fontWeight: FontWeight.normal,
-                 color: Colors.black,
-               ),
-             ],
-           ),
-         ),
-       ),
-        SizedBox(height: 8.0),
-        AnimatedContainer(
+        CustomAnimatedContainer(
           child: Container(
             decoration: CustomDeco.decoRectangle(),
             width: double.infinity,
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AnimatedText(
-                  text: 'Practical Subjects:',
-                  fontSize: 18.0,
+                CustomAnimatedText(
+                  text:
+                      'Status: ${examData["practical_result"]["result"] ?? "NA"}',
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black,
+                ),
+                const SizedBox(height: 8.0),
+                CustomAnimatedText(
+                  text:
+                      'SGPA: ${examData["practical_result"]["current_semester_sgpa"] ?? "NA"}',
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black,
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 8.0),
+        CustomAnimatedContainer(
+          child: Container(
+            decoration: CustomDeco.decoRectangle(),
+            width: double.infinity,
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CustomAnimatedText(
+                  text: 'Subjects & Grades',
+                  fontSize: 14.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 if (examData["practical_result"]["subjects"] != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      for (var subject in examData["practical_result"]["subjects"])
+                      for (var subject in examData["practical_result"]
+                          ["subjects"])
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
                           child: Row(
                             children: [
-                              Icon(
-                                FontAwesomeIcons.tools,
+                              const Icon(
+                                Iconsax.book,
+                                // FontAwesomeIcons.bookJournalWhills,
                                 size: 16.0,
                                 color: Colors.black,
                               ),
-                              SizedBox(width: 8.0),
+                              const SizedBox(width: 8.0),
                               Expanded(
-                                child: AnimatedText(
-                                  text: '${subject["name"]}: ${subject["status"]}',
-                                  fontSize: 16.0,
+                                child: CustomAnimatedText(
+                                  text:
+                                      '${subject["name"]}: ${subject["status"]}',
+                                  fontSize: 13.0,
                                   fontWeight: FontWeight.normal,
                                   color: Colors.black,
                                 ),
@@ -697,8 +655,6 @@ class PracticalContent extends StatelessWidget {
 }
 
  */
-
-
 
 /// Correct UI vertical Tabbar
 /*

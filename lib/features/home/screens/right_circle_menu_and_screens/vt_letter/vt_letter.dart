@@ -45,12 +45,12 @@ class VTLetter extends StatelessWidget {
                   RichText(
                     text: const TextSpan(
                       text: 'Ignite Your Journey',
-                      style: CustomTextStyle.heading24,
+                      style: TextStyleClass.heading24,
                       children: [
                         TextSpan(text: ' with '),
                         TextSpan(
                           text: '\nVocational Excellence!',
-                          style: CustomTextStyle.heading22,
+                          style: TextStyleClass.heading22,
                         ),
                       ],
                     ),
@@ -71,12 +71,12 @@ class VTLetter extends StatelessWidget {
                   RichText(
                     text: const TextSpan(
                       text: 'Check History Status',
-                      style: CustomTextStyle.inputText1,
+                      style: TextStyleClass.inputText1,
                       children: [
                         TextSpan(text: ' for '),
                         TextSpan(
                           text: '\nVT Application',
-                          style: CustomTextStyle.heading22,
+                          style: TextStyleClass.heading22,
                         ),
                       ],
                     ),
