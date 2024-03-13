@@ -42,6 +42,7 @@ class ExamDetailsScreen extends StatelessWidget {
           style: TextStyleClass.appBarTextStyle,
         ),
         showBackArrow: true,
+        centerTitle: false,
         backgroundColor: Colors.transparent,
       ),
       // appBar: AppBar(
@@ -156,7 +157,7 @@ class TabItem extends StatelessWidget {
       child: RotatedBox(
         quarterTurns: -1,
         child: Padding(
-          padding: const EdgeInsets.only(top: 10),
+          padding: const EdgeInsets.only(top: 15),
           child: Text(
             text,
             style: TextStyle(

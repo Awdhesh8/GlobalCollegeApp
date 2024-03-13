@@ -7,6 +7,7 @@ import 'package:globalcollegeapp/utils/constants/sizes.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import '../../../../../common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
 import '../../../../../common/widgets/texts/top_first_heading.dart';
+import '../../right_circle_menu_and_screens/activity/activity.dart';
 import 'controller/controller.dart';
 
 class Result extends StatelessWidget {
@@ -34,6 +35,62 @@ class Result extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            BouncyAnimation(
+              child:
+              StackContainer(
+                child: Container(
+                  decoration: CustomDeco.decoRectangle4(),
+                  padding: const EdgeInsets.all(16.0),
+                  margin: const EdgeInsets.all(16),
+                  // color: Colors.blue,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const TopHeading(
+                        fontSize: 26,
+                        text: 'Overall Performance',
+                      ),
+                      Text(
+                        'Current Sem: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester"] ?? "NA" : "NA"}',
+                        style: TextStyleClass.bodyText3,
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          text: 'CGPA: ',
+                          style: TextStyleClass.heading24,
+                          children: [
+                            // TextSpan(text: ' with '),
+                            TextSpan(
+                              text:
+                              '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                              style: TextStyleClass.bodyText3,
+                              // style: CustomTextStyle.heading22,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        'Current CGPA: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                        style: TextStyleClass.bodyText3,
+                      ),
+                      Text(
+                        'Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_status"] ?? "NA" : "NA"}',
+                        style: TextStyleClass.bodyText3,
+                      ),
+                      Text(
+                        'Mid-Term Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["mid_term_status"] ?? "NA" : "NA"}',
+                        style: TextStyleClass.bodyText3,
+                      ),
+                      Text(
+                        'Final Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["final_status"] ?? "NA" : "NA"}',
+                        style: TextStyleClass.bodyText3,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            /*
             BouncyAnimation(
               child: Container(
                 decoration: CustomDeco.decoRectangle(),
@@ -86,6 +143,7 @@ class Result extends StatelessWidget {
                 ),
               ),
             ),
+             */
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

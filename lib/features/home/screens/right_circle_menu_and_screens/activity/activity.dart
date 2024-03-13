@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
@@ -13,14 +14,10 @@ class Activity extends StatelessWidget {
       appBar: GAppBar(
         backgroundColor: Colors.transparent,
         showBackArrow: true,
+        centerTitle: false,
         title: Text(
           'Activities',
-          style: TextStyle(
-            fontSize: ESizes.appTitle,
-            fontFamily: 'Inter',
-            color: EColors.primary,
-            fontWeight: FontWeight.w500,
-          ),
+          style: TextStyleClass.appBarTextStyle
         ),
       ),
       body: DefaultTabController(
@@ -38,14 +35,8 @@ class Activity extends StatelessWidget {
                           physics: const BouncingScrollPhysics(),
                           child: Column(
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Container(
-                                  height: 220,
-                                  width: 220,
-                                  color: Colors.blue.shade50,
-                                ),
-                              ),
+                             // StackContainer(),
+                             //  ContainerStack(),
                               SizedBox(
                                 height: 15,
                               ),
@@ -83,10 +74,14 @@ class Activity extends StatelessWidget {
                           ),
                         ),
                         // Content for Category 2
-                        Container(
-                          child: const Center(
-                            child: Text('Category 2 content'),
-                          ),
+                        Stack(
+                         children: [
+                           Container(
+                             child: const Center(
+                               child: Text('Category 2 content'),
+                             ),
+                           ),
+                         ],
                         ),
                         // Content for Category 3
                         Container(
@@ -161,6 +156,61 @@ class Activity extends StatelessWidget {
   }
 }
 
+class StackContainer extends StatelessWidget {
+  final Widget? child;
+  const StackContainer({
+    super.key, this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: SizedBox(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Transform.rotate(
+                angle: .03,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    height: 214,
+                    // width: 310,
+                    color: Colors.deepPurple.shade100,
+                    // color: Colors.blue.shade50,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 4, left: 2),
+              child: Transform.rotate(
+                angle: - .03,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    height: 180,
+                    // width: 310,
+                    //color: Colors.orange.shade800,
+                     color: Colors.blue.shade100,
+                  ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: child,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class DotTabIndicator extends Decoration {
   final Color color;
   final double radius;
@@ -188,6 +238,49 @@ class _DotPainter extends BoxPainter {
     canvas.drawCircle(Offset(centerX, bottom), decoration.radius, paint);
   }
 }
+
+
+class ContainerStack extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200, // Change this according to your requirement
+      height: 200, // Change this according to your requirement
+      child: Stack(
+        children: [
+          Container(
+            color: Colors.blue,
+            width: double.infinity,
+            height: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 100, // Change this according to your requirement
+                  height: 100, // Change this according to your requirement
+                  color: Colors.green,
+                ),
+                Container(
+                  width: 100, // Change this according to your requirement
+                  height: 100, // Change this according to your requirement
+                  color: Colors.red,
+                ),
+                Container(
+                  width: 100, // Change this according to your requirement
+                  height: 100, // Change this according to your requirement
+                  color: Colors.yellow,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
 
 
 // import 'package:flutter/material.dart';

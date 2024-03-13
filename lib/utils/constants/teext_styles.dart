@@ -86,7 +86,7 @@ class TextStyleClass {
 
   static const TextStyle appBarTextStyle = TextStyle(
     color: EColors.textColorPrimary1,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
     fontSize: ESizes.appTitle,
     fontFamily: 'Inter'
   );

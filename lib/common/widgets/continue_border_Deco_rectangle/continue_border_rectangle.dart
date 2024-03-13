@@ -62,5 +62,24 @@ class CustomDeco {
     );
   }
 
+  ///
+  static ShapeDecoration decoRectangle4() {
+    return ShapeDecoration(
+      shape: ContinuousRectangleBorder(
+        borderRadius: BorderRadius.circular(40.0),
+      ),
+      // color: EColors.white,
+      color: Colors.blue.shade50,
+      shadows: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.2),
+          spreadRadius: 1,
+          blurRadius: 2,
+          offset: const Offset(0, 0),
+        ),
+      ],
+    );
+  }
+
 
 }
