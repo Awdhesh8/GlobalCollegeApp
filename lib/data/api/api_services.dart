@@ -995,7 +995,6 @@ class ApiService {
   }
 
   /// Result
-
   static Future<String> getAllResults() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
@@ -1009,8 +1008,10 @@ class ApiService {
         Uri.parse(APIConstants.getFullUrl(APIConstants.getResult)));
     request.fields.addAll({
       'APIKEY': 'GNCS0225',
+      // 'USER_ID': userId,
       'USER_ID': '1044',
     });
+    print(userId);
     print(request);
     print(userId);
 

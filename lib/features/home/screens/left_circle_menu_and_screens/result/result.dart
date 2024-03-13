@@ -24,7 +24,7 @@ class Result extends StatelessWidget {
         }
 
         var apiResponse = resultController.apiResponse.value!;
-
+        // print(apiResponse);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
