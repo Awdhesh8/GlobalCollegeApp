@@ -7,6 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/home/screens/left_circle_menu_and_screens/gate_pass/widgets/gate_pass_form_widget/gate_pass_form.dart';
+import '../../features/home/screens/right_circle_menu_and_screens/vt_letter/widgets/vt_letter_form.dart';
 import '../../features/personalization/screens/settings/edit_profile/edit_Profile.dart';
 import '../../utils/constants/api_constants.dart';
 import '../../utils/constants/colors.dart';
@@ -1027,6 +1028,39 @@ class ApiService {
       }
     } catch (e) {
       return 'Error: $e';
+    }
+  }
+
+
+  /// Get VT Letter Subject
+  static Future<List<VtLetterSubject>> fetchVtLetterSubject() async {
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('user_id') ?? '';
+      final response = await http.post(
+        Uri.parse(APIConstants.getFullUrl(APIConstants.getVtLetterSubject)),
+        headers: APIConstants.headers,
+        body: {'APIKEY': 'GNCS0225','USER_ID': userId},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data['status'] == "1") {
+          List<dynamic> VtLetterSubjectData = data['response'];
+          List<VtLetterSubject> vtLetterSubject = VtLetterSubjectData
+              .map((vtLetterSubjectJson) => VtLetterSubject.fromJson(vtLetterSubjectJson))
+              .toList();
+          return vtLetterSubject;
+
+        }else {
+          throw Exception(data['message']);
+        }
+      } else {
+        throw Exception(
+            'Failed to load Gate Pass Reasons: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Exception while fetching Gate Pass Reasons: $e');
     }
   }
 

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../../../../data/api/api_services.dart';
+import '../../../../../../utils/constants/colors.dart';
 import '../../../../../../utils/constants/sizes.dart';
 import '../controller/form_controller.dart';
 import '../functions/form_functions.dart';
@@ -15,12 +18,69 @@ class VTLetterForm extends StatelessWidget {
     return Form(
       child: Column(
         children: [
+          /// VT Letter Subject
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            decoration: const BoxDecoration(),
+            constraints: const BoxConstraints(
+              minHeight: 50.0,
+            ),
+            child: FutureBuilder<List<VtLetterSubject>>(
+              future:
+              ApiService.fetchVtLetterSubject(), // Fetch Gate Pass Reasons
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Show shimmer loading effect while fetching
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      // Adjust height as needed
+                      color: Colors.white,
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  // If data is fetched successfully
+                  return _buildVtLetterSubjectDropdown(snapshot.data!);
+                } else {
+                  return const Text(
+                      'No data available'); // Handle the case when there is no data
+                }
+              },
+            ),
+          ),
+
+          const SizedBox(
+            height: ESizes.spaceBtwItems,
+          ),
+
+            AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                decoration: const BoxDecoration(),
+                constraints: const BoxConstraints(
+                  minHeight: 50.0,
+                ),
+              //child: getCompanyData(controller.vtSubjectId),
+                child: VtLetterCompany(),
+
+              ),
+
+
+          const SizedBox(
+            height: ESizes.spaceBtwItems,
+          ),
+
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               /// From Date
               Obx(
                 () => AnimatedContainer(
-                  width: 150,
+                  width: 165,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
                   decoration: const BoxDecoration(),
@@ -56,9 +116,6 @@ class VTLetterForm extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
-                width: ESizes.spaceBtwItems,
-              ),
 
               /// To Date
               Obx(() => InkWell(
@@ -66,7 +123,7 @@ class VTLetterForm extends StatelessWidget {
                       // _selectDates(context, false, controller.toController);
                     },
                     child: AnimatedContainer(
-                      width: 150,
+                      width: 165,
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                       decoration: const BoxDecoration(),
@@ -137,12 +194,156 @@ class VTLetterForm extends StatelessWidget {
               FormUtils.submitForm(context, controller);
             },
             child: const Text('Submit Form'),
-          )
+          ),
+
         ],
+
       ),
     );
   }
+
+
+  Widget _buildVtLetterSubjectDropdown(List<VtLetterSubject> vtLetterSubject) {
+    String initialValue = controller.subjectController.value?.id ?? '';
+
+    if (initialValue.isEmpty) {
+      initialValue = 'Select VT Letter Subject'; // Set default prompt
+    }
+
+    return DropdownButtonFormField<String>(
+      isDense: true,
+      value: initialValue, // Set initial value here
+      decoration: InputDecoration(
+        //labelText: 'Gate Pass Reasons',
+        labelStyle: const TextStyle(color: EColors.textColorPrimary1),
+        errorText: controller.subjectError.value
+            ? 'Please Select Gate Pass Reason'
+            : '',
+        // : gatePassReasons.firstWhere((group) => group.id == null,
+      ),
+      onChanged: (String? newValue) {
+        controller.subjectController.value =
+            vtLetterSubject.firstWhere((group) => group.id == newValue);
+            String selectedSubject = controller.subjectController.value?.id ?? '';
+            controller.vtSubjectId = selectedSubject.obs;
+            print(controller.vtSubjectId);
+      },
+
+      items: [
+        const DropdownMenuItem<String>(
+          value: 'Select VT Letter Subject',
+          child: Text('Select VT Letter Subject',
+              style: TextStyle(fontSize: 12)),
+        ),
+        ...vtLetterSubject
+            .map<DropdownMenuItem<String>>((VtLetterSubject group) {
+          return DropdownMenuItem<String>(
+            value: group.id,
+            child: Text(group.name, style: const TextStyle(fontSize: 12)),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
 }
+
+class VtLetterCompany extends StatelessWidget {
+  //final controller = Get.find<GatePassFormController>();
+  final controller = Get.put(VTLetterFormController());
+  @override
+  Widget build(BuildContext context) {
+    print('object ${controller.vtSubjectId}');
+    if(controller.vtSubjectId!='') {
+      return FutureBuilder<List<VtLetterSubject>>(
+        future:
+        ApiService.fetchVtLetterSubject(), // Fetch Gate Pass Reasons
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Show shimmer loading effect while fetching
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                // Adjust height as needed
+                color: Colors.white,
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            // If data is fetched successfully
+            return _buildVtLetterSubjectDropdown(snapshot.data!);
+          } else {
+            return const Text(
+                'No data available'); // Handle the case when there is no data
+          }
+        },
+      );
+    }else {
+      return Text('data');
+    }
+  }
+
+  Widget _buildVtLetterSubjectDropdown(List<VtLetterSubject> vtLetterSubject) {
+    String initialValue = controller.subjectController.value?.id ?? '';
+
+    if (initialValue.isEmpty) {
+      initialValue = 'Select VT Letter Subject'; // Set default prompt
+    }
+
+    return DropdownButtonFormField<String>(
+      isDense: true,
+      value: initialValue, // Set initial value here
+      decoration: InputDecoration(
+        //labelText: 'Gate Pass Reasons',
+        labelStyle: const TextStyle(color: EColors.textColorPrimary1),
+        errorText: controller.subjectError.value
+            ? 'Please Select Gate Pass Reason'
+            : '',
+        // : gatePassReasons.firstWhere((group) => group.id == null,
+      ),
+      onChanged: (String? newValue) {
+        controller.subjectController.value =
+            vtLetterSubject.firstWhere((group) => group.id == newValue);
+        //print(controller.subjectController.value?.id);
+      },
+
+      items: [
+        const DropdownMenuItem<String>(
+          value: 'Select VT Letter Subject',
+          child: Text('Select VT Letter Subject',
+              style: TextStyle(fontSize: 12)),
+        ),
+        ...vtLetterSubject
+            .map<DropdownMenuItem<String>>((VtLetterSubject group) {
+          return DropdownMenuItem<String>(
+            value: group.id,
+            child: Text(group.id, style: const TextStyle(fontSize: 12)),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+}
+
+
+class VtLetterSubject {
+  final String id;
+  final String name;
+
+  VtLetterSubject({required this.id, required this.name});
+
+  factory VtLetterSubject.fromJson(Map<String, dynamic> json) {
+    return VtLetterSubject(
+      id: json['vtsubj_id'] ?? '',
+      name: json['vtsubj_name'] ?? '',
+    );
+  }
+}
+
+
 
 /*
  /// Functions --->
