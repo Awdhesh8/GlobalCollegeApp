@@ -174,10 +174,11 @@ class StackContainer extends StatelessWidget {
               child: Transform.rotate(
                 angle: .08,
                 child: Container(
-                  height: 188,
+                  height: 162,
                   // width: 310,
                   decoration: ShapeDecoration(
-                    color: Colors.red.shade100.withOpacity(.2),
+                    color: Colors.white60,
+                    // color: Colors.red.shade100.withOpacity(.2),
                     shape: ContinuousRectangleBorder(
                       borderRadius: BorderRadius.circular(70.0),
                     ),
@@ -192,9 +193,10 @@ class StackContainer extends StatelessWidget {
               child: Transform.rotate(
                 angle: - .08,
                 child: Container(
-                  height: 188,
+                  height: 162,
                   decoration: ShapeDecoration(
-                    color: Colors.red.shade100.withOpacity(.2),
+                    color: Colors.white60,
+                    // color: Colors.red.shade100.withOpacity(.2),
                     shape: ContinuousRectangleBorder(
                       borderRadius: BorderRadius.circular(70.0),
                     ),

@@ -205,7 +205,7 @@ class _RightSideCircularScrollingBoxesState
   final double boxWidth = 50.1; // Width of the scrolling boxes
   final double boxHeight = 90.5; // Height of the scrolling boxes
   late double _angle = 0.0; // Angle for box positioning and rotation
-  final double fontSize = 12.0; // Constant font size for text
+  final double fontSize = 11.5; // Constant font size for text
   int selectedIndex = -1; // Track the currently selected index
   late double previousAngle = 0.0; // Previous angle for continuous rotation
   late List<bool> isSelected; // List to track selection

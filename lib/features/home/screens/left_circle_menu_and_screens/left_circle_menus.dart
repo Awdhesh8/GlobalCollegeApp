@@ -4,8 +4,13 @@ import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_scre
 import 'dart:math';
 import '../../../../utils/constants/colors.dart';
 import 'package:get/get.dart';
+import '../../../notice/notice.dart';
+import '../../../personalization/screens/settings/settings.dart';
 import 'attendance/attendance_screen.dart';
 import 'gate_pass/gate_pass.dart';
+import 'library/e_library/e_library.dart';
+import 'library/history/book_history.dart';
+import 'library/issued_books/issued_books.dart';
 import 'library/library_screen.dart';
 
 class LeftSideCircularScrollingBoxes extends StatefulWidget {
@@ -23,31 +28,31 @@ class _LeftSideCircularScrollingBoxesState
   final double boxWidth = 50.1;
   final double boxHeight = 90.5;
   late double _angle = 0.0;
-  final double fontSize = 12.0;
+  final double fontSize = 11.5;
   int selectedIndex = -1;
   late double previousAngle = 0.0;
   late List<bool> isSelected;
 
   final List<String> contentListLeft = [
-    'Fees',
-    'Library',
-    'Attendance',
-    'Apply Leave',
-    'Result',
-    'Gate Pass',
-    'Placement',
-    'Career',
-    'Internship',
-    'Complaints',
-    'Fees',
-    'Library',
-    'Attendance',
-    'Apply Leave',
-    'Result',
-    'Feedback',
-    'Career',
-    'Internship',
-    'Complaints',
+    'Fees', //1
+    'Library', //2
+    'Attendance',//3
+    'Apply Leave',// 4
+    'Result',//5
+    'Gate Pass',//6
+    'eLibrary',//7
+    'Book History',//8
+    'Notice',//9
+    'Issue Books', //10
+    'Fees',//11
+    'Library',//12
+    'Attendance',//13
+    'Apply Leave',//14
+    'Result',//15
+    'Gate Pass',//16
+    'Book History',//17
+    'Notice',//18
+    'Issue Books',//19
   ];
 
   @override
@@ -198,11 +203,33 @@ class _LeftSideCircularScrollingBoxesState
         screen = () => const ApplyLeave();
 
         case 4:
-      case 14:
+        case 14:
         screen = () => Result();
         break;
+
         case 5:
+        case 15:
         screen = () => const GatePass();
+        break;
+
+        case 6:
+        screen = () => const ELibraryScreen();
+        break;
+
+
+        case 7:
+        case 16:
+        screen = () => const BookHistoryScreen();
+        break;
+
+        case 8:
+        case 17:
+        screen = () => const Notice();
+        break;
+
+           case 9:
+        case 18:
+        screen = () => IssuedBooksScreen();
         break;
 
     // Add cases for other indices/screens as needed
@@ -267,7 +294,7 @@ class _LeftSideCircularScrollingBoxesState
 
   bool isUnderDevelopmentLeftMenus(int index) {
     // Add the indices of screens that are under development
-    List<int> underDevelopmentIndices = [6, 7, 8, 9, 15, 16, 17, 18];
+    List<int> underDevelopmentIndices = [ ];
 
     return underDevelopmentIndices.contains(index);
   }

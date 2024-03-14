@@ -56,6 +56,7 @@ class TextStyleClass {
     fontSize: 12.0,
     fontWeight: FontWeight.normal,
     color: Colors.grey,
+
   );
 
   static const TextStyle bodyText2 = TextStyle(
@@ -67,9 +68,9 @@ class TextStyleClass {
 
   static const TextStyle bodyText3 = TextStyle(
     fontFamily: 'Inter',
-    fontSize: 14.0,
-    fontWeight: FontWeight.normal,
-    color: EColors.textColorPrimary1,
+    fontSize: 12.0,
+    fontWeight: FontWeight.w500,
+    color: EColors.textSecondaryTitle,
   );
 
   static const TextStyle labelText1 = TextStyle(

@@ -31,6 +31,30 @@ class EColors {
         Color(0xfffad0c4),
       ]);
 
+    // Gradient Colors
+  static const Gradient linerGradient1 = LinearGradient(
+      begin: Alignment(0.0, 0.99),
+      end: Alignment(0.507, -0.707),
+      colors: [
+        //Colors.red.shade50.withOpacity(.1),
+        // Color(0xfffad0c4),
+        // Colors.white54,
+        EColors.lightContainer,
+        // EColors.primarySecond,
+        // Color(0xffffffff),
+        // Color(0xfffad0c4),
+        EColors.lightContainer,
+        // Color(0xffffffff),
+        // Color(0xfffad0c4),
+        // Color(0xffffffff),
+        // Color(0xffffffff),
+        Color(0xfffad0c4),
+        // Color(0xffff9a9e),
+        // Color(0xfffad0c4),
+      ]);
+
+
+
   // Text Colors
   static const Color textPrimaryHeading = Color.fromRGBO(227, 30, 37, 1);
   static const Color textSecondaryTitle = Color(0xFF686868);

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/sem_details.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animated_button.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animation.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:globalcollegeapp/utils/constants/sizes.dart';
@@ -38,6 +40,33 @@ class Result extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            /// Top heading
+            Padding(
+              padding: const EdgeInsets.only(left: 18),
+              child: Row(
+                children: [
+                  RichText(
+                    text: const TextSpan(
+                      text: 'Academic Achievements',
+                      style: TextStyleClass.heading22,
+                      children: [
+                        TextSpan(text: '\nExplore Your Grades',
+                          style: TextStyleClass.subtleTextStyle,),
+                        // TextSpan(
+                        //   text: '\nResults &',
+                        //   style: TextStyleClass.heading22,
+                        // ),
+                        //  TextSpan(
+                        //   text: '\nGrades',
+                        //   style: TextStyleClass.heading22,
+                        // ),
+
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
             BouncyAnimation(
               child:
               StackContainer(
@@ -45,51 +74,155 @@ class Result extends StatelessWidget {
                   decoration: CustomDeco.decoRectangle5(),
                   padding: const EdgeInsets.all(16.0),
                   margin: const EdgeInsets.only(top: 6, right: 4,bottom: 4,left: 4),
-                  // color: Colors.blue,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const TopHeading(
-                        fontSize: 26,
-                        text: 'Overall Performance',
-                      ),
-                      Text(
-                        'Current Sem: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester"] ?? "NA" : "NA"}',
-                        style: TextStyleClass.bodyText3,
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          text: 'CGPA: ',
-                          style: TextStyleClass.heading24,
-                          children: [
-                            // TextSpan(text: ' with '),
-                            TextSpan(
-                              text:
-                              '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
-                              style: TextStyleClass.bodyText3,
-                              // style: CustomTextStyle.heading22,
+                      Column(
+                         crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.graduationCap, // Use Font Awesome icon for graduation cap
+                                color: Colors.blue, // Icon color
+                                size: 20, // Icon size
+                              ),
+                              const SizedBox(width: 8), // Add some spacing between icon and text
+                              Text(
+                                'Current Semester: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester"] ?? "NA" : "NA"}',
+                                style: TextStyleClass.heading24.copyWith(color: EColors.textSecondaryTitle, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          RichText(
+                            text: TextSpan(
+                              text: 'CGPA: ',
+                              style: TextStyleClass.bodyText3.copyWith(fontWeight: FontWeight.bold),
+                              children: [
+                                TextSpan(
+                                  text:
+                                  '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                                  style: TextStyleClass.bodyText3.copyWith(color: Colors.blue),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.infoCircle, // Use Font Awesome icon for info circle
+                                color: Colors.grey, // Icon color
+                                size: 16, // Icon size
+                              ),
+                              const SizedBox(width: 8), // Add some spacing between icon and text
+                              Text(
+                                'Current CGPA: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                                style: TextStyleClass.bodyText3,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.circleCheck, // Use Font Awesome icon for check circle
+                                color: Colors.green, // Icon color
+                                size: 16, // Icon size
+                              ),
+                              const SizedBox(width: 8), // Add some spacing between icon and text
+                              Text(
+                                'Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_status"] ?? "NA" : "NA"}',
+                                style: TextStyleClass.bodyText3,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.solidBookmark, // Use Font Awesome icon for bookmark
+                                color: Colors.yellow, // Icon color
+                                size: 16, // Icon size
+                              ),
+                              const SizedBox(width: 8), // Add some spacing between icon and text
+                              Text(
+                                'Mid-Term Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["mid_term_status"] ?? "NA" : "NA"}',
+                                style: TextStyleClass.bodyText3,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.flagCheckered, // Use Font Awesome icon for flag checkered
+                                color: Colors.blue, // Icon color
+                                size: 16, // Icon size
+                              ),
+                              const SizedBox(width: 8), // Add some spacing between icon and text
+                              Text(
+                                'Final Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["final_status"] ?? "NA" : "NA"}',
+                                style: TextStyleClass.bodyText3,
+                              ),
+                            ],
+                          ),
+
+                        ],
                       ),
-                      Text(
-                        'Current CGPA: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
-                        style: TextStyleClass.bodyText3,
-                      ),
-                      Text(
-                        'Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_status"] ?? "NA" : "NA"}',
-                        style: TextStyleClass.bodyText3,
-                      ),
-                      Text(
-                        'Mid-Term Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["mid_term_status"] ?? "NA" : "NA"}',
-                        style: TextStyleClass.bodyText3,
-                      ),
-                      Text(
-                        'Final Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["final_status"] ?? "NA" : "NA"}',
-                        style: TextStyleClass.bodyText3,
+                      Column(
+                        children: [
+                          SizedBox(height: 50,),
+                          Icon(FontAwesomeIcons.fileInvoice, color: Colors.grey.shade200, size: 80,)
+                        ],
                       ),
                     ],
                   ),
+                  // color: Colors.blue,
+                  // child: Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //
+                  //     Text(
+                  //       'Current Sem: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester"] ?? "NA" : "NA"}',
+                  //       style: TextStyleClass.bodyText3,
+                  //     ),
+                  //     RichText(
+                  //       text: TextSpan(
+                  //         text: 'CGPA: ',
+                  //         style: TextStyleClass.heading24,
+                  //         children: [
+                  //           // TextSpan(text: ' with '),
+                  //           TextSpan(
+                  //             text:
+                  //             '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                  //             style: TextStyleClass.bodyText3,
+                  //             // style: CustomTextStyle.heading22,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     Text(
+                  //       'Current CGPA: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                  //       style: TextStyleClass.bodyText3,
+                  //     ),
+                  //     Text(
+                  //       'Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_status"] ?? "NA" : "NA"}',
+                  //       style: TextStyleClass.bodyText3,
+                  //     ),
+                  //     Text(
+                  //       'Mid-Term Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["mid_term_status"] ?? "NA" : "NA"}',
+                  //       style: TextStyleClass.bodyText3,
+                  //     ),
+                  //     Text(
+                  //       'Final Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["final_status"] ?? "NA" : "NA"}',
+                  //       style: TextStyleClass.bodyText3,
+                  //     ),
+                  //   ],
+                  // ),
+
                 ),
               ),
             ),
@@ -147,6 +280,31 @@ class Result extends StatelessWidget {
               ),
             ),
              */
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Divider(),
+            ),
+            /// Sem heading
+            Padding(
+              padding: const EdgeInsets.only(right: 18),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  RichText(
+                    text: const TextSpan(
+                      text: "Semester's",
+                      style: TextStyleClass.heading24,
+                      children: [
+                        TextSpan(text: "\nCheck your Grades",
+                          style: TextStyleClass.subtleTextStyle,
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -163,7 +321,7 @@ class Result extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Container(
-                          decoration: CustomDeco.decoRectangle(),
+                          decoration: CustomDeco.decoRectangle5(),
                           child: InkWell(
                             onTap: () {
                               navigateToExamDetailsScreen(
@@ -184,12 +342,29 @@ class Result extends StatelessWidget {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: ElevatedButton(
+                                        child:
+                                        // ElevatedButton(
+                                        //   onPressed: () {
+                                        //     navigateToExamDetailsScreen(
+                                        //         semester, 'Final Exam');
+                                        //   },
+                                        //   child: const Text('Final Exam'),
+                                        // ),
+
+                                        // BouncyElevatedButton(
+                                        //   text: 'Final Exam', onPressed: () {
+                                        //      navigateToExamDetailsScreen(
+                                        //        semester, 'Final Exam');
+                                        // },
+                                        // ),
+
+                                        BouncyButton(
+                                          label: 'Final Exam',
+                                         // iconPath: 'assets/icons/navigation.svg',
                                           onPressed: () {
-                                            navigateToExamDetailsScreen(
-                                                semester, 'Final Exam');
+                                         navigateToExamDetailsScreen(
+                                            semester, 'Final Exam');
                                           },
-                                          child: const Text('Final Exam'),
                                         ),
                                       ),
                                     ],
@@ -197,6 +372,7 @@ class Result extends StatelessWidget {
                                   const SizedBox(
                                     height: ESizes.spaceBtwItemsHeadings,
                                   ),
+                                  // AnimatedButton(text: '', onPressed: (){},),
                                   Row(
                                     children: [
                                       Expanded(
