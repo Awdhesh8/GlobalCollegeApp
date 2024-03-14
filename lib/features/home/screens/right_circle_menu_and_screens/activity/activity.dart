@@ -170,38 +170,44 @@ class StackContainer extends StatelessWidget {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 6),
+              padding: const EdgeInsets.only(top: 7),
               child: Transform.rotate(
-                angle: .03,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    height: 214,
-                    // width: 310,
-                    color: Colors.deepPurple.shade100,
-                    // color: Colors.blue.shade50,
+                angle: .08,
+                child: Container(
+                  height: 188,
+                  // width: 310,
+                  decoration: ShapeDecoration(
+                    color: Colors.red.shade100.withOpacity(.2),
+                    shape: ContinuousRectangleBorder(
+                      borderRadius: BorderRadius.circular(70.0),
+                    ),
                   ),
+
+                  // color: Colors.blue.shade50,
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 4, left: 2),
+              padding: const EdgeInsets.only(top: 7,),
               child: Transform.rotate(
-                angle: - .03,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    height: 180,
-                    // width: 310,
-                    //color: Colors.orange.shade800,
-                     color: Colors.blue.shade100,
+                angle: - .08,
+                child: Container(
+                  height: 188,
+                  decoration: ShapeDecoration(
+                    color: Colors.red.shade100.withOpacity(.2),
+                    shape: ContinuousRectangleBorder(
+                      borderRadius: BorderRadius.circular(70.0),
+                    ),
                   ),
+                  // width: 310,
+                  //color: Colors.orange.shade800,
+                   //color: Colors.blue.shade100,
                 ),
               ),
             ),
 
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(0.0),
               child: child,
             ),
           ],

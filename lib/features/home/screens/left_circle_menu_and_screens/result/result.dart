@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/sem_details.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animation.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:globalcollegeapp/utils/constants/sizes.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import '../../../../../common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
@@ -18,9 +19,11 @@ class Result extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: EColors.backgroundColor,
       appBar: const GAppBar(
         showBackArrow: true,
         surfaceTintColor: Colors.transparent,
+        backgroundColor: EColors.backgroundColor,
         title: Text('Result',
         style: TextStyleClass.appBarTextStyle,
         ),
@@ -39,9 +42,9 @@ class Result extends StatelessWidget {
               child:
               StackContainer(
                 child: Container(
-                  decoration: CustomDeco.decoRectangle4(),
+                  decoration: CustomDeco.decoRectangle5(),
                   padding: const EdgeInsets.all(16.0),
-                  margin: const EdgeInsets.all(16),
+                  margin: const EdgeInsets.only(top: 6, right: 4,bottom: 4,left: 4),
                   // color: Colors.blue,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

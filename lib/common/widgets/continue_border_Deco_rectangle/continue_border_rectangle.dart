@@ -66,18 +66,45 @@ class CustomDeco {
   static ShapeDecoration decoRectangle4() {
     return ShapeDecoration(
       shape: ContinuousRectangleBorder(
-        borderRadius: BorderRadius.circular(40.0),
+        borderRadius: BorderRadius.circular(70.0),
       ),
+      color: EColors.white,
+      // color: Colors.red.shade50,
+      // shadows: [
+      //   BoxShadow(
+      //     color: Colors.grey.withOpacity(0.2),
+      //     spreadRadius: 1,
+      //     blurRadius: 2,
+      //     offset: const Offset(0, 0),
+      //   ),
+      // ],
+    );
+  }
+
+  ///
+  static ShapeDecoration decoRectangle5() {
+    return ShapeDecoration(
+      shape: ContinuousRectangleBorder(
+        borderRadius: BorderRadius.circular(70.0),
+      ),
+     //color: Colors.transparent,
       // color: EColors.white,
-      color: Colors.blue.shade50,
-      shadows: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.2),
-          spreadRadius: 1,
-          blurRadius: 2,
-          offset: const Offset(0, 0),
-        ),
-      ],
+      gradient: LinearGradient(
+        colors: [Colors.red.shade100, Colors.white], // Set your gradient colors
+        begin: Alignment.topLeft,
+        transform: GradientRotation(1),
+        tileMode: TileMode.repeated,
+        end: Alignment.bottomRight,
+      ),
+      // color: Colors.red.shade50,
+      // shadows: [
+      //   BoxShadow(
+      //     color: Colors.grey.withOpacity(0.2),
+      //     spreadRadius: 1,
+      //     blurRadius: 2,
+      //     offset: const Offset(0, 0),
+      //   ),
+      // ],
     );
   }
 
