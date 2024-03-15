@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../../data/api/api_services.dart';
 import '../../../../../../utils/constants/colors.dart';
@@ -58,16 +60,39 @@ class VTLetterForm extends StatelessWidget {
             height: ESizes.spaceBtwItems,
           ),
 
-            AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-                decoration: const BoxDecoration(),
-                constraints: const BoxConstraints(
-                  minHeight: 50.0,
-                ),
-                child: _showMultiSelectBox(context),
+            // Container(
+                // duration: const Duration(milliseconds: 300),
+                // curve: Curves.easeInOut,
+                // decoration: const BoxDecoration(),
+                // constraints: const BoxConstraints(
+                  //minHeight: 50.0,
 
-              ),
+                // child:
+                InkWell(
+                  onTap:() {
+                    _showMultiSelect(context);
+                  },
+                  child: Obx(() => Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Wrap(
+                      spacing: 8.0,
+                      children: controller.selectedItems.map((item) {
+                        return Chip(
+                          label: Text(item.name),
+                          onDeleted: () {
+                            controller.toggleSelection(item);
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  )),
+                ),
+
+              // ),
 
 
           const SizedBox(
@@ -297,6 +322,27 @@ class VTLetterForm extends StatelessWidget {
       selectedOptionIcon: const Icon(Icons.check_circle),
     );
 
+  }
+
+  void _showMultiSelect(BuildContext context) {
+    Get.bottomSheet(
+
+      Container(
+        color: Colors.white,
+        child: MultiSelectBottomSheet(
+          items: controller.items
+              .map((item) => MultiSelectItem<Item>(item, item.name))
+              .toList(),
+          initialValue: controller.selectedItems,
+          onConfirm: (values) {
+            controller.selectedItems.assignAll(values);
+            print('Confirmed Selected Items: ${controller.selectedItems.map((item) => item.name).join(", ")}');
+            print('Confirmed Selected ID: ${controller.selectedItems.map((item) => item.id).join(", ")}');
+          },
+          maxChildSize: 1,
+        ),
+      ),
+    );
   }
 }
 
