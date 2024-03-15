@@ -71,10 +71,10 @@ class _BouncyButtonState extends State<BouncyButton>
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: .4,
+                color: Colors.grey.withOpacity(0.4),
+                spreadRadius: 1,
                 blurRadius: 0,
-                offset: Offset(0, 1),
+                offset: Offset(0, 1.5),
               ),
             ],
           ),

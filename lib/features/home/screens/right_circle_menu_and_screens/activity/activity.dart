@@ -1,4 +1,400 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../utils/constants/colors.dart';
+import 'controller/activity_controller.dart';
+
+
+class Activity extends StatelessWidget {
+  final ActivityController _controller = Get.put(ActivityController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: const GAppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
+        showBackArrow: true,
+        centerTitle: false,
+        title: Text('Activities'),
+      ),
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: [
+              SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Obx(() {
+                  return Column(
+                    children: [
+                      if (_controller.selectedIndex.value == 0)
+                        Container(
+                          color: Colors.cyan.shade50,
+                          child: const Text('First Contents'),
+                        ),
+                      if (_controller.selectedIndex.value == 1)
+                        Container(
+                          color: Colors.red.shade50,
+                          child: const Text('Second Contents'),
+                        ),
+                      if (_controller.selectedIndex.value == 2)
+                        Container(
+                          color: Colors.pink.shade50,
+                          child: const Text('Third Contents'),
+                        ),
+                    ],
+                  );
+                }),
+              ),
+            ],
+          ),
+
+          /// Vertical Menu Containers
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                RotatedBox(
+                  quarterTurns: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20, left: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _controller.setSelectedIndex(0);
+                          },
+                          child: Obx(() => Container(
+                            color: _controller.selectedIndex.value == 0
+                                ? Colors.white
+                                : Colors.transparent,
+                            child: const Text('First menu'),
+                          )),
+                        ),
+                        const SizedBox(width: 20),
+                        GestureDetector(
+                          onTap: () {
+                            _controller.setSelectedIndex(1);
+                          },
+                          child: Obx(() => Container(
+                            color: _controller.selectedIndex.value == 1
+                                ? Colors.white
+                                : Colors.transparent,
+                            child: const Text('Second menu'),
+                          )),
+                        ),
+                        const SizedBox(width: 20),
+                        GestureDetector(
+                          onTap: () {
+                            _controller.setSelectedIndex(2);
+                          },
+                          child: Obx(() => Container(
+                            color: _controller.selectedIndex.value == 2
+                                ? Colors.white
+                                : Colors.transparent,
+                            child: const Text('Third menu'),
+                          )),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Bottom sheet with multiselection
+/*
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+
+class Item {
+  final int id;
+  final String name;
+
+  Item(this.id, this.name);
+}
+
+class ActivityController extends GetxController {
+  final items = <Item>[
+    Item(1, 'Item 1'),
+    Item(2, 'Item 2'),
+    Item(3, 'Item 3'),
+    Item(4, 'Item 4'),
+    Item(5, 'Item 5'),
+  ].obs;
+
+  final selectedItems = <Item>[].obs;
+
+  void toggleSelection(Item item) {
+    if (selectedItems.contains(item)) {
+      selectedItems.remove(item);
+    } else {
+      selectedItems.add(item);
+    }
+    print('Selected Items: ${selectedItems.map((item) => item.name).join(", ")}');
+    print('Selected Items: ${selectedItems.map((item) => item.id).join(", ")}');
+  }
+}
+
+class Activity extends StatelessWidget {
+  final ActivityController _controller = Get.put(ActivityController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('MultiSelectBottomSheet Example'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                _showMultiSelect(context);
+              },
+              child: Text('Open MultiSelect BottomSheet'),
+            ),
+            SizedBox(height: 20),
+            Obx(() => Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Wrap(
+                spacing: 8.0,
+                children: _controller.selectedItems.map((item) {
+                  return Chip(
+                    label: Text(item.name),
+                    onDeleted: () {
+                      _controller.toggleSelection(item);
+                    },
+                  );
+                }).toList(),
+              ),
+            )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showMultiSelect(BuildContext context) {
+    Get.bottomSheet(
+      Container(
+        color: Colors.white,
+        child: MultiSelectBottomSheet(
+          items: _controller.items
+              .map((item) => MultiSelectItem<Item>(item, item.name))
+              .toList(),
+          initialValue: _controller.selectedItems,
+          onConfirm: (values) {
+            _controller.selectedItems.assignAll(values);
+            print('Confirmed Selected Items: ${_controller.selectedItems.map((item) => item.name).join(", ")}');
+            print('Confirmed Selected ID: ${_controller.selectedItems.map((item) => item.id).join(", ")}');
+          },
+          maxChildSize: 1,
+        ),
+      ),
+    );
+  }
+}
+ */
+
+/*
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../../../common/widgets/appbar/appbar.dart';
+import '../../../../../utils/constants/colors.dart';
+import 'controller/activity_controller.dart';
+
+
+class Activity extends StatelessWidget {
+  final ActivityController _controller = Get.put(ActivityController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: const GAppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
+        showBackArrow: true,
+        centerTitle: false,
+        title: Text('Activities'),
+      ),
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: [
+              SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Obx(() {
+                  return Column(
+                    children: [
+                      if (_controller.selectedIndex.value == 0)
+                        Container(
+                          color: Colors.cyan.shade50,
+                          child: const Text('First Contents'),
+                        ),
+                      if (_controller.selectedIndex.value == 1)
+                        Container(
+                          color: Colors.red.shade50,
+                          child: const Text('Second Contents'),
+                        ),
+                      if (_controller.selectedIndex.value == 2)
+                        Container(
+                          color: Colors.pink.shade50,
+                          child: const Text('Third Contents'),
+                        ),
+                    ],
+                  );
+                }),
+              ),
+            ],
+          ),
+
+          /// Vertical Menu Containers
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                RotatedBox(
+                  quarterTurns: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20, left: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _controller.setSelectedIndex(0);
+                          },
+                          child: Obx(() => Container(
+                            color: _controller.selectedIndex.value == 0
+                                ? Colors.white
+                                : Colors.transparent,
+                            child: const Text('First menu'),
+                          )),
+                        ),
+                        const SizedBox(width: 20),
+                        GestureDetector(
+                          onTap: () {
+                            _controller.setSelectedIndex(1);
+                          },
+                          child: Obx(() => Container(
+                            color: _controller.selectedIndex.value == 1
+                                ? Colors.white
+                                : Colors.transparent,
+                            child: const Text('Second menu'),
+                          )),
+                        ),
+                        const SizedBox(width: 20),
+                        GestureDetector(
+                          onTap: () {
+                            _controller.setSelectedIndex(2);
+                          },
+                          child: Obx(() => Container(
+                            color: _controller.selectedIndex.value == 2
+                                ? Colors.white
+                                : Colors.transparent,
+                            child: const Text('Third menu'),
+                          )),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+ */
+
+
+
+class StackContainer extends StatelessWidget {
+  final Widget? child;
+  const StackContainer({
+    super.key, this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: SizedBox(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 7),
+              child: Transform.rotate(
+                angle: .08,
+                child: Container(
+                  height: 162,
+                  // width: 310,
+                  decoration: ShapeDecoration(
+                    // color:  EColors.white,
+                    // color: Colors.white60,
+                    color: Colors.red.shade100.withOpacity(.4),
+                    shape: ContinuousRectangleBorder(
+                      borderRadius: BorderRadius.circular(70.0),
+                    ),
+                  ),
+
+                  // color: Colors.blue.shade50,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 7,),
+              child: Transform.rotate(
+                angle: - .08,
+                child: Container(
+                  height: 162,
+                  decoration: ShapeDecoration(
+                    //color: EColors.primarySecond,
+                    // color: Colors.white60,
+                    color: Colors.red.shade100.withOpacity(.4),
+                    shape: ContinuousRectangleBorder(
+                      borderRadius: BorderRadius.circular(70.0),
+                    ),
+                  ),
+                  // width: 310,
+                  //color: Colors.orange.shade800,
+                  //color: Colors.blue.shade100,
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: child,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+/*
+import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
@@ -156,71 +552,6 @@ class Activity extends StatelessWidget {
   }
 }
 
-class StackContainer extends StatelessWidget {
-  final Widget? child;
-  const StackContainer({
-    super.key, this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: SizedBox(
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 7),
-              child: Transform.rotate(
-                angle: .08,
-                child: Container(
-                  height: 162,
-                  // width: 310,
-                  decoration: ShapeDecoration(
-                    // color:  EColors.white,
-                    // color: Colors.white60,
-                    color: Colors.red.shade100.withOpacity(.4),
-                    shape: ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(70.0),
-                    ),
-                  ),
-
-                  // color: Colors.blue.shade50,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 7,),
-              child: Transform.rotate(
-                angle: - .08,
-                child: Container(
-                  height: 162,
-                  decoration: ShapeDecoration(
-                    //color: EColors.primarySecond,
-                    // color: Colors.white60,
-                     color: Colors.red.shade100.withOpacity(.4),
-                    shape: ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(70.0),
-                    ),
-                  ),
-                  // width: 310,
-                  //color: Colors.orange.shade800,
-                   //color: Colors.blue.shade100,
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: child,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class DotTabIndicator extends Decoration {
   final Color color;
   final double radius;
@@ -248,7 +579,6 @@ class _DotPainter extends BoxPainter {
     canvas.drawCircle(Offset(centerX, bottom), decoration.radius, paint);
   }
 }
-
 
 class ContainerStack extends StatelessWidget {
   @override
@@ -290,6 +620,7 @@ class ContainerStack extends StatelessWidget {
   }
 }
 
+ */
 
 
 
