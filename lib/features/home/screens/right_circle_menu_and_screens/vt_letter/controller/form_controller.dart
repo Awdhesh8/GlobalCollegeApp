@@ -26,8 +26,8 @@ class VTLetterFormController extends GetxController {
   void getCompany()async{
     listCompanyDropDown.value.clear();
     print(vtSubjectId);
-    //listCompanyDropDown.value.add(DropdownMenuItem(child: Text("GCF"),value: '1998',));
-    //listCompanyDropDown.value.add(DropdownMenuItem(child: Text("TCS"),value: '1948',));
+    listCompanyDropDown.value.add(DropdownMenuItem(child: Text("GCF"),value: '1998',));
+    listCompanyDropDown.value.add(DropdownMenuItem(child: Text("TCS"),value: '1948',));
 
     print(vtSubjectId);
 
