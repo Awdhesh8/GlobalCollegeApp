@@ -227,6 +227,7 @@ class VTLetterForm extends StatelessWidget {
             String selectedSubject = controller.subjectController.value?.id ?? '';
             controller.vtSubjectId = selectedSubject.obs;
             print(controller.vtSubjectId);
+            controller.getCompany();
       },
 
       items: [
@@ -253,8 +254,6 @@ class VtLetterCompany extends StatelessWidget {
   final controller = Get.put(VTLetterFormController());
   @override
   Widget build(BuildContext context) {
-    print('object ${controller.vtSubjectId}');
-    if(controller.vtSubjectId!='') {
       return FutureBuilder<List<VtLetterSubject>>(
         future:
         ApiService.fetchVtLetterSubject(), // Fetch Gate Pass Reasons
@@ -280,9 +279,6 @@ class VtLetterCompany extends StatelessWidget {
           }
         },
       );
-    }else {
-      return Text('data');
-    }
   }
 
   Widget _buildVtLetterSubjectDropdown(List<VtLetterSubject> vtLetterSubject) {
@@ -292,9 +288,9 @@ class VtLetterCompany extends StatelessWidget {
       initialValue = 'Select VT Letter Subject'; // Set default prompt
     }
 
-    return DropdownButtonFormField<String>(
+    return Obx(() => DropdownButtonFormField<String>(
       isDense: true,
-      value: initialValue, // Set initial value here
+      //value: controller.selectedCompany.value.isNotEmpty?controller.selectedCompany.value:null, // Set initial value here
       decoration: InputDecoration(
         //labelText: 'Gate Pass Reasons',
         labelStyle: const TextStyle(color: EColors.textColorPrimary1),
@@ -303,27 +299,16 @@ class VtLetterCompany extends StatelessWidget {
             : '',
         // : gatePassReasons.firstWhere((group) => group.id == null,
       ),
-      onChanged: (String? newValue) {
-        controller.subjectController.value =
-            vtLetterSubject.firstWhere((group) => group.id == newValue);
-        //print(controller.subjectController.value?.id);
+      onChanged: (newValue) {
+        controller.selectedCompany.value = newValue.toString();
+
+        //String selectedSubject = controller.subjectController.value?.id ?? '';
+        //controller.vtSubjectId = selectedSubject.obs;
+        print(controller.selectedCompany.value);
       },
 
-      items: [
-        const DropdownMenuItem<String>(
-          value: 'Select VT Letter Subject',
-          child: Text('Select VT Letter Subject',
-              style: TextStyle(fontSize: 12)),
-        ),
-        ...vtLetterSubject
-            .map<DropdownMenuItem<String>>((VtLetterSubject group) {
-          return DropdownMenuItem<String>(
-            value: group.id,
-            child: Text(group.id, style: const TextStyle(fontSize: 12)),
-          );
-        }).toList(),
-      ],
-    );
+      items: controller.listCompanyDropDown.value,
+    ));
   }
 
 }
