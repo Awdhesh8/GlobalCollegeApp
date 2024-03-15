@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:globalcollegeapp/common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
@@ -72,22 +73,35 @@ class VTLetterForm extends StatelessWidget {
                   onTap:() {
                     _showMultiSelect(context);
                   },
-                  child: Obx(() => Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Wrap(
-                      spacing: 8.0,
-                      children: controller.selectedItems.map((item) {
-                        return Chip(
-                          label: Text(item.name),
-                          onDeleted: () {
-                            controller.toggleSelection(item);
-                          },
-                        );
-                      }).toList(),
+                  child: Obx(() => AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    decoration: CustomDeco.decoRectangle2(),
+                    constraints: const BoxConstraints(
+                    minHeight: 50.0,
+                    minWidth: double.infinity
+                    // width: double.infinity,
+                    // height: 60,
+                    // padding: EdgeInsets.all(10),
+                    // decoration: BoxDecoration(
+                    //   color: Colors.white,
+                    //   border: Border.all(color: Colors.grey),
+                    //   borderRadius: BorderRadius.circular(10),
+                     ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Wrap(
+                        spacing: 8.0,
+                        children: controller.selectedItems.map((item) {
+                          return Chip(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+                            label: Text(item.name),
+                            onDeleted: () {
+                              controller.toggleSelection(item);
+                            },
+                          );
+                        }).toList(),
+                      ),
                     ),
                   )),
                 ),
@@ -324,6 +338,7 @@ class VTLetterForm extends StatelessWidget {
 
   }
 
+
   void _showMultiSelect(BuildContext context) {
     Get.bottomSheet(
 
@@ -344,6 +359,70 @@ class VTLetterForm extends StatelessWidget {
       ),
     );
   }
+
+  /*
+  void _showMultiSelect(BuildContext context) {
+  Get.bottomSheet(
+    Container(
+      color: Colors.white,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Select Items',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.75, // Adjust height according to your needs
+            child: ListView(
+              shrinkWrap: true,
+              children: controller.items
+                  .map((item) => CheckboxListTile(
+                        title: Text(item.name),
+                        value: controller.selectedItems.contains(item),
+                        onChanged: (value) {
+                          // Handle item selection here
+                        },
+                      ))
+                  .toList(),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+   */
+
 }
 
 class VtLetterSubject {
