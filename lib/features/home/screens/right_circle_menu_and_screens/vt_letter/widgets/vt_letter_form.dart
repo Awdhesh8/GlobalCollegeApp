@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../../data/api/api_services.dart';
 import '../../../../../../utils/constants/colors.dart';
@@ -64,8 +65,7 @@ class VTLetterForm extends StatelessWidget {
                 constraints: const BoxConstraints(
                   minHeight: 50.0,
                 ),
-              //child: getCompanyData(controller.vtSubjectId),
-                child: VtLetterCompany(),
+                child: _showMultiSelectBox(context),
 
               ),
 
@@ -247,46 +247,7 @@ class VTLetterForm extends StatelessWidget {
     );
   }
 
-}
-
-class VtLetterCompany extends StatelessWidget {
-  //final controller = Get.find<GatePassFormController>();
-  final controller = Get.put(VTLetterFormController());
-  @override
-  Widget build(BuildContext context) {
-      return FutureBuilder<List<VtLetterSubject>>(
-        future:
-        ApiService.fetchVtLetterSubject(), // Fetch Gate Pass Reasons
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // Show shimmer loading effect while fetching
-            return Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Container(
-                // Adjust height as needed
-                color: Colors.white,
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (snapshot.hasData) {
-            // If data is fetched successfully
-            return _buildVtLetterSubjectDropdown(snapshot.data!);
-          } else {
-            return const Text(
-                'No data available'); // Handle the case when there is no data
-          }
-        },
-      );
-  }
-
-  Widget _buildVtLetterSubjectDropdown(List<VtLetterSubject> vtLetterSubject) {
-    String initialValue = controller.subjectController.value?.id ?? '';
-
-    if (initialValue.isEmpty) {
-      initialValue = 'Select VT Letter Subject'; // Set default prompt
-    }
+  Obx _showReasonBottomSheet(BuildContext context){
 
     return Obx(() => DropdownButtonFormField<String>(
       isDense: true,
@@ -301,7 +262,6 @@ class VtLetterCompany extends StatelessWidget {
       ),
       onChanged: (newValue) {
         controller.selectedCompany.value = newValue.toString();
-
         //String selectedSubject = controller.subjectController.value?.id ?? '';
         //controller.vtSubjectId = selectedSubject.obs;
         print(controller.selectedCompany.value);
@@ -309,10 +269,29 @@ class VtLetterCompany extends StatelessWidget {
 
       items: controller.listCompanyDropDown.value,
     ));
+
   }
 
-}
+  Obx _showMultiSelectBox(BuildContext context){
 
+    return Obx(() => MultiSelectDropDown(
+      //showClearIcon: true,
+      //controller: controller.selectedCompanyww,
+      onOptionSelected: (options) {
+        print(options);
+      },
+      options: controller.companyValueItem.value,
+      maxItems: 3,
+      //disabledOptions: const [ValueItem(label: 'Option 1', value: '1')],
+      selectionType: SelectionType.multi,
+      chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+      dropdownHeight: 300,
+      optionTextStyle: const TextStyle(fontSize: 16),
+      selectedOptionIcon: const Icon(Icons.check_circle),
+    ),);
+
+  }
+}
 
 class VtLetterSubject {
   final String id;
