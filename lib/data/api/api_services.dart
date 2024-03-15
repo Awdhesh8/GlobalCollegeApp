@@ -670,7 +670,7 @@ class ApiService {
     String userType = prefs.getString('user_type') ?? '';
     var headers = {
       'Cookie':
-      'ci_session=edn7k256dg192cpgoa8qltoc355qma65; remember_code=192544114397b621016b697351b3071fd3e499b5.caea73eb212ce286f0a0eca04192926bd52e2a0ce1f90a928834801fd9a4f355d64005f9426390aafb37e68a807fd6e907c88ce541d6f50b2d20d8a50a29bb3c'
+          'ci_session=edn7k256dg192cpgoa8qltoc355qma65; remember_code=192544114397b621016b697351b3071fd3e499b5.caea73eb212ce286f0a0eca04192926bd52e2a0ce1f90a928834801fd9a4f355d64005f9426390aafb37e68a807fd6e907c88ce541d6f50b2d20d8a50a29bb3c'
     };
 
     var request = http.MultipartRequest(
@@ -697,7 +697,8 @@ class ApiService {
           throw Exception("Response data not found in the response");
         }
       } else {
-        throw Exception("Failed to fetch data. Status code: ${response.statusCode}");
+        throw Exception(
+            "Failed to fetch data. Status code: ${response.statusCode}");
       }
     } catch (e) {
       throw Exception("Error: $e");
@@ -808,9 +809,7 @@ class ApiService {
   static Future<void> cancelLeave(String leaveId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
-    var headers = {
-      'Cookie': 'ci_session=5a5e359s108tlmsgdfsnevd9s51pns27'
-    };
+    var headers = {'Cookie': 'ci_session=5a5e359s108tlmsgdfsnevd9s51pns27'};
     var body = {
       'APIKEY': 'GNCS0225',
       'USER_ID': userId,
@@ -833,32 +832,31 @@ class ApiService {
 
   /// Get Gate Pass Reasons
   static Future<List<GatePassReason>> fetchGatePassReasons() async {
-     try{
-       final response = await http.post(
-         Uri.parse(APIConstants.getFullUrl(APIConstants.getGatePassReasons)),
-         headers: APIConstants.headers,
-         body: {'APIKEY': 'GNCS0225'},
-       );
+    try {
+      final response = await http.post(
+        Uri.parse(APIConstants.getFullUrl(APIConstants.getGatePassReasons)),
+        headers: APIConstants.headers,
+        body: {'APIKEY': 'GNCS0225'},
+      );
 
-       if (response.statusCode == 200) {
-         final Map<String, dynamic> data = json.decode(response.body);
-         if (data['status'] == "1") {
-           List<dynamic> GatePassReasonData = data['response'];
-           List<GatePassReason> gatePassReasons = GatePassReasonData
-               .map((gatePassReasonJson) => GatePassReason.fromJson(gatePassReasonJson))
-               .toList();
-           return gatePassReasons;
-
-         }else {
-           throw Exception(data['message']);
-         }
-       } else {
-         throw Exception(
-             'Failed to load Gate Pass Reasons: ${response.reasonPhrase}');
-       }
-     } catch (e) {
-       throw Exception('Exception while fetching Gate Pass Reasons: $e');
-     }
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data['status'] == "1") {
+          List<dynamic> GatePassReasonData = data['response'];
+          List<GatePassReason> gatePassReasons = GatePassReasonData.map(
+              (gatePassReasonJson) =>
+                  GatePassReason.fromJson(gatePassReasonJson)).toList();
+          return gatePassReasons;
+        } else {
+          throw Exception(data['message']);
+        }
+      } else {
+        throw Exception(
+            'Failed to load Gate Pass Reasons: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Exception while fetching Gate Pass Reasons: $e');
+    }
   }
 
   /// Apply Gate Pass
@@ -880,8 +878,8 @@ class ApiService {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse('http://myglobalapp.in/global/API005/apply_gatepass'),
-     // final response = await http.post(
-     // Uri.parse(APIConstants.getFullUrl(APIConstants.getGatePassReasons)),
+        // final response = await http.post(
+        // Uri.parse(APIConstants.getFullUrl(APIConstants.getGatePassReasons)),
       );
 
       request.fields.addAll({
@@ -890,8 +888,8 @@ class ApiService {
         'applyFrom': applyFrom,
         'applyTo': applyTo,
         'reason': reason,
-        'goWith':goWith,
-        'applyRemark':applyRemark,
+        'goWith': goWith,
+        'applyRemark': applyRemark,
       });
 
       request.headers.addAll(headers);
@@ -967,14 +965,11 @@ class ApiService {
     }
   }
 
-
   ///  Cancel Leave
   static Future<void> cancelGatePass(String gatePassId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString('user_id') ?? '';
-    var headers = {
-      'Cookie': 'ci_session=5a5e359s108tlmsgdfsnevd9s51pns27'
-    };
+    var headers = {'Cookie': 'ci_session=5a5e359s108tlmsgdfsnevd9s51pns27'};
     var body = {
       'APIKEY': 'GNCS0225',
       'USER_ID': userId,
@@ -1005,8 +1000,8 @@ class ApiService {
     };
 
     // var request = http.MultipartRequest('POST', Uri.parse('$baseUrl2/get_all_result'));
-    var request = http.MultipartRequest('POST',
-        Uri.parse(APIConstants.getFullUrl(APIConstants.getResult)));
+    var request = http.MultipartRequest(
+        'POST', Uri.parse(APIConstants.getFullUrl(APIConstants.getResult)));
     request.fields.addAll({
       'APIKEY': 'GNCS0225',
       // 'USER_ID': userId,
@@ -1015,12 +1010,11 @@ class ApiService {
     print('Current User ID => USER_ID ' ' 1044');
     print(userId);
 
-
     request.headers.addAll(headers);
 
     try {
       http.StreamedResponse response = await request.send();
-        print(response);
+      print(response);
       if (response.statusCode == 200) {
         return await response.stream.bytesToString();
       } else {
@@ -1031,28 +1025,30 @@ class ApiService {
     }
   }
 
-
   /// Get VT Letter Subject
   static Future<List<VtLetterSubject>> fetchVtLetterSubject() async {
-    try{
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userId = prefs.getString('user_id') ?? '';
       final response = await http.post(
         Uri.parse(APIConstants.getFullUrl(APIConstants.getVtLetterSubject)),
         headers: APIConstants.headers,
-        body: {'APIKEY': 'GNCS0225','USER_ID': userId},
+        body: {
+          'APIKEY': 'GNCS0225',
+          // 'USER_ID': userId,
+          'USER_ID': '567'
+        },
       );
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data['status'] == "1") {
           List<dynamic> VtLetterSubjectData = data['response'];
-          List<VtLetterSubject> vtLetterSubject = VtLetterSubjectData
-              .map((vtLetterSubjectJson) => VtLetterSubject.fromJson(vtLetterSubjectJson))
-              .toList();
+          List<VtLetterSubject> vtLetterSubject = VtLetterSubjectData.map(
+              (vtLetterSubjectJson) =>
+                  VtLetterSubject.fromJson(vtLetterSubjectJson)).toList();
           return vtLetterSubject;
-
-        }else {
+        } else {
           throw Exception(data['message']);
         }
       } else {
@@ -1063,6 +1059,4 @@ class ApiService {
       throw Exception('Exception while fetching Gate Pass Reasons: $e');
     }
   }
-
-
 }

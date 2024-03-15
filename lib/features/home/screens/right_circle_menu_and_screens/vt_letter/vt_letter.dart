@@ -5,6 +5,7 @@ import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/helpers/helper_functions.dart';
+import 'package:get/get.dart';
 
 class VTLetter extends StatelessWidget {
   const VTLetter({super.key});
@@ -85,6 +86,9 @@ class VTLetter extends StatelessWidget {
 
                 ],
               ),
+
+              ///
+              // MyApp()
             ],
           ),
         ),
@@ -92,3 +96,57 @@ class VTLetter extends StatelessWidget {
     );
   }
 }
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     // Initialize your controller
+//     final ToggleController controller = Get.put(ToggleController());
+//
+//     return
+//
+//         Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             // Obx widget listens to changes in the toggle state
+//             Obx(
+//                   () => controller.isContainerVisible.value
+//                   ? Container(
+//                 width: 200,
+//                 height: 200,
+//                 color: Colors.blue,
+//                 child: Center(
+//                   child: Text(
+//                     'Container is visible!',
+//                     style: TextStyle(fontSize: 20, color: Colors.white),
+//                   ),
+//                 ),
+//               )
+//                   : Container(), // Empty container when not visible
+//             ),
+//             SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: () {
+//                 // Toggle the container visibility
+//                 controller.toggleContainerVisibility();
+//               },
+//               child: Text('Toggle Container'),
+//             ),
+//           ],
+//         )
+//
+//     ;
+//   }
+// }
+//
+// // Define a controller class extending GetxController
+// class ToggleController extends GetxController {
+//   // Define the state variable for toggle
+//   var isContainerVisible = false.obs;
+//
+//   // Method to toggle the container visibility
+//   void toggleContainerVisibility() {
+//     isContainerVisible.value = !isContainerVisible.value;
+//   }
+//
+// }

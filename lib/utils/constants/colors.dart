@@ -31,7 +31,31 @@ class EColors {
         Color(0xfffad0c4),
       ]);
 
-    // Gradient Colors
+  static const Gradient linerGradient3 = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFFFF9A9E),
+      Color(0xFFFFCDC6),
+      Color(0xFFFFE6D9),
+      Color(0xFFFFF6F0),
+      Color(0xFFFFFDFB),
+    ],
+  );
+
+  static const Gradient semesterExamsGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFFFF6E6E), // Pinkish Red
+      Color(0xFFFFFFFF), // White
+    ],
+  );
+
+
+
+
+  // Gradient Colors
   static const Gradient linerGradient1 = LinearGradient(
       begin: Alignment(0.0, 0.99),
       end: Alignment(0.507, -0.707),

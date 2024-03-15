@@ -177,8 +177,9 @@ class StackContainer extends StatelessWidget {
                   height: 162,
                   // width: 310,
                   decoration: ShapeDecoration(
-                    color: Colors.white60,
-                    // color: Colors.red.shade100.withOpacity(.2),
+                    // color:  EColors.white,
+                    // color: Colors.white60,
+                    color: Colors.red.shade100.withOpacity(.4),
                     shape: ContinuousRectangleBorder(
                       borderRadius: BorderRadius.circular(70.0),
                     ),
@@ -195,8 +196,9 @@ class StackContainer extends StatelessWidget {
                 child: Container(
                   height: 162,
                   decoration: ShapeDecoration(
-                    color: Colors.white60,
-                    // color: Colors.red.shade100.withOpacity(.2),
+                    //color: EColors.primarySecond,
+                    // color: Colors.white60,
+                     color: Colors.red.shade100.withOpacity(.4),
                     shape: ContinuousRectangleBorder(
                       borderRadius: BorderRadius.circular(70.0),
                     ),

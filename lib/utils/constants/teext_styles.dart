@@ -51,6 +51,16 @@ class TextStyleClass {
     color: Colors.white,
   );
 
+  static const TextStyle buttonStyle1 = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 13.0,
+    fontWeight: FontWeight.w500,
+    color: Colors.black,
+    // color: Colors.white,
+    // color: Colors.black87,
+    // color: EColors.textSecondaryTitle,
+  );
+
   static const TextStyle subtleTextStyle = TextStyle(
     fontFamily: 'Inter',
     fontSize: 12.0,
@@ -70,7 +80,8 @@ class TextStyleClass {
     fontFamily: 'Inter',
     fontSize: 12.0,
     fontWeight: FontWeight.w500,
-    color: EColors.textSecondaryTitle,
+    color: EColors.black,
+    // color: EColors.textSecondaryTitle,
   );
 
   static const TextStyle labelText1 = TextStyle(

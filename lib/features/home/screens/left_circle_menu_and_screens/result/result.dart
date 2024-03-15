@@ -18,6 +18,7 @@ class Result extends StatelessWidget {
   final CustomAnimationController animationController =
       Get.put(CustomAnimationController());
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,8 +27,9 @@ class Result extends StatelessWidget {
         showBackArrow: true,
         surfaceTintColor: Colors.transparent,
         backgroundColor: EColors.backgroundColor,
-        title: Text('Result',
-        style: TextStyleClass.appBarTextStyle,
+        title: Text(
+          'Result',
+          style: TextStyleClass.appBarTextStyle,
         ),
       ),
       body: Obx(() {
@@ -50,8 +52,10 @@ class Result extends StatelessWidget {
                       text: 'Academic Achievements',
                       style: TextStyleClass.heading22,
                       children: [
-                        TextSpan(text: '\nExplore Your Grades',
-                          style: TextStyleClass.subtleTextStyle,),
+                        TextSpan(
+                          text: '\nExplore Your Grades',
+                          style: TextStyleClass.subtleTextStyle,
+                        ),
                         // TextSpan(
                         //   text: '\nResults &',
                         //   style: TextStyleClass.heading22,
@@ -60,7 +64,6 @@ class Result extends StatelessWidget {
                         //   text: '\nGrades',
                         //   style: TextStyleClass.heading22,
                         // ),
-
                       ],
                     ),
                   ),
@@ -68,30 +71,35 @@ class Result extends StatelessWidget {
               ),
             ),
             BouncyAnimation(
-              child:
-              StackContainer(
+              child: StackContainer(
                 child: Container(
-                  decoration: CustomDeco.decoRectangle5(),
+                  decoration: CustomDeco.decoRectangle6(),
                   padding: const EdgeInsets.all(16.0),
-                  margin: const EdgeInsets.only(top: 6, right: 4,bottom: 4,left: 4),
+                  margin: const EdgeInsets.only(
+                      top: 6, right: 4, bottom: 4, left: 4),
                   width: double.infinity,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
-                         crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.graduationCap, // Use Font Awesome icon for graduation cap
-                                color: Colors.blue, // Icon color
+                                FontAwesomeIcons
+                                    .graduationCap, // Use Font Awesome icon for graduation cap
+                                color: Colors.black, // Icon color
                                 size: 20, // Icon size
                               ),
-                              const SizedBox(width: 8), // Add some spacing between icon and text
+                              const SizedBox(
+                                  width:
+                                      8), // Add some spacing between icon and text
                               Text(
                                 'Current Semester: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester"] ?? "NA" : "NA"}',
-                                style: TextStyleClass.heading24.copyWith(color: EColors.textSecondaryTitle, fontWeight: FontWeight.bold),
+                                style: TextStyleClass.heading24.copyWith(
+                                    color: EColors.textSecondaryTitle,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -99,12 +107,14 @@ class Result extends StatelessWidget {
                           RichText(
                             text: TextSpan(
                               text: 'CGPA: ',
-                              style: TextStyleClass.bodyText3.copyWith(fontWeight: FontWeight.bold),
+                              style: TextStyleClass.bodyText3
+                                  .copyWith(fontWeight: FontWeight.bold),
                               children: [
                                 TextSpan(
                                   text:
-                                  '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
-                                  style: TextStyleClass.bodyText3.copyWith(color: Colors.blue),
+                                      '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                                  style: TextStyleClass.bodyText3
+                                      .copyWith(color: Colors.blue),
                                 ),
                               ],
                             ),
@@ -113,11 +123,14 @@ class Result extends StatelessWidget {
                           Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.infoCircle, // Use Font Awesome icon for info circle
+                                FontAwesomeIcons
+                                    .infoCircle, // Use Font Awesome icon for info circle
                                 color: Colors.grey, // Icon color
                                 size: 16, // Icon size
                               ),
-                              const SizedBox(width: 8), // Add some spacing between icon and text
+                              const SizedBox(
+                                  width:
+                                      8), // Add some spacing between icon and text
                               Text(
                                 'Current CGPA: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
                                 style: TextStyleClass.bodyText3,
@@ -128,11 +141,14 @@ class Result extends StatelessWidget {
                           Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.circleCheck, // Use Font Awesome icon for check circle
+                                FontAwesomeIcons
+                                    .circleCheck, // Use Font Awesome icon for check circle
                                 color: Colors.green, // Icon color
                                 size: 16, // Icon size
                               ),
-                              const SizedBox(width: 8), // Add some spacing between icon and text
+                              const SizedBox(
+                                  width:
+                                      8), // Add some spacing between icon and text
                               Text(
                                 'Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_status"] ?? "NA" : "NA"}',
                                 style: TextStyleClass.bodyText3,
@@ -143,11 +159,14 @@ class Result extends StatelessWidget {
                           Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.solidBookmark, // Use Font Awesome icon for bookmark
+                                FontAwesomeIcons
+                                    .solidBookmark, // Use Font Awesome icon for bookmark
                                 color: Colors.yellow, // Icon color
                                 size: 16, // Icon size
                               ),
-                              const SizedBox(width: 8), // Add some spacing between icon and text
+                              const SizedBox(
+                                  width:
+                                      8), // Add some spacing between icon and text
                               Text(
                                 'Mid-Term Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["mid_term_status"] ?? "NA" : "NA"}',
                                 style: TextStyleClass.bodyText3,
@@ -158,24 +177,33 @@ class Result extends StatelessWidget {
                           Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.flagCheckered, // Use Font Awesome icon for flag checkered
+                                FontAwesomeIcons
+                                    .flagCheckered, // Use Font Awesome icon for flag checkered
                                 color: Colors.blue, // Icon color
                                 size: 16, // Icon size
                               ),
-                              const SizedBox(width: 8), // Add some spacing between icon and text
+                              const SizedBox(
+                                  width:
+                                      8), // Add some spacing between icon and text
                               Text(
                                 'Final Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["final_status"] ?? "NA" : "NA"}',
                                 style: TextStyleClass.bodyText3,
                               ),
                             ],
                           ),
-
                         ],
                       ),
                       Column(
                         children: [
-                          SizedBox(height: 50,),
-                          Icon(FontAwesomeIcons.fileInvoice, color: Colors.grey.shade200, size: 80,)
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Icon(
+                            FontAwesomeIcons.fileInvoice,
+                            color: Colors.black38,
+                            // color: Colors.grey.shade200,
+                            size: 80,
+                          )
                         ],
                       ),
                     ],
@@ -222,7 +250,6 @@ class Result extends StatelessWidget {
                   //     ),
                   //   ],
                   // ),
-
                 ),
               ),
             ),
@@ -284,6 +311,7 @@ class Result extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Divider(),
             ),
+
             /// Sem heading
             Padding(
               padding: const EdgeInsets.only(right: 18),
@@ -295,10 +323,10 @@ class Result extends StatelessWidget {
                       text: "Semester's",
                       style: TextStyleClass.heading24,
                       children: [
-                        TextSpan(text: "\nCheck your Grades",
+                        TextSpan(
+                          text: "\nCheck your Grades",
                           style: TextStyleClass.subtleTextStyle,
                         ),
-
                       ],
                     ),
                   ),
@@ -322,72 +350,80 @@ class Result extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Container(
                           decoration: CustomDeco.decoRectangle5(),
-                          child: InkWell(
-                            onTap: () {
-                              navigateToExamDetailsScreen(
-                                  semester, 'Final Exam');
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Semester ${semester["semester_number"] ?? "NA"}',
-                                    style: const TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Semester ${semester["semester_number"] ?? "NA"}',
+                                  style: const TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Inter',
+                                    color: EColors.black
                                   ),
-                                  const SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child:
-                                        // ElevatedButton(
-                                        //   onPressed: () {
-                                        //     navigateToExamDetailsScreen(
-                                        //         semester, 'Final Exam');
-                                        //   },
-                                        //   child: const Text('Final Exam'),
-                                        // ),
+                                ),
+                                const SizedBox(height: 15.0),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child:
+                                          // ElevatedButton(
+                                          //   onPressed: () {
+                                          //     navigateToExamDetailsScreen(
+                                          //         semester, 'Final Exam');
+                                          //   },
+                                          //   child: const Text('Final Exam'),
+                                          // ),
 
-                                        // BouncyElevatedButton(
-                                        //   text: 'Final Exam', onPressed: () {
-                                        //      navigateToExamDetailsScreen(
-                                        //        semester, 'Final Exam');
-                                        // },
-                                        // ),
+                                          // BouncyElevatedButton(
+                                          //   text: 'Final Exam', onPressed: () {
+                                          //      navigateToExamDetailsScreen(
+                                          //        semester, 'Final Exam');
+                                          // },
+                                          // ),
 
-                                        BouncyButton(
-                                          label: 'Final Exam',
-                                         // iconPath: 'assets/icons/navigation.svg',
-                                          onPressed: () {
-                                         navigateToExamDetailsScreen(
-                                            semester, 'Final Exam');
-                                          },
-                                        ),
+                                          BouncyButton(
+                                        label: 'Final Exam',
+                                        // iconPath: 'assets/icons/navigation.svg',
+                                        onPressed: () {
+                                          navigateToExamDetailsScreen(
+                                              semester, 'Final Exam');
+                                        },
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: ESizes.spaceBtwItemsHeadings,
-                                  ),
-                                  // AnimatedButton(text: '', onPressed: (){},),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            navigateToExamDetailsScreen(
-                                                semester, 'Mid-Term Exam');
-                                          },
-                                          child: const Text('Mid-Term Exam'),
-                                        ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: ESizes.spaceBtwItems,
+                                ),
+                                // AnimatedButton(text: '', onPressed: (){},),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child:
+                                      BouncyButton(
+                                        label: 'Mid-Sem   ',
+                                        // iconPath: 'assets/icons/navigation.svg',
+                                        onPressed: () {
+                                          navigateToExamDetailsScreen(
+                                              semester, 'Mid-Sem   ');
+                                        },
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                      // ElevatedButton(
+                                      //   onPressed: () {
+                                      //     navigateToExamDetailsScreen(
+                                      //         semester, 'Mid-Term Exam');
+                                      //   },
+                                      //   child: const Text('Mid-Term Exam'),
+                                      // ),
+
+
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -408,8 +444,6 @@ class Result extends StatelessWidget {
     Get.to(() => ExamDetailsScreen(semester, examType));
   }
 }
-
-
 
 /// Correct Code ----- for Exam details screen
 /*
@@ -478,8 +512,6 @@ class ExamDetailsScreen extends StatelessWidget {
   }
 }
  */
-
-
 
 /*
 import 'package:flutter/material.dart';
