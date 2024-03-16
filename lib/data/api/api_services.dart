@@ -1059,4 +1059,71 @@ class ApiService {
       throw Exception('Exception while fetching Gate Pass Reasons: $e');
     }
   }
+
+  ///Get VT Letter Location
+  static Future<List<VtlocationModal>> fetchVtLetterLocation111(String vtp_subjid) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('user_id') ?? '';
+      final response = await http.post(
+        Uri.parse(APIConstants.getFullUrl(APIConstants.getVtLetterLocation)),
+        headers: APIConstants.headers,
+        body: {
+          'APIKEY': 'GNCS0225',
+          // 'USER_ID': userId,
+          'vtp_subjid': 'vtp_subjid'
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data['status'] == "1") {
+          List<dynamic> VtLetterSubjectData = data['response'];
+          List<VtlocationModal> vtLetterSubject = VtLetterSubjectData.map(
+                  (vtLetterSubjectJson) =>
+                      VtlocationModal.fromJson(vtLetterSubjectJson)).toList();
+          return vtLetterSubject;
+        } else {
+          throw Exception(data['message']);
+        }
+      } else {
+        throw Exception(
+            'Failed to load Gate Pass Reasons: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Exception while fetching Gate Pass Reasons: $e');
+    }
+  }
+
+  Future<VtlocationModal> fetchVtLetterLocation(String ? vtp_subjid) async {
+    try {
+      final response = await http.post(
+        Uri.parse(APIConstants.getFullUrl(APIConstants.getVtLetterLocation)),
+        headers: APIConstants.headers,
+        body: {
+          'APIKEY': 'GNCS0225',
+          // 'USER_ID': userId,
+          'vtp_subjid': vtp_subjid
+        },
+      );
+      print(vtp_subjid);
+      print(response.body);
+      if (response.statusCode == 200) {
+        print(response.body);
+        VtlocationModal districtDataFromJson(String str) => VtlocationModal.fromJson(json.decode(str));
+        final VtlocationModal responseModel =
+        districtDataFromJson(response.body);
+        return responseModel;
+      } else {
+        return VtlocationModal(
+            status: 0,
+            message: 'Something went wrong: ${response.statusCode}',
+            data: []);
+      }
+    } catch (e) {
+      //log('Exception: ${e.toString()}');
+      throw Exception(e.toString());
+    }
+  }
+
 }

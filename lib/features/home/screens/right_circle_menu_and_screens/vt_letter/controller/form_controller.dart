@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../../../data/api/api_services.dart';
 import '../widgets/vt_letter_form.dart';
 
 class VTLetterFormController extends GetxController {
+  Repository ?repository;
   RxString fromController = ''.obs;
   RxString toController = ''.obs;
   RxString subjectsController = ''.obs;//
@@ -12,6 +14,8 @@ class VTLetterFormController extends GetxController {
   RxBool fromError = false.obs;
 
   Rx<VtLetterSubject?> subjectController = Rx<VtLetterSubject?>(null);
+  //Rx<VtlocationModal?> locationController = Rx<VtlocationModal?>(null);
+  //Rx<List<StateDatum>> lststatemodel = Rx<List<StateDatum>>([]);
   RxBool subjectError = false.obs;
 
   RxString vtSubjectId = ''.obs;
@@ -22,6 +26,7 @@ class VTLetterFormController extends GetxController {
 
   Rx<List<DropdownMenuItem<String>>> listCompanyDropDown = Rx<List<DropdownMenuItem<String>>>([]);
   //Rx<List<ValueItem<String>>> companyValueItem = Rx<List<ValueItem<String>>>([]);
+  Rx<List<DistDatum>> lstdistmodel = Rx<List<DistDatum>>([]);
 
   final items = <Item>[
     // Item(1, 'Item 1'),
@@ -32,7 +37,7 @@ class VTLetterFormController extends GetxController {
   ].obs;
 
 
-  void getCompany()async{
+  void getCompany111()async{
     listCompanyDropDown.value.clear();
     print(vtSubjectId);
     listCompanyDropDown.value.add(DropdownMenuItem(child: Text("GCF"),value: '1998',));
@@ -57,9 +62,66 @@ class VTLetterFormController extends GetxController {
     print('Selected Items: ${selectedItems.map((item) => item.name).join(", ")}');
     print('Selected Items: ${selectedItems.map((item) => item.id).join(", ")}');
   }
+
+  void getCompany() {
+    var vtp_subjid = vtSubjectId;
+    print(vtp_subjid);
+
+    try {
+      // Get.dialog(Center(
+      //   child: CircularProgressIndicator(),
+      // ));
+      repository!.getalldistrict(vtp_subjid)?.then((value) {
+        if (value.data.length > 0) {
+          //Get.back();
+          lstdistmodel.value.clear();
+          lstdistmodel.value.addAll(value.data);
+          listCompanyDropDown.value = [];
+          listCompanyDropDown.value.add(
+            DropdownMenuItem(
+              child: Text(
+                'Select Dist',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              value: "0",
+            ),
+          );
+          for (DistDatum dist in lstdistmodel.value) {
+            listCompanyDropDown.value.add(
+              DropdownMenuItem(
+                child: Text(
+                  dist.districtTitle,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
+                value: dist.districtid,
+              ),
+            );
+          }
+        }
+
+      }).onError((error, stackTrace) {
+        Get.back();
+        //error handling code
+      });
+    } catch (exception) {
+      //Get.back();
+      //print(exception);
+      // exception handling code
+    }
+  }
+
+
 }
 class Item {
   final int id;
   final String name;
   Item(this.id, this.name);
+}
+
+class Repository {
+ // final ApiService apiProvider;
+  ApiService ?apiProvider;
+  Repository(this.apiProvider);
+  Future<VtlocationModal>? getalldistrict(var vtp_subjid) => apiProvider?.fetchVtLetterLocation(vtp_subjid);
+
 }
