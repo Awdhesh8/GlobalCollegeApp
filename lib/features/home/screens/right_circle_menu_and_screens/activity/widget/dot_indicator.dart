@@ -36,3 +36,31 @@ class DotIndicator extends StatelessWidget {
     );
   }
 }
+
+class DotTabIndicator extends Decoration {
+  final Color color;
+  final double radius;
+
+  const DotTabIndicator({required this.color, required this.radius});
+
+  @override
+  _DotPainter createBoxPainter([VoidCallback? onChanged]) {
+    return _DotPainter(this, onChanged);
+  }
+}
+
+class _DotPainter extends BoxPainter {
+  final DotTabIndicator decoration;
+
+  _DotPainter(this.decoration, VoidCallback? onChanged) : super(onChanged);
+
+  @override
+  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
+    final Paint paint = Paint()..color = decoration.color;
+    final Rect rect = offset & configuration.size!;
+    final double centerX = rect.center.dx;
+    final double bottom = rect.bottom - 6; // Adjust the value based on your preference
+
+    canvas.drawCircle(Offset(centerX, bottom), decoration.radius, paint);
+  }
+}

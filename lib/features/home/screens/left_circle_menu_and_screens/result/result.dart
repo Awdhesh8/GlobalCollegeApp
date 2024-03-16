@@ -9,8 +9,7 @@ import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:globalcollegeapp/utils/constants/sizes.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import '../../../../../common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
-import '../../../../../common/widgets/texts/top_first_heading.dart';
-import '../../right_circle_menu_and_screens/activity/activity.dart';
+import '../../../../../common/widgets/stack_containers/stack_containers.dart';
 import 'controller/controller.dart';
 
 class Result extends StatelessWidget {

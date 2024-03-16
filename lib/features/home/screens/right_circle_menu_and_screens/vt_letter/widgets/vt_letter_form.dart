@@ -353,8 +353,8 @@ class VTLetterForm extends StatelessWidget {
           initialValue: controller.selectedItems,
           onConfirm: (values) {
             controller.selectedItems.assignAll(values);
-            print('Confirmed Selected Items: ${controller.selectedItems.map((item) => item.name).join(", ")}');
-            print('Confirmed Selected ID: ${controller.selectedItems.map((item) => item.id).join(", ")}');
+            print('Confirmed Selected Items11: ${controller.selectedItems.map((item) => item.name).join(", ")}');
+            print('Confirmed Selected ID11: ${controller.selectedItems.map((item) => item.id).join(", ")}');
           },
           maxChildSize: 1,
         ),

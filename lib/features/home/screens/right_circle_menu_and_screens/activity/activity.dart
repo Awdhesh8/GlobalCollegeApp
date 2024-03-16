@@ -1,4 +1,2184 @@
+
+
+
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
+import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
+
+
+class EventData {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+  final String image;
+
+  EventData({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+    required this.image,
+  });
+
+  factory EventData.fromJson(Map<String, dynamic> json) {
+    return EventData(
+      event: json['event'],
+      venue: json['venue'],
+      date: json['date'],
+      time: json['time'],
+      image: json['image'],
+    );
+  }
+}
+
+class ActivityController extends GetxController {
+  final RxList<EventData> eventData = <EventData>[].obs;
+  late PageController pageController;
+  final RxInt currentIndex = 0.obs;
+
+  @override
+  void onInit() {
+    pageController = PageController(viewportFraction: 0.8);
+    // Fetch your data from the JSON or any other source
+    final jsonData = [
+      {
+        "event": "Vibrant Garba Night",
+        "venue": "City Square",
+        "date": "15-09-2024",
+        "time": "06:00 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Navratri Extravaganza",
+        "venue": "Community Hall",
+        "date": "18-10-2024",
+        "time": "07:00 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Global Fusion Garba",
+        "venue": "Grand Plaza",
+        "date": "22-09-2024",
+        "time": "06:30 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Unity Garba Fest",
+        "venue": "Town Hall",
+        "date": "25-09-2024",
+        "time": "08:00 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Diverse Garba Celebration",
+        "venue": "Cultural Center",
+        "date": "28-09-2024",
+        "time": "07:30 pm",
+        "image": "assets/Backgrounds/activity2.jpg"
+      }
+    ];
+
+    // Parse JSON data and add to eventData list
+    eventData.addAll(jsonData.map((data) => EventData.fromJson(data)));
+
+    super.onInit();
+  }
+}
+
+class Activity extends StatelessWidget {
+  final ActivityController controller = Get.put(ActivityController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Activities',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 15, left: 35),
+            child: SizedBox(
+              height: 40,
+              child: Obx(() {
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: controller.eventData.map((event) {
+                      final int index = controller.eventData.indexOf(event);
+                      return GestureDetector(
+                        onTap: () {
+                          controller.pageController.animateToPage(
+                            index,
+                            duration: Duration(milliseconds: 500),
+                            curve: Curves.ease,
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Obx(() => Column(
+                            children: [
+                              Text(
+                                '${event.event}',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontFamily: 'Inter',
+                                  fontSize: 14,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Container(
+                                width: 10,
+                                height: 3,
+                                decoration: BoxDecoration(
+                                  color: controller.currentIndex.value == index ? Colors.black : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            ],
+                          )),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                );
+              }),
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.55,
+            child: PageView.builder(
+              clipBehavior: Clip.none,
+              controller: controller.pageController,
+              itemCount: controller.eventData.length,
+              onPageChanged: (index) {
+                controller.currentIndex.value = index;
+              },
+              itemBuilder: (context, index) {
+                return AnimatedBuilder(
+                  animation: controller.pageController,
+                  builder: (context, child) {
+                    double pageOffset = 0;
+                    if (controller.pageController.position.haveDimensions) {
+                      pageOffset = controller.pageController.page! -
+                          index.toDouble();
+                    }
+                    double gauss = math.exp(-(math.pow(
+                        (pageOffset.abs() - 0.5), 2) /
+                        0.08));
+                    return Transform.translate(
+                      offset: Offset(
+                          -32 * gauss * pageOffset.sign, 0),
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            left: 8, right: 8, bottom: 24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(32),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              offset: const Offset(8, 20),
+                              blurRadius: 24,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(32)),
+                              child: Image.asset(
+                                controller.eventData[index].image,
+                                height:
+                                MediaQuery.of(context).size.height *
+                                    0.4,
+                                alignment:
+                                Alignment(-pageOffset.abs(), 0),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Expanded(child: child!),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 8),
+                      Expanded(
+                        child: CardContent(
+                          event: controller.eventData[index].event,
+                          venue: controller.eventData[index].venue,
+                          date: controller.eventData[index].date,
+                          time: controller.eventData[index].time,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
+}
+
+
+
+class CardContent extends StatelessWidget {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+
+  const CardContent({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            event,
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Inter'
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            venue,
+            style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey[600],
+                fontFamily: 'Inter'
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            '$date at $time',
+            style: TextStyle(
+                fontSize: 11,
+                color: Colors.grey[600],
+                fontFamily: 'Inter'
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+
+
+/// -------------------------------------------------->>>>>>>>>>>>
+
+
+
+/*
+import 'package:flutter/material.dart';
+import 'dart:math' as math;
+import 'package:get/get.dart';
+import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
+import 'package:iconsax/iconsax.dart';
+
+class EventData {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+  final String image;
+
+  EventData({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+    required this.image,
+  });
+
+  factory EventData.fromJson(Map<String, dynamic> json) {
+    return EventData(
+      event: json['event'],
+      venue: json['venue'],
+      date: json['date'],
+      time: json['time'],
+      image: json['image'],
+    );
+  }
+}
+
+class ActivityController extends GetxController {
+  final RxList<EventData> eventData = <EventData>[].obs;
+  late PageController pageController;
+  final RxInt currentIndex = 0.obs;
+
+  @override
+  void onInit() {
+    pageController = PageController(viewportFraction: 0.8);
+    // Fetch your data from the JSON or any other source
+    final jsonData = [
+      {
+        "event": "Vibrant Garba Night",
+        "venue": "City Square",
+        "date": "15-09-2024",
+        "time": "06:00 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Navratri Extravaganza",
+        "venue": "Community Hall",
+        "date": "18-10-2024",
+        "time": "07:00 pm",
+        "image": "assets/Backgrounds/activity2.jpg"
+      },
+      {
+        "event": "Global Fusion Garba",
+        "venue": "Grand Plaza",
+        "date": "22-09-2024",
+        "time": "06:30 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Unity Garba Fest",
+        "venue": "Town Hall",
+        "date": "25-09-2024",
+        "time": "08:00 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Diverse Garba Celebration",
+        "venue": "Cultural Center",
+        "date": "28-09-2024",
+        "time": "07:30 pm",
+        "image": "assets/Backgrounds/activity2.jpg"
+      }
+    ];
+
+    // Parse JSON data and add to eventData list
+    eventData.addAll(jsonData.map((data) => EventData.fromJson(data)));
+
+    super.onInit();
+  }
+}
+
+class Activity extends StatelessWidget {
+  final ActivityController controller = Get.put(ActivityController());
+
+  Activity({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: GAppBar(
+        surfaceTintColor: Colors.transparent,
+        showBackArrow: true,
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Activities',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 40,
+              child: Obx(() {
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.eventData.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        controller.pageController.animateToPage(
+                          index,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.ease,
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          children: [
+                            Text(
+                              '${controller.eventData[index].event}',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontFamily: 'Inter',
+                                fontSize: 14,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Container(
+                              width: 10,
+                              height: 3,
+                              decoration: BoxDecoration(
+                                color: controller.currentIndex.value == index ? Colors.black : Colors.transparent,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }),
+            ),
+            SizedBox(height: 20),
+            Expanded(
+              child: PageView.builder(
+                controller: controller.pageController,
+                itemCount: controller.eventData.length,
+                onPageChanged: (index) {
+                  controller.currentIndex.value = index;
+                },
+                itemBuilder: (context, index) {
+                  final event = controller.eventData[index];
+                  return GestureDetector(
+                    onTap: () {
+                      // Open full-screen image view
+                      Get.to(FullScreenImageView(imageUrl: event.image));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
+                              child: Image.asset(
+                                event.image,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  event.event,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  "Venue: ${event.venue}",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                SizedBox(height: 2),
+                                Text(
+                                  "Date: ${event.date} at ${event.time}",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FullScreenImageView extends StatelessWidget {
+  final String imageUrl;
+
+  const FullScreenImageView({required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: GestureDetector(
+          onTap: () {
+            // Close full-screen image view
+            Get.back();
+          },
+          child: Hero(
+            tag: imageUrl,
+            child: Image.asset(
+              imageUrl,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class CardContent extends StatelessWidget {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+
+  const CardContent({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            event,
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Inter'
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            venue,
+            style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey[600],
+                fontFamily: 'Inter'
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            '$date at $time',
+            style: TextStyle(
+                fontSize: 11,
+                color: Colors.grey[600],
+                fontFamily: 'Inter'
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+class FullScreenImage extends StatelessWidget {
+  final String image;
+
+  const FullScreenImage({required this.image});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Hero(
+            tag: 'image',
+            child: Container(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Iconsax.close_circle,
+                            color: Colors.white,
+                          ))),
+                  Image.asset(
+                    image,
+                    fit: BoxFit.contain,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+ */
+
+/*
+import 'package:flutter/material.dart';
+import 'dart:math' as math;
+import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
+
+import 'package:flutter/material.dart';
+import 'dart:math' as math;
+import 'package:get/get.dart';
+
+class EventData {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+  final String image;
+
+  EventData({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+    required this.image,
+  });
+
+  factory EventData.fromJson(Map<String, dynamic> json) {
+    return EventData(
+      event: json['event'],
+      venue: json['venue'],
+      date: json['date'],
+      time: json['time'],
+      image: json['image'],
+    );
+  }
+}
+
+class ActivityController extends GetxController {
+  final RxList<EventData> eventData = <EventData>[].obs;
+  late PageController pageController;
+  final RxInt currentIndex = 0.obs;
+
+  @override
+  void onInit() {
+    pageController = PageController(viewportFraction: 0.8);
+    // Fetch your data from the JSON or any other source
+    final jsonData = [
+      {
+        "event": "Vibrant Garba Night",
+        "venue": "City Square",
+        "date": "15-09-2024",
+        "time": "06:00 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Navratri Extravaganza",
+        "venue": "Community Hall",
+        "date": "18-10-2024",
+        "time": "07:00 pm",
+        "image": "assets/Backgrounds/activity2.jpg"
+      },
+      {
+        "event": "Global Fusion Garba",
+        "venue": "Grand Plaza",
+        "date": "22-09-2024",
+        "time": "06:30 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Unity Garba Fest",
+        "venue": "Town Hall",
+        "date": "25-09-2024",
+        "time": "08:00 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Diverse Garba Celebration",
+        "venue": "Cultural Center",
+        "date": "28-09-2024",
+        "time": "07:30 pm",
+        "image": "assets/Backgrounds/activity2.jpg"
+      }
+    ];
+
+    // Parse JSON data and add to eventData list
+    eventData.addAll(jsonData.map((data) => EventData.fromJson(data)));
+
+    super.onInit();
+  }
+}
+
+class Activity extends StatelessWidget {
+  final ActivityController controller = Get.put(ActivityController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Activities',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 15, left: 35),
+            child: SizedBox(
+              height: 40,
+              child: Obx(() {
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: controller.eventData.map((event) {
+                      final int index = controller.eventData.indexOf(event);
+                      return GestureDetector(
+                        onTap: () {
+                          controller.pageController.animateToPage(
+                            index,
+                            duration: Duration(milliseconds: 500),
+                            curve: Curves.ease,
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Obx(() => Column(
+                            children: [
+                              Text(
+                                '${event.event}',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontFamily: 'Inter',
+                                  fontSize: 14,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Container(
+                                width: 10,
+                                height: 3,
+                                decoration: BoxDecoration(
+                                  color: controller.currentIndex.value == index ? Colors.black : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            ],
+                          )),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                );
+              }),
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.55,
+            child: PageView.builder(
+
+              clipBehavior: Clip.none,
+              controller: controller.pageController,
+              itemCount: controller.eventData.length,
+              onPageChanged: (index) {
+                controller.currentIndex.value = index;
+              },
+              itemBuilder: (context, index) {
+                return AnimatedBuilder(
+                  animation: controller.pageController,
+                  builder: (context, child) {
+                    double pageOffset = 0;
+                    if (controller.pageController.position.haveDimensions) {
+                      pageOffset = controller.pageController.page! -
+                          index.toDouble();
+                    }
+                    double gauss = math.exp(-(math.pow(
+                        (pageOffset.abs() - 0.5), 2) /
+                        0.08));
+                    return Transform.translate(
+                      offset: Offset(
+                          -32 * gauss * pageOffset.sign, 0),
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            left: 8, right: 8, bottom: 24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(32),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              offset: const Offset(8, 20),
+                              blurRadius: 24,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(32)),
+                              child: Image.asset(
+                                controller.eventData[index].image,
+                                height:
+                                MediaQuery.of(context).size.height *
+                                    0.4,
+                                alignment:
+                                Alignment(-pageOffset.abs(), 0),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Expanded(child: child!),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 8),
+                      Expanded(
+                        child: CardContent(
+                          event: controller.eventData[index].event,
+                          venue: controller.eventData[index].venue,
+                          date: controller.eventData[index].date,
+                          time: controller.eventData[index].time,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+class CardContent extends StatelessWidget {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+
+  const CardContent({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            event,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Inter'
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            venue,
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey[600],
+                fontFamily: 'Inter'
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            '$date at $time',
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.grey[600],
+                fontFamily: 'Inter'
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+
+ */
+
+
+/*
+import 'package:flutter/material.dart';
+import 'dart:math' as math;
+import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
+
+class EventData {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+  final String image;
+
+  EventData({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+    required this.image,
+  });
+
+  factory EventData.fromJson(Map<String, dynamic> json) {
+    return EventData(
+      event: json['event'],
+      venue: json['venue'],
+      date: json['date'],
+      time: json['time'],
+      image: json['image'],
+    );
+  }
+}
+
+class ActivityController extends GetxController {
+  final RxList<EventData> eventData = <EventData>[].obs;
+  late PageController pageController;
+
+  @override
+  void onInit() {
+    pageController = PageController(viewportFraction: 0.8);
+    // Fetch your data from the JSON or any other source
+    final jsonData = [
+      {
+        "event": "Vibrant Garba Night",
+        "venue": "City Square",
+        "date": "15-09-2024",
+        "time": "06:00 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Navratri Extravaganza",
+        "venue": "Community Hall",
+        "date": "18-10-2024",
+        "time": "07:00 pm",
+        "image": "assets/Backgrounds/activity2.jpg"
+      },
+      {
+        "event": "Global Fusion Garba",
+        "venue": "Grand Plaza",
+        "date": "22-09-2024",
+        "time": "06:30 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Unity Garba Fest",
+        "venue": "Town Hall",
+        "date": "25-09-2024",
+        "time": "08:00 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      },
+      {
+        "event": "Diverse Garba Celebration",
+        "venue": "Cultural Center",
+        "date": "28-09-2024",
+        "time": "07:30 pm",
+        "image": "assets/Backgrounds/activity2.jpg"
+      }
+    ];
+
+    // Parse JSON data and add to eventData list
+    eventData.addAll(jsonData.map((data) => EventData.fromJson(data)));
+
+    super.onInit();
+  }
+}
+
+class Activity extends StatelessWidget {
+  final ActivityController controller = Get.put(ActivityController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Activities',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 40,
+            child: Obx(() {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: controller.eventData.map((event) {
+                    return GestureDetector(
+                      onTap: () {
+                        controller.pageController.animateToPage(
+                          controller.eventData.indexOf(event),
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.ease,
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          event.event,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Inter',
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              );
+            }),
+          ),
+          Expanded(
+            child: PageView.builder(
+              clipBehavior: Clip.none,
+              controller: controller.pageController,
+              itemCount: controller.eventData.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => FullScreenImage(
+                              image: controller.eventData[index].image,
+                            ),
+                          ),
+                        );
+                      },
+                  child: AnimatedBuilder(
+                    animation: controller.pageController,
+                    builder: (context, child) {
+                      double pageOffset = 0;
+                      if (controller.pageController.position.haveDimensions) {
+                        pageOffset = controller.pageController.page! -
+                            index.toDouble();
+                      }
+                      double gauss = math.exp(-(math.pow(
+                          (pageOffset.abs() - 0.5), 2) /
+                          0.08));
+                      return Transform.translate(
+                        offset: Offset(
+                            -32 * gauss * pageOffset.sign, 0),
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              left: 8, right: 8, bottom: 24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(32),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                offset: const Offset(8, 20),
+                                blurRadius: 24,
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: <Widget>[
+                              ClipRRect(
+                                borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(32)),
+                                child: Image.asset(
+                                  '${controller.eventData[index].image}',
+                                  height:
+                                  MediaQuery.of(context).size.height *
+                                      0.6,
+                                  alignment:
+                                  Alignment(-pageOffset.abs(), 0),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+
+                              Expanded(child: child!),
+
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 8),
+                        Expanded(
+                          child: CardContent(
+                            event: controller.eventData[index].event,
+                            venue: controller.eventData[index].venue,
+                            date: controller.eventData[index].date,
+                            time: controller.eventData[index].time,
+                          ),
+                        ),
+
+                      ],
+                    ),
+
+                  ),
+
+                );
+              },
+
+            ),
+
+          ),
+
+        ],
+      ),
+    );
+  }
+}
+
+class CardContent extends StatelessWidget {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+
+  const CardContent({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            event,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            venue,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            '$date at $time',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+ */
+
+/*
+class FullScreenImage extends StatelessWidget {
+  final String image;
+
+  const FullScreenImage({required this.image});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Hero(
+            tag: 'image',
+            child: Container(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Iconsax.close_circle,
+                            color: Colors.white,
+                          ))),
+                  Image.asset(
+                    image,
+                    fit: BoxFit.contain,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+ */
+
+
+
+
+/*
+import 'package:flutter/material.dart';
+import 'dart:math' as math;
+import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'dart:math' as math;
+import 'package:get/get.dart';
+
+
+class EventData {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+  final String image;
+
+  EventData({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+    required this.image,
+  });
+
+  factory EventData.fromJson(Map<String, dynamic> json) {
+    return EventData(
+      event: json['event'],
+      venue: json['venue'],
+      date: json['date'],
+      time: json['time'],
+      image: json['image'],
+    );
+  }
+}
+
+class ActivityController extends GetxController {
+  final RxList<EventData> eventData = <EventData>[].obs;
+  late PageController pageController;
+
+  @override
+  void onInit() {
+    pageController = PageController(viewportFraction: 0.8);
+    // Fetch your data from the JSON or any other source
+    eventData.addAll([
+      EventData.fromJson({
+        "event": "Vibrant Garba Night",
+        "venue": "City Square",
+        "date": "15-09-2024",
+        "time": "06:00 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      }),
+      EventData.fromJson({
+        "event": "Navratri Extravaganza",
+        "venue": "Community Hall",
+        "date": "18-10-2024",
+        "time": "07:00 pm",
+        "image": "assets/Backgrounds/activity2.jpg"
+      }),
+    ]);
+    super.onInit();
+  }
+}
+
+class Activity extends StatelessWidget {
+  final ActivityController controller = Get.put(ActivityController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Activities',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 40,
+            child: Obx(() {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: controller.eventData.map((event) {
+                    return GestureDetector(
+                      onTap: () {
+                        controller.pageController.animateToPage(
+                          controller.eventData.indexOf(event),
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.ease,
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          event.event,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Inter',
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              );
+            }),
+          ),
+          Expanded(
+            child: PageView.builder(
+              clipBehavior: Clip.none,
+              controller: controller.pageController,
+              itemCount: controller.eventData.length,
+              itemBuilder: (context, index) {
+                return AnimatedBuilder(
+                  animation: controller.pageController,
+                  builder: (context, child) {
+                    double pageOffset = 0;
+                    if (controller.pageController.position.haveDimensions) {
+                      pageOffset = controller.pageController.page! -
+                          index.toDouble();
+                    }
+                    double gauss = math.exp(-(math.pow(
+                        (pageOffset.abs() - 0.5), 2) /
+                        0.08));
+                    return Transform.translate(
+                      offset: Offset(
+                          -32 * gauss * pageOffset.sign, 0),
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            left: 8, right: 8, bottom: 24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(32),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              offset: const Offset(8, 20),
+                              blurRadius: 24,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(32)),
+                              child: Image.asset(
+                                controller.eventData[index].image,
+                                height:
+                                MediaQuery.of(context).size.height *
+                                    0.6,
+                                alignment:
+                                Alignment(-pageOffset.abs(), 0),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Expanded(child: child!),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 8),
+                      Expanded(
+                        child: CardContent(
+                          event: controller.eventData[index].event,
+                          venue: controller.eventData[index].venue,
+                          date: controller.eventData[index].date,
+                          time: controller.eventData[index].time,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CardContent extends StatelessWidget {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+
+  const CardContent({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            event,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            venue,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            '$date at $time',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+ */
+
+
+
+
+/*
+class EventData {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+  final String image;
+
+  EventData({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+    required this.image,
+  });
+
+  factory EventData.fromJson(Map<String, dynamic> json) {
+    return EventData(
+      event: json['event'],
+      venue: json['venue'],
+      date: json['date'],
+      time: json['time'],
+      image: json['image'],
+    );
+  }
+}
+
+class ActivityController extends GetxController {
+  final RxList<EventData> eventData = <EventData>[].obs;
+  late PageController pageController;
+
+  @override
+  void onInit() {
+    pageController = PageController(viewportFraction: 0.8);
+    // Fetch your data from the JSON or any other source
+    eventData.addAll([
+      EventData.fromJson({
+        "event": "Vibrant Garba Night",
+        "venue": "City Square",
+        "date": "15-09-2024",
+        "time": "06:00 pm",
+        "image": "assets/Backgrounds/activity1.jpg"
+      }),
+      EventData.fromJson({
+        "event": "Navratri Extravaganza",
+        "venue": "Community Hall",
+        "date": "18-10-2024",
+        "time": "07:00 pm",
+        "image": "assets/Backgrounds/activity2.jpg"
+      }),
+    ]);
+    super.onInit();
+  }
+}
+
+class Activity extends StatelessWidget {
+  final ActivityController controller = Get.put(ActivityController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Activities',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.75,
+        child: Obx(
+              () => PageView.builder(
+            clipBehavior: Clip.none,
+            controller: controller.pageController,
+            itemCount: controller.eventData.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => FullScreenImage(
+                        image: controller.eventData[index].image,
+                      ),
+                    ),
+                  );
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    AnimatedBuilder(
+                      animation: controller.pageController,
+                      builder: (context, child) {
+                        double pageOffset = 0;
+                        if (controller.pageController.position.haveDimensions) {
+                          pageOffset = controller.pageController.page! -
+                              index.toDouble();
+                        }
+                        double gauss = math.exp(
+                            -(math.pow((pageOffset.abs() - 0.5), 2) / 0.08));
+                        return Transform.translate(
+                          offset: Offset(-32 * gauss * pageOffset.sign, 0),
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                                left: 8, right: 8, bottom: 24),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(32),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: const Offset(8, 20),
+                                  blurRadius: 24,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Hero(
+                                  tag: 'image$index',
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(32)),
+                                    child: Image.asset(
+                                      controller.eventData[index].image,
+                                      height:
+                                      MediaQuery.of(context).size.height *
+                                          0.5,
+                                      alignment:
+                                      Alignment(-pageOffset.abs(), 0),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(child: child!),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: CardContent(
+                              event: controller.eventData[index].event,
+                              venue: controller.eventData[index].venue,
+                              date: controller.eventData[index].date,
+                              time: controller.eventData[index].time,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.remove_red_eye, color: Colors.white,),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => FullScreenImage(
+                                      image: controller.eventData[index].image,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class FullScreenImage extends StatelessWidget {
+  final String image;
+
+  const FullScreenImage({required this.image});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Hero(
+            tag: 'image',
+            child: Container(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Iconsax.close_circle,
+                            color: Colors.white,
+                          ))),
+                  Image.asset(
+                    image,
+                    fit: BoxFit.contain,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CardContent extends StatelessWidget {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+
+  const CardContent({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            event,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            venue,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            '$date at $time',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+ */
+
+
+
+
+/*
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'dart:math' as math;
+
+class EventData {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+  final String image;
+
+  EventData({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+    required this.image,
+  });
+
+  factory EventData.fromJson(Map<String, dynamic> json) {
+    return EventData(
+      event: json['event'],
+      venue: json['venue'],
+      date: json['date'],
+      time: json['time'],
+      image: json['image'],
+    );
+  }
+}
+
+class Activity extends StatefulWidget {
+  @override
+  State<Activity> createState() => _ActivityState();
+}
+
+class _ActivityState extends State<Activity> {
+  final List<EventData> eventData = [
+
+    EventData.fromJson({
+      "event": "Vibrant Garba Night",
+      "venue": "City Square",
+      "date": "15-09-2024",
+      "time": "06:00 pm",
+      "image": "assets/Backgrounds/activity1.jpg"
+    }),
+    EventData.fromJson({
+      "event": "Navratri Extravaganza",
+      "venue": "Community Hall",
+      "date": "18-10-2024",
+      "time": "07:00 pm",
+      "image": "assets/Backgrounds/activity2.jpg"
+    }),
+  ];
+
+  late PageController pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController(viewportFraction: 0.8);
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Activities',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.55,
+        child: PageView.builder(
+          clipBehavior: Clip.none,
+          controller: pageController,
+          itemCount: eventData.length,
+          itemBuilder: (context, index) {
+            return AnimatedBuilder(
+              animation: pageController,
+              builder: (context, child) {
+                double pageOffset = 0;
+                if (pageController.position.haveDimensions) {
+                  pageOffset = pageController.page! - index;
+                }
+                double gauss =
+                math.exp(-(math.pow((pageOffset.abs() - 0.5), 2) / 0.08));
+                return Transform.translate(
+                  offset: Offset(-32 * gauss * pageOffset.sign, 0),
+                  child: Container(
+                    margin:
+                    const EdgeInsets.only(left: 8, right: 8, bottom: 24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(32),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          offset: const Offset(8, 20),
+                          blurRadius: 24,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(32)),
+                          child: Image.asset(
+                            '${eventData[index].image}',
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            alignment: Alignment(-pageOffset.abs(), 0),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Expanded(child: child!),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              child: Column(
+                children: [
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: CardContent(
+                      event: eventData[index].event,
+                      venue: eventData[index].venue,
+                      date: eventData[index].date,
+                      time: eventData[index].time,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class CardContent extends StatelessWidget {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+
+  const CardContent({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            event,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            venue,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+        ),
+        SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            '$date at $time',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+ */
+
+// import 'package:flutter/material.dart';
+// import '../../../../../common/widgets/appbar/appbar.dart';
+// import '../../../../../utils/constants/colors.dart';
+// import '../../../../../utils/constants/sizes.dart';
+//
+// class Activity extends StatelessWidget {
+//   const Activity({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Scaffold(
+//       backgroundColor: EColors.backgroundColor,
+//       appBar: GAppBar(
+//         backgroundColor: Colors.transparent,
+//         showBackArrow: true,
+//         title: Text(
+//           'Activities',
+//           style: TextStyle(
+//             fontSize: ESizes.appTitle,
+//             fontFamily: 'Inter',
+//             color: EColors.primary,
+//             fontWeight: FontWeight.w500,
+//           ),
+//         ),
+//       ),
+//       body: Column(
+//         children: [
+//
+//
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
+
+/// Activity in Tabb-ar
+/*
+import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/features/home/screens/right_circle_menu_and_screens/activity/widget/dot_indicator.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
@@ -116,7 +2296,7 @@ class Activity extends StatelessWidget {
                           isScrollable: true,
                           dividerColor: Colors.transparent,
                           indicator: DotTabIndicator(
-                            color: Colors.redAccent,
+                            color: EColors.primary,
                             radius: 4,
                           ),
                           tabs: [
@@ -156,75 +2336,8 @@ class Activity extends StatelessWidget {
   }
 }
 
-class DotTabIndicator extends Decoration {
-  final Color color;
-  final double radius;
 
-  const DotTabIndicator({required this.color, required this.radius});
-
-  @override
-  _DotPainter createBoxPainter([VoidCallback? onChanged]) {
-    return _DotPainter(this, onChanged);
-  }
-}
-
-class _DotPainter extends BoxPainter {
-  final DotTabIndicator decoration;
-
-  _DotPainter(this.decoration, VoidCallback? onChanged) : super(onChanged);
-
-  @override
-  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
-    final Paint paint = Paint()..color = decoration.color;
-    final Rect rect = offset & configuration.size!;
-    final double centerX = rect.center.dx;
-    final double bottom = rect.bottom - 6; // Adjust the value based on your preference
-
-    canvas.drawCircle(Offset(centerX, bottom), decoration.radius, paint);
-  }
-}
-
-class ContainerStack extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 200, // Change this according to your requirement
-      height: 200, // Change this according to your requirement
-      child: Stack(
-        children: [
-          Container(
-            color: Colors.blue,
-            width: double.infinity,
-            height: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 100, // Change this according to your requirement
-                  height: 100, // Change this according to your requirement
-                  color: Colors.green,
-                ),
-                Container(
-                  width: 100, // Change this according to your requirement
-                  height: 100, // Change this according to your requirement
-                  color: Colors.red,
-                ),
-                Container(
-                  width: 100, // Change this according to your requirement
-                  height: 100, // Change this according to your requirement
-                  color: Colors.yellow,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-
+ */
 
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
@@ -325,8 +2438,6 @@ class ContainerStack extends StatelessWidget {
 //   }
 // }
 //
-
-
 
 /*
 import 'package:flutter/material.dart';
@@ -444,72 +2555,6 @@ class Activity extends StatelessWidget {
 
  */
 
-
-
-class StackContainer extends StatelessWidget {
-  final Widget? child;
-  const StackContainer({
-    super.key, this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: SizedBox(
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 7),
-              child: Transform.rotate(
-                angle: .08,
-                child: Container(
-                  height: 162,
-                  // width: 310,
-                  decoration: ShapeDecoration(
-                    // color:  EColors.white,
-                    // color: Colors.white60,
-                    color: Colors.red.shade100.withOpacity(.4),
-                    shape: ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(70.0),
-                    ),
-                  ),
-
-                  // color: Colors.blue.shade50,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 7,),
-              child: Transform.rotate(
-                angle: - .08,
-                child: Container(
-                  height: 162,
-                  decoration: ShapeDecoration(
-                    //color: EColors.primarySecond,
-                    // color: Colors.white60,
-                    color: Colors.red.shade100.withOpacity(.4),
-                    shape: ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(70.0),
-                    ),
-                  ),
-                  // width: 310,
-                  //color: Colors.orange.shade800,
-                  //color: Colors.blue.shade100,
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: child,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 /*
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
@@ -738,8 +2783,6 @@ class ContainerStack extends StatelessWidget {
 }
 
  */
-
-
 
 // import 'package:flutter/material.dart';
 // import '../../../../../common/widgets/appbar/appbar.dart';

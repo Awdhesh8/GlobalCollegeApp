@@ -1095,7 +1095,7 @@ class ApiService {
     }
   }
 
-  Future<VtlocationModal> fetchVtLetterLocation(String ? vtp_subjid) async {
+  Future<VtlocationModal> fetchVtLetterLocation(String? vtp_subjid) async {
     try {
       final response = await http.post(
         Uri.parse(APIConstants.getFullUrl(APIConstants.getVtLetterLocation)),
