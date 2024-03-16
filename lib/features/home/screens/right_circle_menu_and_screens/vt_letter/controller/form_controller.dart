@@ -65,16 +65,16 @@ class VTLetterFormController extends GetxController {
 
   void getCompany() {
     var vtp_subjid = vtSubjectId;
-    print(vtp_subjid);
+    print('yyy $vtp_subjid');
 
     try {
       // Get.dialog(Center(
       //   child: CircularProgressIndicator(),
       // ));
       repository!.getalldistrict(vtp_subjid)?.then((value) {
-        if (value.data.length > 0) {
+        if (value.data.isNotEmpty) {
           //Get.back();
-          lstdistmodel.value.clear();
+           lstdistmodel.value.clear();
           lstdistmodel.value.addAll(value.data);
           listCompanyDropDown.value = [];
           listCompanyDropDown.value.add(
@@ -101,11 +101,12 @@ class VTLetterFormController extends GetxController {
 
       }).onError((error, stackTrace) {
         Get.back();
+        print('popo $error');
         //error handling code
       });
     } catch (exception) {
       //Get.back();
-      //print(exception);
+      print('ggggg $exception');
       // exception handling code
     }
   }

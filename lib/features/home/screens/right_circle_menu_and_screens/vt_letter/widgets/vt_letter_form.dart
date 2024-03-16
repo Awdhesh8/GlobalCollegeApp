@@ -267,7 +267,7 @@ class VTLetterForm extends StatelessWidget {
             vtLetterSubject.firstWhere((group) => group.id == newValue);
             String selectedSubject = controller.subjectController.value?.id ?? '';
             controller.vtSubjectId = selectedSubject.obs;
-            print(controller.vtSubjectId);
+            print("ID ${controller.vtSubjectId}");
             controller.getCompany();
       },
 
