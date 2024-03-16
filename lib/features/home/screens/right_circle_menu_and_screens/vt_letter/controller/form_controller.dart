@@ -5,7 +5,7 @@ import '../../../../../../data/api/api_services.dart';
 import '../widgets/vt_letter_form.dart';
 
 class VTLetterFormController extends GetxController {
-  Repository repository = new Repository();
+  Repository repository = Repository();
   RxString fromController = ''.obs;
   RxString toController = ''.obs;
   RxString subjectsController = ''.obs;//
@@ -71,7 +71,9 @@ class VTLetterFormController extends GetxController {
       // Get.dialog(Center(
       //   child: CircularProgressIndicator(),
       // ));
-      repository.getalldistrict(vtp_subjid)?.then((value) {
+      repository!.getalldistrict()?.then((value) {
+        print('fff');
+        print(value);
         if (value.data.isNotEmpty) {
           //Get.back();
            lstdistmodel.value.clear();
@@ -121,9 +123,9 @@ class Item {
 
 class Repository {
  // final ApiService apiProvider;
-  ApiService apiProvider = new ApiService();
+  ApiService apiProvider = ApiService();
   // Repository(this.apiProvider);
-  Future<VtlocationModal>? getalldistrict(var vtp_subjid) => apiProvider.fetchVtLetterLocation(vtp_subjid);
+  Future<VtlocationModal>? getalldistrict() => apiProvider.fetchVtLetterLocation();
 
 }
 

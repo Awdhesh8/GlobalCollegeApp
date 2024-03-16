@@ -1095,7 +1095,7 @@ class ApiService {
     }
   }
 
-  Future<VtlocationModal> fetchVtLetterLocation(String? vtp_subjid) async {
+  Future<VtlocationModal> fetchVtLetterLocation() async {
     try {
       final response = await http.post(
         Uri.parse(APIConstants.getFullUrl(APIConstants.getVtLetterLocation)),
@@ -1103,13 +1103,13 @@ class ApiService {
         body: {
           'APIKEY': 'GNCS0225',
           // 'USER_ID': userId,
-          'vtp_subjid': vtp_subjid
+          'vtp_subjid': '948',
         },
       );
-      print(vtp_subjid);
-      print(response.body);
+      //print(vtp_subjid);
+      //print(response.body);
       if (response.statusCode == 200) {
-        print(response.body);
+        //print(response.body);
         VtlocationModal districtDataFromJson(String str) => VtlocationModal.fromJson(json.decode(str));
         final VtlocationModal responseModel =
         districtDataFromJson(response.body);
