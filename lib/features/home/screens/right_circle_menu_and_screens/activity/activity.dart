@@ -1,6 +1,349 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
+import 'dart:math' as math;
+
+import 'package:shimmer/shimmer.dart';
+
+import '../../../../../data/api/api_services.dart';
+
+class EventData {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+  final String image;
+
+  EventData({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+    required this.image,
+  });
+
+  factory EventData.fromJson(Map<String, dynamic> json) {
+    return EventData(
+      event: json['event'],
+      venue: json['venue'],
+      date: json['date'],
+      time: json['time'],
+      image: json['image'],
+    );
+  }
+}
+
+// class ApiServices {
+//   static const String baseUrl = 'http://myglobalapp.in/global/API005/';
+//
+//   static Future<List<EventData>> fetchEventData() async {
+//     final response = await http.post(
+//       Uri.parse(baseUrl + 'get_activity'),
+//       headers: {'Cookie': 'ci_session=obq2f8dlcp0kiq4h1hpnspprtgbrahih'},
+//       body: {'APIKEY': 'GNCS0225'},
+//     );
+//
+//     if (response.statusCode == 200) {
+//       final jsonData = json.decode(response.body);
+//       final List<dynamic> data = jsonData['response'];
+//
+//       return data.map((item) => EventData.fromJson(item)).toList();
+//     } else {
+//       throw Exception('Failed to load data');
+//     }
+//   }
+// }
+
+class ActivityController extends GetxController {
+  final RxList<EventData> eventData = <EventData>[].obs;
+  late PageController pageController;
+  final RxInt currentIndex = 0.obs; // Define currentIndex as RxInt
+
+  @override
+  void onInit() {
+    fetchEvents();
+    super.onInit();
+  }
+
+  void fetchEvents() async {
+    try {
+      final events = await ApiService.fetchEventData();
+      eventData.assignAll(events);
+    } catch (e) {
+      print('Error fetching events: $e');
+    }
+  }
+
+  void initPageController() {
+    pageController = PageController(viewportFraction: 0.8);
+  }
+}
+
+class Activity extends StatelessWidget {
+  final ActivityController controller = Get.put(ActivityController());
+
+  @override
+  Widget build(BuildContext context) {
+    controller.initPageController();
+
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Activities',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: Obx(() {
+        if (controller.eventData.isEmpty) {
+          // Show shimmer effect while waiting for API response
+          return ShimmerList();
+        } else {
+          // Once API response is received, show actual data
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 15, left: 35),
+                child: SizedBox(
+                  height: 40,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: controller.eventData.map((event) {
+                        final int index =
+                        controller.eventData.indexOf(event);
+                        return GestureDetector(
+                          onTap: () {
+                            controller.pageController.animateToPage(
+                              index,
+                              duration: Duration(milliseconds: 500),
+                              curve: Curves.ease,
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${event.event}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Inter',
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Container(
+                                  width: 10,
+                                  height: 3,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.75,
+                child: PageView.builder(
+                  clipBehavior: Clip.none,
+                  controller: controller.pageController,
+                  itemCount: controller.eventData.length,
+                  onPageChanged: (index) {
+                    controller.currentIndex.value = index;
+                  },
+                  itemBuilder: (context, index) {
+                    return AnimatedBuilder(
+                      animation: controller.pageController,
+                      builder: (context, child) {
+                        double pageOffset = 0;
+                        if (controller.pageController
+                            .position.haveDimensions) {
+                          pageOffset = controller.pageController.page! -
+                              index.toDouble();
+                        }
+                        double gauss = math.exp(-(math.pow(
+                            (pageOffset.abs() - 0.5), 2) /
+                            0.08));
+                        return Transform.translate(
+                          offset: Offset(
+                              -32 * gauss * pageOffset.sign, 0),
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                                left: 8, right: 8, bottom: 24),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(32),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: const Offset(8, 20),
+                                  blurRadius: 24,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(32),
+                                      bottom: Radius.circular(32)),
+                                  child: Image.network(
+                                    controller.eventData[index].image,
+                                    height: MediaQuery.of(context)
+                                        .size
+                                        .height *
+                                        0.56,
+                                    alignment:
+                                    Alignment(-pageOffset.abs(), 0),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Expanded(child: child!),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: CardContent(
+                              event: controller.eventData[index].event,
+                              venue: controller.eventData[index].venue,
+                              date: controller.eventData[index].date,
+                              time: controller.eventData[index].time,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        }
+      }),
+    );
+  }
+}
+
+class ShimmerList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(
+          5,
+              (index) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                width: 100,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CardContent extends StatelessWidget {
+  final String event;
+  final String venue;
+  final String date;
+  final String time;
+
+  const CardContent({
+    required this.event,
+    required this.venue,
+    required this.date,
+    required this.time,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(32),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              event,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Inter'
+              ),
+            ),
+          ),
+          SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              venue,
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey[600],
+                  fontFamily: 'Inter'
+              ),
+            ),
+          ),
+          SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              '$date at $time',
+              style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey[600],
+                  fontFamily: 'Inter'
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 
 
+/// ----  pARALLEX IS WORKING FINE
+/*
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:get/get.dart';
@@ -32,6 +375,7 @@ class EventData {
     );
   }
 }
+
 
 class ActivityController extends GetxController {
   final RxList<EventData> eventData = <EventData>[].obs;
@@ -159,8 +503,9 @@ class Activity extends StatelessWidget {
               }),
             ),
           ),
+
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.55,
+            height: MediaQuery.of(context).size.height * 0.75,
             child: PageView.builder(
               clipBehavior: Clip.none,
               controller: controller.pageController,
@@ -187,7 +532,7 @@ class Activity extends StatelessWidget {
                         margin: const EdgeInsets.only(
                             left: 8, right: 8, bottom: 24),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          // color: Colors.white,
                           borderRadius: BorderRadius.circular(32),
                           boxShadow: [
                             BoxShadow(
@@ -201,12 +546,12 @@ class Activity extends StatelessWidget {
                           children: <Widget>[
                             ClipRRect(
                               borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(32)),
+                                  top: Radius.circular(32), bottom: Radius.circular(32)),
                               child: Image.asset(
                                 controller.eventData[index].image,
                                 height:
                                 MediaQuery.of(context).size.height *
-                                    0.4,
+                                    0.56,
                                 alignment:
                                 Alignment(-pageOffset.abs(), 0),
                                 fit: BoxFit.cover,
@@ -235,14 +580,11 @@ class Activity extends StatelessWidget {
               },
             ),
           ),
-
         ],
       ),
     );
   }
 }
-
-
 
 class CardContent extends StatelessWidget {
   final String event;
@@ -259,51 +601,60 @@ class CardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            event,
-            style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter'
+    return Container(
+      width: double.infinity,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(32),
+    ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              event,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Inter'
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 4),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            venue,
-            style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey[600],
-                fontFamily: 'Inter'
+          SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              venue,
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey[600],
+                  fontFamily: 'Inter'
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 4),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            '$date at $time',
-            style: TextStyle(
-                fontSize: 11,
-                color: Colors.grey[600],
-                fontFamily: 'Inter'
+          SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              '$date at $time',
+              style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey[600],
+                  fontFamily: 'Inter'
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
+
+ */
 
 
 

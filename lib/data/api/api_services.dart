@@ -7,6 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/home/screens/left_circle_menu_and_screens/gate_pass/widgets/gate_pass_form_widget/gate_pass_form.dart';
+import '../../features/home/screens/right_circle_menu_and_screens/activity/activity.dart';
 import '../../features/home/screens/right_circle_menu_and_screens/vt_letter/widgets/vt_letter_form.dart';
 import '../../features/personalization/screens/settings/edit_profile/edit_Profile.dart';
 import '../../utils/constants/api_constants.dart';
@@ -1126,4 +1127,24 @@ class ApiService {
     }
   }
 
+
+  /// Activity
+  static const String baseUrl = 'http://myglobalapp.in/global/API005/';
+
+  static Future<List<EventData>> fetchEventData() async {
+    final response = await http.post(
+      Uri.parse(baseUrl + 'get_activity'),
+      headers: {'Cookie': 'ci_session=obq2f8dlcp0kiq4h1hpnspprtgbrahih'},
+      body: {'APIKEY': 'GNCS0225'},
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      final List<dynamic> data = jsonData['response'];
+
+      return data.map((item) => EventData.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
 }
