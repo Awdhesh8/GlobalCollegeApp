@@ -1161,7 +1161,7 @@ class ApiService {
   }
 
   ///Get VT Letter Location
-  static Future<List<VtlocationModal>> fetchVtLetterLocation111(
+  static Future<Map<String, dynamic>>fetchVtLetterLocation111(
       String vtp_subjid) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -1172,29 +1172,58 @@ class ApiService {
         body: {
           'APIKEY': 'GNCS0225',
           // 'USER_ID': userId,
-          'vtp_subjid': 'vtp_subjid'
+          'vtp_subjid': vtp_subjid
         },
       );
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
-        if (data['status'] == "1") {
-          List<dynamic> VtLetterSubjectData = data['response'];
-          List<VtlocationModal> vtLetterSubject = VtLetterSubjectData.map(
-              (vtLetterSubjectJson) =>
-                  VtlocationModal.fromJson(vtLetterSubjectJson)).toList();
-          return vtLetterSubject;
+          return data;
         } else {
-          throw Exception(data['message']);
+          //throw Exception(data['message']);
+          throw Exception('Failed to login. Status Code: ${response.statusCode}');
         }
-      } else {
-        throw Exception(
-            'Failed to load Gate Pass Reasons: ${response.reasonPhrase}');
-      }
+
     } catch (e) {
       throw Exception('Exception while fetching Gate Pass Reasons: $e');
     }
   }
+
+  ///alok
+  static Future<Map<String, dynamic>> alokapi(
+      String username, String password) async {
+    try {
+      var headers = {
+        'Cookie':
+        'ci_session=trb1cdm1k01ka4jrt6t55nrstv6frt8p; remember_code=529f1face76aad1813e947055101a76386950be0.e599f6271f11ddc484b1e8288df76ed79742de7399f1cd73f46f29113b68db349035fc15cdae996a5df0a4faec0d53c40d3b666f6336fc9ea236da0428f702c6'
+      };
+
+      var request = http.MultipartRequest('POST',
+          Uri.parse(APIConstants.getFullUrl(APIConstants.loginEndpoint)));
+      request.fields.addAll({
+        'APIKEY': 'GNCS0225',
+        'USERNAME': username,
+        'PASSWORD': password,
+      });
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data =
+        json.decode(await response.stream.bytesToString());
+        return data;
+      } else {
+        throw Exception('Failed to login. Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('An error occurred: $e');
+    }
+  }
+
+
+
 
   Future<VtlocationModal> fetchVtLetterLocation() async {
     try {

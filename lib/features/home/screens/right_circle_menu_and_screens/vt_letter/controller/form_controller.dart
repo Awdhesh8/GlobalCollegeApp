@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -63,10 +64,19 @@ class VTLetterFormController extends GetxController {
     print('Selected Items: ${selectedItems.map((item) => item.id).join(", ")}');
   }
 
-  void getCompany() {
-    var vtp_subjid = vtSubjectId;
-    print('yyy $vtp_subjid');
+    Future<void> getCompany() async {
+      String vtp_subjid = vtSubjectId.value;
+      print('yyy $vtp_subjid');
+      //ApiService apiProvider = ApiService();
+      var snapshot = await Future.value(ApiService.fetchVtLetterLocation111(vtp_subjid));
+      var data = snapshot['response'];
+      print(data);
 
+      // for(var item as data){
+      //   var id = item['vtp_id'];
+      //   var name = item['locat'];
+      // }
+   /*
     try {
       // Get.dialog(Center(
       //   child: CircularProgressIndicator(),
@@ -111,6 +121,8 @@ class VTLetterFormController extends GetxController {
       print('ggggg $exception');
       // exception handling code
     }
+
+    */
   }
 
 
