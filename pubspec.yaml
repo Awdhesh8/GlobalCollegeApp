@@ -43,7 +43,35 @@ dependencies:
   intl: ^0.18.1
   fl_chart: ^0.64.0
   circle_wheel_scroll: ^0.0.3
-  url_launcher: ^6.2.1
+  url_launcher: ^6.2.1------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   webview_flutter: ^4.4.4
   flutter_native_splash: ^2.3.5
   smooth_page_indicator: ^1.1.0
