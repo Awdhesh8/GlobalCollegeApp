@@ -1,17 +1,16 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
+import '../../utils/constants/colors.dart';
+import '../../utils/constants/api_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../features/home/screens/left_circle_menu_and_screens/gate_pass/widgets/gate_pass_form_widget/gate_pass_form.dart';
+import '../../features/personalization/screens/settings/edit_profile/edit_Profile.dart';
 import '../../features/home/screens/right_circle_menu_and_screens/activity/activity.dart';
 import '../../features/home/screens/right_circle_menu_and_screens/vt_letter/widgets/vt_letter_form.dart';
-import '../../features/personalization/screens/settings/edit_profile/edit_Profile.dart';
-import '../../utils/constants/api_constants.dart';
-import '../../utils/constants/colors.dart';
+import '../../features/home/screens/left_circle_menu_and_screens/gate_pass/widgets/gate_pass_form_widget/gate_pass_form.dart';
 
 class ApiService {
   /// User Login --->>>
@@ -76,15 +75,21 @@ class ApiService {
             responseData['response'] != null) {
           return responseData;
         } else {
-          print('Error: Missing or null "response" key in the API response.');
+          if (kDebugMode) {
+            print('Error: Missing or null "response" key in the API response.');
+          }
           return null;
         }
       } else {
-        print('API error: ${response.reasonPhrase}');
+        if (kDebugMode) {
+          print('API error: ${response.reasonPhrase}');
+        }
         return null;
       }
     } catch (e) {
-      print('Error in API call: $e');
+      if (kDebugMode) {
+        print('Error in API call: $e');
+      }
       return null;
     }
   }
@@ -112,11 +117,15 @@ class ApiService {
         var responseData = json.decode(await response.stream.bytesToString());
         return responseData;
       } else {
-        print('API error: ${response.reasonPhrase}');
+        if (kDebugMode) {
+          print('API error: ${response.reasonPhrase}');
+        }
         return null;
       }
     } catch (e) {
-      print('Error in API call: $e');
+      if (kDebugMode) {
+        print('Error in API call: $e');
+      }
       return null;
     }
   }
@@ -213,12 +222,18 @@ class ApiService {
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        print(await response.stream.bytesToString());
+        if (kDebugMode) {
+          print(await response.stream.bytesToString());
+        }
       } else {
-        print(response.reasonPhrase);
+        if (kDebugMode) {
+          print(response.reasonPhrase);
+        }
       }
     } catch (error) {
-      print('Error: $error');
+      if (kDebugMode) {
+        print('Error: $error');
+      }
     }
   }
 
@@ -243,23 +258,33 @@ class ApiService {
 
     request.headers.addAll(headers);
 
-    print('Sending request to API...');
+    if (kDebugMode) {
+      print('Sending request to API...');
+    }
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
       var responseBody = await response.stream.bytesToString();
-      print('Response received from API: $responseBody');
+      if (kDebugMode) {
+        print('Response received from API: $responseBody');
+      }
       var parsedResponse = json.decode(responseBody);
 
       if (parsedResponse['status'] == "1") {
-        print('API call successful');
+        if (kDebugMode) {
+          print('API call successful');
+        }
         return {'success': true, 'data': parsedResponse};
       } else {
-        print('API call failed. Error message: ${parsedResponse['message']}');
+        if (kDebugMode) {
+          print('API call failed. Error message: ${parsedResponse['message']}');
+        }
         return {'success': false, 'error': parsedResponse['message']};
       }
     } else {
-      print('API request failed with status: ${response.statusCode}');
+      if (kDebugMode) {
+        print('API request failed with status: ${response.statusCode}');
+      }
       return {
         'success': false,
         'error': 'Request failed with status: ${response.statusCode}'
@@ -273,8 +298,12 @@ class ApiService {
     var userId = prefs.getString('user_id') ?? '';
     var userType = prefs.getString('user_type') ?? '';
 
-    print(userId);
-    print(userType);
+    if (kDebugMode) {
+      print(userId);
+    }
+    if (kDebugMode) {
+      print(userType);
+    }
 
     var headers = {
       'Cookie': 'ci_session=ga2gv43kdoaqr8bs0f91tqof0rss55r4',
@@ -380,7 +409,9 @@ class ApiService {
         'srch_keyword': searchKeyword,
         'USER_ID': userId,
       });
-      print(request);
+      if (kDebugMode) {
+        print(request);
+      }
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
@@ -391,11 +422,15 @@ class ApiService {
 
         return List<Map<String, dynamic>>.from(jsonResponse['response']);
       } else {
-        print(response.reasonPhrase);
+        if (kDebugMode) {
+          print(response.reasonPhrase);
+        }
         return []; // Return an empty list in case of an error
       }
     } catch (error) {
-      print('Error: $error');
+      if (kDebugMode) {
+        print('Error: $error');
+      }
       return []; // Return an empty list in case of an error
     }
   }
@@ -429,7 +464,9 @@ class ApiService {
         Map<String, dynamic> responseData =
             json.decode(await response.stream.bytesToString());
         // Print the response data
-        print('Response Data: $responseData');
+        if (kDebugMode) {
+          print('Response Data: $responseData');
+        }
 
         // Handle the response data as needed
         var status = responseData['status'];
@@ -437,7 +474,9 @@ class ApiService {
 
         if (status == '1') {
           // Update was successful, handle accordingly
-          print('Lock Status Updated Successfully');
+          if (kDebugMode) {
+            print('Lock Status Updated Successfully');
+          }
 
           // Show a SnackBar with the success message
           Get.snackbar(
@@ -455,7 +494,9 @@ class ApiService {
           // );
         } else {
           // Update failed, handle accordingly
-          print('Lock Status Update Failed: $message');
+          if (kDebugMode) {
+            print('Lock Status Update Failed: $message');
+          }
 
           // Show a SnackBar with the failure message
           // ScaffoldMessenger.of(context).showSnackBar(
@@ -474,19 +515,21 @@ class ApiService {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: ${response.reasonPhrase}'),
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
           ),
         );
       }
     } catch (error) {
       // Handle any other errors that might occur during the request
-      print('Error updating lock status: $error');
+      if (kDebugMode) {
+        print('Error updating lock status: $error');
+      }
 
       // Show a SnackBar with the error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error updating lock status: $error'),
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
     }
@@ -509,7 +552,9 @@ class ApiService {
         'APIKEY': 'GNCS0225',
         'srch_keyword': searchKeyword,
       });
-      print(request);
+      if (kDebugMode) {
+        print(request);
+      }
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
@@ -520,11 +565,15 @@ class ApiService {
 
         return List<Map<String, dynamic>>.from(jsonResponse['response']);
       } else {
-        print(response.reasonPhrase);
+        if (kDebugMode) {
+          print(response.reasonPhrase);
+        }
         return []; // Return an empty list in case of an error
       }
     } catch (error) {
-      print('Error: $error');
+      if (kDebugMode) {
+        print('Error: $error');
+      }
       return []; // Return an empty list in case of an error
     }
   }
@@ -535,7 +584,9 @@ class ApiService {
     var userType = prefs.getString('user_type') ?? '';
     var empID = prefs.getString('emp_id') ?? '';
 
-    print("EMP_ID: $empID");
+    if (kDebugMode) {
+      print("EMP_ID: $empID");
+    }
     // print("USER_TYPE: $userType");
 
     var headers = {
@@ -746,11 +797,15 @@ class ApiService {
 
         return message;
       } else {
-        print(response.reasonPhrase);
+        if (kDebugMode) {
+          print(response.reasonPhrase);
+        }
         return 'Error occurred: ${response.reasonPhrase}';
       }
     } catch (e) {
-      print('Error applying leave: $e');
+      if (kDebugMode) {
+        print('Error applying leave: $e');
+      }
       return 'Error occurred: $e';
     }
   }
@@ -781,8 +836,12 @@ class ApiService {
       if (response.statusCode == 200) {
         String responseBody = await response.stream.bytesToString();
         Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-        print(responseBody);
-        print(response.request);
+        if (kDebugMode) {
+          print(responseBody);
+        }
+        if (kDebugMode) {
+          print(response.request);
+        }
         if (jsonResponse['status'] == '1') {
           // Successful API response
           List<dynamic> leaveHistoryData = jsonResponse['response'];
@@ -793,15 +852,21 @@ class ApiService {
           return leaveHistoryList;
         } else {
           // Error in API response
-          print('Error in API response: ${jsonResponse['message']}');
+          if (kDebugMode) {
+            print('Error in API response: ${jsonResponse['message']}');
+          }
           return [];
         }
       } else {
-        print(response.reasonPhrase);
+        if (kDebugMode) {
+          print(response.reasonPhrase);
+        }
         return [];
       }
     } catch (e) {
-      print('Error getting leave history: $e');
+      if (kDebugMode) {
+        print('Error getting leave history: $e');
+      }
       return [];
     }
   }
@@ -822,12 +887,20 @@ class ApiService {
       headers: headers,
       body: body,
     );
-    print(body);
-    print(response);
+    if (kDebugMode) {
+      print(body);
+    }
+    if (kDebugMode) {
+      print(response);
+    }
     if (response.statusCode == 200) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     } else {
-      print(response.reasonPhrase);
+      if (kDebugMode) {
+        print(response.reasonPhrase);
+      }
     }
   }
 
@@ -906,11 +979,15 @@ class ApiService {
 
         return message;
       } else {
-        print(response.reasonPhrase);
+        if (kDebugMode) {
+          print(response.reasonPhrase);
+        }
         return 'Error occurred: ${response.reasonPhrase}';
       }
     } catch (e) {
-      print('Error applying Gate Pass: $e');
+      if (kDebugMode) {
+        print('Error applying Gate Pass: $e');
+      }
       return 'Error occurred: $e';
     }
   }
@@ -927,7 +1004,8 @@ class ApiService {
 
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('http://myglobalapp.in/global/API005/gatepass_history'),
+        Uri.parse(APIConstants.getFullUrl(APIConstants.gatePassHistory)),
+        // Uri.parse('http://myglobalapp.in/global/API005/gatepass_history'),
       );
 
       request.fields.addAll({
@@ -953,15 +1031,21 @@ class ApiService {
           return GatePassHistoryList;
         } else {
           // Error in API response
-          print('Error in API response: ${jsonResponse['message']}');
+          if (kDebugMode) {
+            print('Error in API response: ${jsonResponse['message']}');
+          }
           return [];
         }
       } else {
-        print(response.reasonPhrase);
+        if (kDebugMode) {
+          print(response.reasonPhrase);
+        }
         return [];
       }
     } catch (e) {
-      print('Error getting Gate Pass history: $e');
+      if (kDebugMode) {
+        print('Error getting Gate Pass history: $e');
+      }
       return [];
     }
   }
@@ -978,16 +1062,25 @@ class ApiService {
     };
 
     var response = await http.post(
-      Uri.parse('http://myglobalapp.in/global/API005/cancelgatepass'),
+      Uri.parse(APIConstants.getFullUrl(APIConstants.cancelGatePass)),
+      // Uri.parse('http://myglobalapp.in/global/API005/cancelgatepass'),
       headers: headers,
       body: body,
     );
-    print(body);
-    print(response);
+    if (kDebugMode) {
+      print(body);
+    }
+    if (kDebugMode) {
+      print(response);
+    }
     if (response.statusCode == 200) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     } else {
-      print(response.reasonPhrase);
+      if (kDebugMode) {
+        print(response.reasonPhrase);
+      }
     }
   }
 
@@ -1008,14 +1101,20 @@ class ApiService {
       // 'USER_ID': userId,
       'USER_ID': '1044',
     });
-    print('Current User ID => USER_ID ' ' 1044');
-    print(userId);
+    if (kDebugMode) {
+      print('Current User ID => USER_ID ' ' 1044');
+    }
+    if (kDebugMode) {
+      print(userId);
+    }
 
     request.headers.addAll(headers);
 
     try {
       http.StreamedResponse response = await request.send();
-      print(response);
+      if (kDebugMode) {
+        print(response);
+      }
       if (response.statusCode == 200) {
         return await response.stream.bytesToString();
       } else {
@@ -1062,7 +1161,8 @@ class ApiService {
   }
 
   ///Get VT Letter Location
-  static Future<List<VtlocationModal>> fetchVtLetterLocation111(String vtp_subjid) async {
+  static Future<List<VtlocationModal>> fetchVtLetterLocation111(
+      String vtp_subjid) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userId = prefs.getString('user_id') ?? '';
@@ -1081,8 +1181,8 @@ class ApiService {
         if (data['status'] == "1") {
           List<dynamic> VtLetterSubjectData = data['response'];
           List<VtlocationModal> vtLetterSubject = VtLetterSubjectData.map(
-                  (vtLetterSubjectJson) =>
-                      VtlocationModal.fromJson(vtLetterSubjectJson)).toList();
+              (vtLetterSubjectJson) =>
+                  VtlocationModal.fromJson(vtLetterSubjectJson)).toList();
           return vtLetterSubject;
         } else {
           throw Exception(data['message']);
@@ -1111,9 +1211,10 @@ class ApiService {
       //print(response.body);
       if (response.statusCode == 200) {
         //print(response.body);
-        VtlocationModal districtDataFromJson(String str) => VtlocationModal.fromJson(json.decode(str));
+        VtlocationModal districtDataFromJson(String str) =>
+            VtlocationModal.fromJson(json.decode(str));
         final VtlocationModal responseModel =
-        districtDataFromJson(response.body);
+            districtDataFromJson(response.body);
         return responseModel;
       } else {
         return VtlocationModal(
@@ -1126,7 +1227,6 @@ class ApiService {
       throw Exception(e.toString());
     }
   }
-
 
   /// Activity
   static const String baseUrl = 'http://myglobalapp.in/global/API005/';

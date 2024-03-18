@@ -1,8 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
-import 'dart:math' as math;
 import 'package:shimmer/shimmer.dart';
 import '../../../../../data/api/api_services.dart';
 
@@ -317,7 +314,6 @@ class Activity extends StatelessWidget {
   }
 }
  */
-
 
 /*
 class Activity extends StatelessWidget {
@@ -922,11 +918,7 @@ class CardContent extends StatelessWidget {
 
  */
 
-
-
 /// -------------------------------------------------->>>>>>>>>>>>
-
-
 
 /*
 import 'package:flutter/material.dart';

@@ -21,16 +21,17 @@ class DotIndicator extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           pageCount,
-              (index) => Obx(() => Container(
-            width: 8.0,
-            height: currentPage.value == index ? 30.0 : 12,
-            margin: const EdgeInsets.symmetric(vertical: 4.0),
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(50),
-              color: Colors.blue.withOpacity(currentPage.value == index ? 0.9 : 0.4),
-            ),
-          )),
+          (index) => Obx(() => Container(
+                width: 8.0,
+                height: currentPage.value == index ? 30.0 : 12,
+                margin: const EdgeInsets.symmetric(vertical: 4.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(50),
+                  color: Colors.blue
+                      .withOpacity(currentPage.value == index ? 0.9 : 0.4),
+                ),
+              )),
         ),
       ),
     );
@@ -59,7 +60,8 @@ class _DotPainter extends BoxPainter {
     final Paint paint = Paint()..color = decoration.color;
     final Rect rect = offset & configuration.size!;
     final double centerX = rect.center.dx;
-    final double bottom = rect.bottom - 6; // Adjust the value based on your preference
+    final double bottom =
+        rect.bottom - 6; // Adjust the value based on your preference
 
     canvas.drawCircle(Offset(centerX, bottom), decoration.radius, paint);
   }
