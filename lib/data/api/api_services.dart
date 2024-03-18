@@ -1133,7 +1133,9 @@ class ApiService {
 
   static Future<List<EventData>> fetchEventData() async {
     final response = await http.post(
-      Uri.parse(baseUrl + 'get_activity'),
+      Uri.parse(APIConstants.getFullUrl(APIConstants.getActivity)),
+      // Uri.parse(APIConstants.getActivity),
+      // Uri.parse(baseUrl + 'get_activity'),
       headers: {'Cookie': 'ci_session=obq2f8dlcp0kiq4h1hpnspprtgbrahih'},
       body: {'APIKEY': 'GNCS0225'},
     );

@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'dart:math' as math;
-
 import 'package:shimmer/shimmer.dart';
-
 import '../../../../../data/api/api_services.dart';
 
 class EventData {
@@ -34,27 +32,6 @@ class EventData {
   }
 }
 
-// class ApiServices {
-//   static const String baseUrl = 'http://myglobalapp.in/global/API005/';
-//
-//   static Future<List<EventData>> fetchEventData() async {
-//     final response = await http.post(
-//       Uri.parse(baseUrl + 'get_activity'),
-//       headers: {'Cookie': 'ci_session=obq2f8dlcp0kiq4h1hpnspprtgbrahih'},
-//       body: {'APIKEY': 'GNCS0225'},
-//     );
-//
-//     if (response.statusCode == 200) {
-//       final jsonData = json.decode(response.body);
-//       final List<dynamic> data = jsonData['response'];
-//
-//       return data.map((item) => EventData.fromJson(item)).toList();
-//     } else {
-//       throw Exception('Failed to load data');
-//     }
-//   }
-// }
-
 class ActivityController extends GetxController {
   final RxList<EventData> eventData = <EventData>[].obs;
   late PageController pageController;
@@ -80,6 +57,269 @@ class ActivityController extends GetxController {
   }
 }
 
+class Activity extends StatelessWidget {
+  final ActivityController controller = Get.put(ActivityController());
+
+  @override
+  Widget build(BuildContext context) {
+    controller.initPageController();
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Activities',
+          style: TextStyle(
+            fontSize: 24,
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: Obx(() {
+        if (controller.eventData.isEmpty) {
+          // Show shimmer effect while waiting for API response
+          return ShimmerList();
+        } else {
+          // Once API response is received, show actual data
+          return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: controller.eventData.map((event) {
+                return Container(
+                  margin: EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                        child: Image.network(
+                          event.image,
+                          height: 300,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  event.event,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Venue: ${event.venue}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Date: ${event.date}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Time: ${event.time}',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          );
+        }
+      }),
+    );
+  }
+}
+
+/*
+class Activity extends StatelessWidget {
+  final ActivityController controller = Get.put(ActivityController());
+
+  @override
+  Widget build(BuildContext context) {
+    controller.initPageController();
+
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Activities',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: Obx(() {
+        if (controller.eventData.isEmpty) {
+          // Show shimmer effect while waiting for API response
+          return ShimmerList();
+        } else {
+          // Once API response is received, show actual data
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 15, left: 35),
+                child: SizedBox(
+                  height: 40,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: controller.eventData.map((event) {
+                        final int index =
+                        controller.eventData.indexOf(event);
+                        return GestureDetector(
+                          onTap: () {
+                            controller.pageController.animateToPage(
+                              index,
+                              duration: Duration(milliseconds: 500),
+                              curve: Curves.ease,
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${event.event}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Inter',
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Container(
+                                  width: 10,
+                                  height: 3,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.75,
+                child: PageView.builder(
+                  clipBehavior: Clip.none,
+                  controller: controller.pageController,
+                  itemCount: controller.eventData.length,
+                  onPageChanged: (index) {
+                    controller.currentIndex.value = index;
+                  },
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.only(
+                          left: 8, right: 8, bottom: 24),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(32),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            offset: const Offset(8, 20),
+                            blurRadius: 24,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(32),
+                                bottom: Radius.circular(32)),
+                            child: Image.network(
+                              controller.eventData[index].image,
+                              height: MediaQuery.of(context)
+                                  .size
+                                  .height *
+                                  0.56,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Expanded(
+                            child: CardContent(
+                              event: controller.eventData[index].event,
+                              venue: controller.eventData[index].venue,
+                              date: controller.eventData[index].date,
+                              time: controller.eventData[index].time,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        }
+      }),
+    );
+  }
+}
+ */
+
+
+/*
 class Activity extends StatelessWidget {
   final ActivityController controller = Get.put(ActivityController());
 
@@ -243,31 +483,57 @@ class Activity extends StatelessWidget {
     );
   }
 }
+ */
 
 class ShimmerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(
-          5,
-              (index) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Container(
-                width: 100,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+      // scrollDirection: Axis.horizontal,
+      child: Column(
+        children: [
+          Row(
+            children: List.generate(
+              3,
+                  (index) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    width: 100,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
+          SizedBox(height: 30,),
+          Column(
+            children: List.generate(
+              5,
+                  (index) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
