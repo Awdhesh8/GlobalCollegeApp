@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:globalcollegeapp/common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
 import 'package:globalcollegeapp/data/api/api_services.dart';
-import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/fees/semister_fees/semister_fees_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
@@ -332,6 +331,7 @@ class SemesterDetailsCard extends StatelessWidget {
                   backgroundColor: Colors.transparent,
                   builder: (BuildContext context) {
                     return DraggableScrollableSheet(
+                      snapAnimationDuration: const Duration(milliseconds: 1200),
                       initialChildSize: 0.5,
                       minChildSize: 0.2,
                       maxChildSize: 0.9,
@@ -350,6 +350,7 @@ class SemesterDetailsCard extends StatelessWidget {
                   backgroundColor: Colors.transparent,
                   builder: (BuildContext context) {
                     return DraggableScrollableSheet(
+                      snapAnimationDuration: const Duration(milliseconds: 1200),
                       initialChildSize: 0.5,
                       minChildSize: 0.2,
                       maxChildSize: 0.9,
@@ -490,14 +491,15 @@ class SemesterDetailsCard extends StatelessWidget {
     );
   }
 }
+
 Widget _buildBottomSheetContent(ScrollController scrollController, Map<String, dynamic> data) {
   return Container(
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(20),
-        topRight: Radius.circular(20),
+        topLeft: Radius.circular(30),
+        topRight: Radius.circular(30),
       ),
     ),
     child: SingleChildScrollView(
@@ -529,7 +531,6 @@ Widget _buildBottomSheetContent(ScrollController scrollController, Map<String, d
     ),
   );
 }
-
 
 Widget _buildInfoCard(String feesType, String totalAmt, String mode,
     String slipNo, String entryDate) {
@@ -707,6 +708,7 @@ class ShimmerItem extends StatelessWidget {
     );
   }
 }
+
 
 /// Correctly Fetch the API
 
