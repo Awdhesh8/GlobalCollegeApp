@@ -492,6 +492,197 @@ class SemesterDetailsCard extends StatelessWidget {
   }
 }
 
+
+Widget _buildBottomSheetContent(
+    ScrollController scrollController, Map<String, dynamic> data) {
+  return Container(
+    decoration: BoxDecoration(
+      // color: EColors.lightContainer,
+      color: Colors.white,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(30),
+        topRight: Radius.circular(30),
+      ),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(20),
+      child: SingleChildScrollView(
+        controller: scrollController,
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  FontAwesomeIcons.fileInvoiceDollar,
+                  color: EColors.primary,
+                  size: 30,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  'Fees Summary',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            for (var fee in data['viewmore']['fees'])
+              _buildInfoCard(
+                feesType: fee['fees_type'],
+                totalAmt: fee['totalamt'],
+                mode: fee['mode'],
+                slipNo: fee['slips'],
+                entryDate: fee['cash_entrydt'],
+              ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _buildInfoCard({
+  required String feesType,
+  required String totalAmt,
+  required String mode,
+  required String slipNo,
+  required String entryDate,
+}) {
+  return Container(
+    margin: EdgeInsets.only(bottom: 20),
+    padding: EdgeInsets.all(15),
+    decoration: BoxDecoration(
+      color: EColors.lightContainer,
+      // color: EColors.white,
+      // color: Colors.grey[200],
+      borderRadius: BorderRadius.circular(15),
+      border: Border.all(color: Colors.white, width: 2),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  FontAwesomeIcons.dollarSign,
+                  color: EColors.primary,
+                  size: 20,
+                ),
+                SizedBox(width: 5),
+                Text(
+                  feesType,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                      fontFamily: 'Inter'
+                  ),
+                ),
+              ],
+            ),
+            Icon(
+              FontAwesomeIcons.infoCircle,
+              color: Colors.grey,
+              size: 20,
+            ),
+          ],
+        ),
+        SizedBox(height: 8),
+        Divider(color: Colors.grey),
+        SizedBox(height: 8),
+        Row(
+          children: [
+            Icon(
+              FontAwesomeIcons.moneyBill,
+              color: Colors.pinkAccent,
+              size: 16,
+            ),
+            SizedBox(width: 5),
+            Text(
+              'Total: ₹$totalAmt',
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: EColors.textColorPrimary1,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 4),
+        Row(
+          children: [
+            Icon(
+              FontAwesomeIcons.clipboardList,
+              color: Colors.pinkAccent,
+              size: 16,
+            ),
+            SizedBox(width: 5),
+            Text(
+              'Mode: $mode',
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: EColors.textColorPrimary1,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 4),
+        Row(
+          children: [
+            Icon(
+              FontAwesomeIcons.receipt,
+              color: Colors.pinkAccent,
+              size: 16,
+            ),
+            SizedBox(width: 5),
+            Text(
+              'Slip No: $slipNo',
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: EColors.textColorPrimary1,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 4),
+        Row(
+          children: [
+            Icon(
+              FontAwesomeIcons.calendarAlt,
+              color: Colors.pinkAccent,
+              size: 16,
+            ),
+            SizedBox(width: 5),
+            Text(
+              'Date: $entryDate',
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: EColors.textColorPrimary1,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+
+/*
+
 Widget _buildBottomSheetContent(ScrollController scrollController, Map<String, dynamic> data) {
   return Container(
     padding: const EdgeInsets.all(20),
@@ -576,6 +767,8 @@ Widget _buildInfoCard(String feesType, String totalAmt, String mode,
   );
 }
 
+
+ */
 class SummaryCard extends StatelessWidget {
   final Map<String, dynamic> summaryData;
 
