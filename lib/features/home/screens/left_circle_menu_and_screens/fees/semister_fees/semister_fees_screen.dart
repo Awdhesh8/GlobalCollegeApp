@@ -138,7 +138,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../../../common/widgets/appbar/appbar.dart';
@@ -194,7 +193,7 @@ class ViewMoreScreen extends StatelessWidget {
                 '₹$perSemFees' ?? '',
               ),
 
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   showModalBottomSheet(
                     context: context,
@@ -343,24 +342,6 @@ Widget _topFeesContainer(String title, String value) {
     padding: const EdgeInsets.all(8.0),
     child: Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: EColors.backgroundColor,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.red.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 4,
-            offset: const Offset(2, 2),
-          ),
-          const BoxShadow(
-            color: Colors.white,
-            spreadRadius: 2,
-            blurRadius: 2,
-            offset: Offset(-3, -3),
-          ),
-        ],
-      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -386,26 +367,6 @@ Widget _topFeesContainer(String title, String value) {
               ),
             ],
           ),
-          // Container(
-          //   padding: const EdgeInsets.all(10),
-          //   decoration: BoxDecoration(
-          //     shape: BoxShape.circle,
-          //     color: Colors.pinkAccent,
-          //     boxShadow: [
-          //       BoxShadow(
-          //         color: Colors.pinkAccent.withOpacity(0.5),
-          //         spreadRadius: 1,
-          //         blurRadius: 5,
-          //         offset: const Offset(0, 3),
-          //       ),
-          //     ],
-          //   ),
-          //   child: const Icon(
-          //     FontAwesomeIcons.creditCard,
-          //     color: EColors.backgroundColor,
-          //     size: 20,
-          //   ),
-          // ),
         ],
       ),
     ),

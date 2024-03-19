@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:globalcollegeapp/data/api/api_services.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/fees/semister_fees/semister_fees_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
+import '../../../../../utils/constants/teext_styles.dart';
 import '../../../../../utils/helpers/helper_functions.dart';
 
 class FeesController extends GetxController {
@@ -322,6 +324,79 @@ class SemesterDetailsCard extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
+              if (data["viewmore"] is List && (data["viewmore"] as List).isNotEmpty) {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Fees Summary',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.bold,
+                              color: EColors.textColorPrimary1,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          for (var fee in data['viewmore']['fees'])
+                            _buildInfoCard(
+                              fee['fees_type'],
+                              fee['totalamt'],
+                              fee['mode'],
+                              fee['slips'],
+                              fee['cash_entrydt'],
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              } else if (data["viewmore"] is List && (data["viewmore"] as List).isEmpty) {
+                Get.snackbar('Empty Fees', 'Sem data is empty.');
+              } else if (data["viewmore"] is Map && (data["viewmore"] as Map).isNotEmpty) {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Fees Summary',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.bold,
+                              color: EColors.textColorPrimary1,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          for (var fee in data['viewmore']['fees'])
+                            _buildInfoCard(
+                              fee['fees_type'],
+                              fee['totalamt'],
+                              fee['mode'],
+                              fee['slips'],
+                              fee['cash_entrydt'],
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              } else {
+                Get.snackbar('Error', 'Unable to process ViewMore data.');
+              }
+            },
+
+            /*
+            onTap: () {
               if (data["viewmore"] is List &&
                   (data["viewmore"] as List).isNotEmpty) {
                 Get.to(
@@ -347,6 +422,7 @@ class SemesterDetailsCard extends StatelessWidget {
                 Get.snackbar('Error', 'Unable to process ViewMore data.');
               }
             },
+             */
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -379,6 +455,38 @@ class SemesterDetailsCard extends StatelessWidget {
     );
   }
 }
+
+Widget _buildInfoCard(String feesType, String totalAmt, String mode, String slipNo, String entryDate) {
+  return Padding(
+    padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Icon(
+              FontAwesomeIcons.solidCreditCard,
+              color: EColors.primary,
+              size: 15,
+            ),
+            Text(
+              feesType,
+              style: TextStyleClass.feesSummaryText,
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text('Total: ₹$totalAmt,',style: TextStyleClass.feesText,),
+        Text('Mode: $mode,',style: TextStyleClass.feesText,),
+        Text('Slip No: $slipNo,',style: TextStyleClass.feesText,),
+        Text('Date: $entryDate',style: TextStyleClass.feesText,),
+        const Divider()
+      ],
+    ),
+  );
+}
+
 
 class SummaryCard extends StatelessWidget {
   final Map<String, dynamic> summaryData;

@@ -142,5 +142,27 @@ class CustomDeco {
     );
   }
 
+ /// Neomorphic
+  static BoxDecoration neoDecoRectangle() {
+    return BoxDecoration(
+      color: EColors.backgroundColor,
+      borderRadius: BorderRadius.circular(15),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.red.withOpacity(0.2),
+          spreadRadius: 2,
+          blurRadius: 4,
+          offset: const Offset(2, 2),
+        ),
+        const BoxShadow(
+          color: Colors.white,
+          spreadRadius: 2,
+          blurRadius: 2,
+          offset: Offset(-3, -3),
+        ),
+      ],
+    );
+  }
+
 
 }
