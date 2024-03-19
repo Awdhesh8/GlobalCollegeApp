@@ -150,9 +150,92 @@ class ViewMoreScreen extends StatelessWidget {
   final perSemFees;
   final paidAmount;
   final balanceAmount;
+
   ViewMoreScreen(this.viewMoreData, this.sem, this.perSemFees, this.paidAmount,
       this.balanceAmount);
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: GAppBar(
+        backgroundColor: Colors.transparent,
+        showBackArrow: true,
+        title: Text(
+          "Sem ${sem.toString()}",
+          style: const TextStyle(
+            color: EColors.textColorPrimary1,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Container(
+          margin: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white70,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.red.withOpacity(0.1),
+                spreadRadius: 5,
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              _topFeesContainer(
+                'Per Semester',
+                '₹$perSemFees' ?? '',
+              ),
+              _topFeesContainer(
+                'Balance Amt',
+                '₹$balanceAmount' ?? '',
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10, bottom: 10, top: 8),
+                child: Text(
+                  'Fees Summary',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: EColors.textColorPrimary1,
+                  ),
+                ),
+              ),
+              // for (var entry in viewMoreData['fees'].entries)
+              //   _buildInfoCard(entry.key, entry.value),
+              // for (var fee in viewMoreData['fees'])
+              //   _buildInfoCard(
+              //       fee['fees_type'],
+              //       'Total: ₹${fee['totalamt']}, \nMode: ${fee['mode']}, \nSlip No: ${fee['slips']}, \nEntry Date: ${fee['cash_entrydt']}'
+              //   ),
+              for (var fee in viewMoreData['fees'])
+                _buildInfoCard(
+                  fee['fees_type'],
+                  fee['totalamt'],
+                  fee['mode'],
+                  fee['slips'],
+                  fee['cash_entrydt'],
+                ),
+
+              _topFeesContainer(
+                'Total Paid',
+                '₹$paidAmount' ?? '',
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/*
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,7 +313,9 @@ class ViewMoreScreen extends StatelessWidget {
   }
 }
 
-Widget _buildInfoCard(String title, int value) {
+ */
+
+Widget _buildInfoCard(String feesType, String totalAmt, String mode, String slipNo, String entryDate) {
   return Padding(
     padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
     child: Column(
@@ -245,24 +330,24 @@ Widget _buildInfoCard(String title, int value) {
               size: 15,
             ),
             Text(
-              title,
+              feesType,
               style: const TextStyle(
-                  fontSize: 15,
-                  fontFamily: 'Inter',
-                  color: EColors.textColorPrimary1
-                  // fontWeight: FontWeight.bold,
-                  ),
+                fontSize: 15,
+                fontFamily: 'Inter',
+                color: EColors.textColorPrimary1,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 4),
         Text(
-          '₹${value.toString()}',
+          'Total: ₹$totalAmt, Mode: $mode, Slip No: $slipNo, Entry Date: $entryDate',
           style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Inter',
-              color: EColors.textColorPrimary1),
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Inter',
+            color: EColors.textColorPrimary1,
+          ),
         ),
       ],
     ),
