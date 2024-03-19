@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'The Flutter Way',
+      title: 'Baderia College App',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system, // Use system theme mode
