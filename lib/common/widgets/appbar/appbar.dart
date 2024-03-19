@@ -17,7 +17,7 @@ class GAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.centerTitle,
     this.bottom,
     this.flexibleSpace,
-    this.surfaceTintColor,
+    this.surfaceTintColor = Colors.transparent,
   });
 
   final Widget? title;

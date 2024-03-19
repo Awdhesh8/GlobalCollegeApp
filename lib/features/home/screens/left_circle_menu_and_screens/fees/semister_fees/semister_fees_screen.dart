@@ -141,6 +141,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import '../../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../../utils/constants/colors.dart';
 
@@ -196,16 +197,21 @@ class ViewMoreScreen extends StatelessWidget {
                 'Balance Amt',
                 '₹$balanceAmount' ?? '',
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 10, bottom: 10, top: 8),
-                child: Text(
-                  'Fees Summary',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: EColors.textColorPrimary1,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, bottom: 10, top: 8),
+                    child: Text(
+                      'Fees Summary',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: EColors.textColorPrimary1,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
               // for (var entry in viewMoreData['fees'].entries)
               //   _buildInfoCard(entry.key, entry.value),
@@ -331,24 +337,16 @@ Widget _buildInfoCard(String feesType, String totalAmt, String mode, String slip
             ),
             Text(
               feesType,
-              style: const TextStyle(
-                fontSize: 15,
-                fontFamily: 'Inter',
-                color: EColors.textColorPrimary1,
-              ),
+              style: TextStyleClass.feesSummaryText,
             ),
           ],
         ),
         const SizedBox(height: 4),
-        Text(
-          'Total: ₹$totalAmt, Mode: $mode, Slip No: $slipNo, Entry Date: $entryDate',
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Inter',
-            color: EColors.textColorPrimary1,
-          ),
-        ),
+        Text('Total: ₹$totalAmt,',style: TextStyleClass.feesText,),
+      Text('Mode: $mode,',style: TextStyleClass.feesText,),
+      Text('Slip No: $slipNo,',style: TextStyleClass.feesText,),
+      Text('Date: $entryDate',style: TextStyleClass.feesText,),
+      const Divider()
       ],
     ),
   );

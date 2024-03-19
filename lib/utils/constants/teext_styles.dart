@@ -66,12 +66,18 @@ class TextStyleClass {
     fontSize: 12.0,
     fontWeight: FontWeight.normal,
     color: Colors.grey,
-
   );
+
 
   static const TextStyle bodyText2 = TextStyle(
     fontFamily: 'Inter',
     fontSize: 14.0,
+    fontWeight: FontWeight.normal,
+    color: EColors.textSecondaryTitle,
+  );
+  static const TextStyle feesText = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 12.0,
     fontWeight: FontWeight.normal,
     color: EColors.textSecondaryTitle,
   );
@@ -82,6 +88,13 @@ class TextStyleClass {
     fontWeight: FontWeight.w500,
     color: EColors.black,
     // color: EColors.textSecondaryTitle,
+  );
+
+  static const TextStyle feesSummaryText = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Inter',
+    color: EColors.textColorPrimary1,
   );
 
   static const TextStyle labelText1 = TextStyle(
@@ -97,13 +110,10 @@ class TextStyleClass {
   );
 
   static const TextStyle appBarTextStyle = TextStyle(
-    color: EColors.textColorPrimary1,
-    fontWeight: FontWeight.w600,
-    fontSize: ESizes.appTitle,
-    fontFamily: 'Inter'
-  );
-
-
+      color: EColors.textColorPrimary1,
+      fontWeight: FontWeight.w600,
+      fontSize: ESizes.appTitle,
+      fontFamily: 'Inter');
 
 // Add more styles as needed
 
