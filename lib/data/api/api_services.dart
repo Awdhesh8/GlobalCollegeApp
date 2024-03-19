@@ -1161,7 +1161,7 @@ class ApiService {
   }
 
   ///Get VT Letter Location
-  static Future<Map<String, dynamic>>fetchVtLetterLocation111(
+  static Future<Map<String, dynamic>>fetchVtLetterLocation(
       String vtp_subjid) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -1219,41 +1219,6 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('An error occurred: $e');
-    }
-  }
-
-
-
-
-  Future<VtlocationModal> fetchVtLetterLocation() async {
-    try {
-      final response = await http.post(
-        Uri.parse(APIConstants.getFullUrl(APIConstants.getVtLetterLocation)),
-        headers: APIConstants.headers,
-        body: {
-          'APIKEY': 'GNCS0225',
-          // 'USER_ID': userId,
-          'vtp_subjid': '948',
-        },
-      );
-      //print(vtp_subjid);
-      //print(response.body);
-      if (response.statusCode == 200) {
-        //print(response.body);
-        VtlocationModal districtDataFromJson(String str) =>
-            VtlocationModal.fromJson(json.decode(str));
-        final VtlocationModal responseModel =
-            districtDataFromJson(response.body);
-        return responseModel;
-      } else {
-        return VtlocationModal(
-            status: 0,
-            message: 'Something went wrong: ${response.statusCode}',
-            data: []);
-      }
-    } catch (e) {
-      //log('Exception: ${e.toString()}');
-      throw Exception(e.toString());
     }
   }
 

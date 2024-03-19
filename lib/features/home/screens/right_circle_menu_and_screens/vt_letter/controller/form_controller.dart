@@ -1,12 +1,14 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../../../../../data/api/api_services.dart';
 import '../widgets/vt_letter_form.dart';
 
 class VTLetterFormController extends GetxController {
-  Repository repository = Repository();
   RxString fromController = ''.obs;
   RxString toController = ''.obs;
   RxString subjectsController = ''.obs;//
@@ -15,8 +17,6 @@ class VTLetterFormController extends GetxController {
   RxBool fromError = false.obs;
 
   Rx<VtLetterSubject?> subjectController = Rx<VtLetterSubject?>(null);
-  //Rx<VtlocationModal?> locationController = Rx<VtlocationModal?>(null);
-  //Rx<List<StateDatum>> lststatemodel = Rx<List<StateDatum>>([]);
   RxBool subjectError = false.obs;
 
   RxString vtSubjectId = ''.obs;
@@ -26,29 +26,17 @@ class VTLetterFormController extends GetxController {
   RxList<String> vtLetterHistory = <String>[].obs;
 
   Rx<List<DropdownMenuItem<String>>> listCompanyDropDown = Rx<List<DropdownMenuItem<String>>>([]);
-  //Rx<List<ValueItem<String>>> companyValueItem = Rx<List<ValueItem<String>>>([]);
-  Rx<List<DistDatum>> lstdistmodel = Rx<List<DistDatum>>([]);
 
-  final items = <Item>[
-    // Item(1, 'Item 1'),
-    // Item(2, 'Item 2'),
-    // Item(3, 'Item 3'),
-    // Item(4, 'Item 4'),
-    // Item(5, 'Item 5'),
-  ].obs;
+  final items = <Item>[].obs;
 
-
-  void getCompany111()async{
-    listCompanyDropDown.value.clear();
+  void getCompany_old()async{
+    //listCompanyDropDown.value.clear();
     print(vtSubjectId);
-    listCompanyDropDown.value.add(DropdownMenuItem(child: Text("GCF"),value: '1998',));
-    listCompanyDropDown.value.add(DropdownMenuItem(child: Text("TCS"),value: '1948',));
-    items.add(Item(11, "Item 11"));
-    items.add(Item(22, "Item 22"));
+    //listCompanyDropDown.value.add(DropdownMenuItem(child: Text("GCF"),value: '1998',));
+    //listCompanyDropDown.value.add(DropdownMenuItem(child: Text("TCS"),value: '1948',));
+    //items.add(Item(11, "Item 11"));
+    //items.add(Item(22, "Item 22"));
     print(vtSubjectId);
-
-    //companyValueItem.value.add(const ValueItem(label: 'label', value: '33'));
-    //listCompanyDropDown.value.add(DropdownMenuItem(value: '0',child: Text(vtSubjectId.toString()),));
   }
 
 
@@ -64,19 +52,44 @@ class VTLetterFormController extends GetxController {
     print('Selected Items: ${selectedItems.map((item) => item.id).join(", ")}');
   }
 
-    Future<void> getCompany() async {
+  Future<void> getCompany() async {
       String vtp_subjid = vtSubjectId.value;
-      print('yyy $vtp_subjid');
-      //ApiService apiProvider = ApiService();
-      var snapshot = await Future.value(ApiService.fetchVtLetterLocation111(vtp_subjid));
+      //print('SubjectId $vtp_subjid');
+      var snapshot = await Future.value(ApiService.fetchVtLetterLocation(vtp_subjid));
       var data = snapshot['response'];
-      print(data);
+      //print(data);
 
-      // for(var item as data){
-      //   var id = item['vtp_id'];
-      //   var name = item['locat'];
-      // }
-   /*
+      List<dynamic> listData = data;
+      List<LocationModal> listArray = listData.map((e) =>LocationModal.fromJson(e)).toList();
+      items.clear();
+      for (var i in listArray) {
+        items.add(Item(i.id, "${i.name}"));
+        print('vtp_id: ${i.id}, locat: ${i.name}');
+      }
+  }
+}
+
+class Item {
+  final String id;
+  final String name;
+  Item(this.id, this.name);
+}
+
+class LocationModal {
+  final String id;
+  final String name;
+
+  LocationModal({required this.id, required this.name});
+
+  factory LocationModal.fromJson(Map<String, dynamic> json) {
+    return LocationModal(
+      id: json['vtp_id'] ?? '',
+      name: json['locat'] ?? '',
+    );
+  }
+}
+
+/*
     try {
       // Get.dialog(Center(
       //   child: CircularProgressIndicator(),
@@ -123,21 +136,3 @@ class VTLetterFormController extends GetxController {
     }
 
     */
-  }
-
-
-}
-class Item {
-  final int id;
-  final String name;
-  Item(this.id, this.name);
-}
-
-class Repository {
- // final ApiService apiProvider;
-  ApiService apiProvider = ApiService();
-  // Repository(this.apiProvider);
-  Future<VtlocationModal>? getalldistrict() => apiProvider.fetchVtLetterLocation();
-
-}
-

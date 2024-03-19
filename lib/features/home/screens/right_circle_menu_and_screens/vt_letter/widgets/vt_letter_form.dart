@@ -343,7 +343,6 @@ class VTLetterForm extends StatelessWidget {
 
   void _showMultiSelect(BuildContext context) {
     Get.bottomSheet(
-
       Container(
         color: Colors.white,
         child: MultiSelectBottomSheet(
@@ -353,8 +352,8 @@ class VTLetterForm extends StatelessWidget {
           initialValue: controller.selectedItems,
           onConfirm: (values) {
             controller.selectedItems.assignAll(values);
-            print('Confirmed Selected Items11: ${controller.selectedItems.map((item) => item.name).join(", ")}');
-            print('Confirmed Selected ID11: ${controller.selectedItems.map((item) => item.id).join(", ")}');
+            print('Confirmed Selected Items: ${controller.selectedItems.map((item) => item.name).join(", ")}');
+            print('Confirmed Selected ID: ${controller.selectedItems.map((item) => item.id).join(", ")}');
           },
           maxChildSize: 1,
         ),
@@ -440,91 +439,6 @@ class VtLetterSubject {
     );
   }
 }
-/*
-class VtlocationModal {
-  final String id;
-  final String name;
-
-  VtlocationModal({required this.id, required this.name});
-
-  factory VtlocationModal.fromJson(Map<String, dynamic> json) {
-    return VtlocationModal(
-      id: json['vtp_id'] ?? '',
-      name: json['locat'] ?? '',
-    );
-  }
-}
-*/
-String districtDataToJson(VtlocationModal data) => json.encode(data.toJson());
-class VtlocationModal {
-  int status;
-  String message;
-  List<DistDatum> data;
-
-  VtlocationModal({
-    required this.status,
-    required this.message,
-    required this.data,
-  });
-
-  factory VtlocationModal.fromJson(Map<String, dynamic> json) => VtlocationModal(
-    status: json["status"],
-    message: json["message"],
-    data: List<DistDatum>.from(json["Data"].map((x) => DistDatum.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "status": status,
-    "message": message,
-    "Data": List<dynamic>.from(data.map((x) => x.toJson())),
-  };
-}
-class DistDatum {
-  String districtid;
-  String districtTitle;
- // String stateId;
-
-  DistDatum({
-    required this.districtid,
-    required this.districtTitle,
-    //required this.stateId,
-  });
-
-  factory DistDatum.fromJson(Map<String, dynamic> json) => DistDatum(
-    districtid: json["vtp_id"],
-    districtTitle: json["locat"],
-    //stateId: json["state_id"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "districtid": districtid,
-    "district_title": districtTitle,
-    //"state_id": stateId,
-  };
-}
-
-class Response {
-  String? vtpId;
-  String? locat;
-
-  Response({this.vtpId, this.locat});
-
-  Response.fromJson(Map<String, dynamic> json) {
-    vtpId = json['vtp_id'];
-    locat = json['locat'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['vtp_id'] = this.vtpId;
-    data['locat'] = this.locat;
-    return data;
-  }
-}
-
-
-
-
 
 /// Bottom sheet with multiselection
 /*
