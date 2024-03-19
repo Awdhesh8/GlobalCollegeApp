@@ -142,7 +142,7 @@ class CustomDeco {
     );
   }
 
- /// Neomorphic
+ /// Neomorphic container
   static BoxDecoration neoDecoRectangle() {
     return BoxDecoration(
       color: EColors.backgroundColor,
@@ -159,6 +159,28 @@ class CustomDeco {
           spreadRadius: 2,
           blurRadius: 2,
           offset: Offset(-3, -3),
+        ),
+      ],
+    );
+  }
+
+/// Neomorphic Icon container
+  static BoxDecoration neoDecoIconRectangle() {
+    return BoxDecoration(
+      shape: BoxShape.circle,
+      color: Colors.redAccent.shade400,
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0xFFFFC1C5),
+          offset: Offset(2, 2),
+          blurRadius: 5,
+          spreadRadius: 1,
+        ),
+        BoxShadow(
+          color: Colors.white,
+          offset: Offset(-3, -3),
+          blurRadius: 5,
+          spreadRadius: 1,
         ),
       ],
     );

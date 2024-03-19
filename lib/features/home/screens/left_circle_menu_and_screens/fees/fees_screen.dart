@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:globalcollegeapp/common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
 import 'package:globalcollegeapp/data/api/api_services.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/fees/semister_fees/semister_fees_screen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -26,7 +27,8 @@ class FeesController extends GetxController {
       Map<String, dynamic>? responseData = await ApiService.getProfileData();
       if (responseData!.containsKey('response')) {
         // Extracting the list of profiles from the 'response' key
-        List<Map<String, dynamic>> profiles = List<Map<String, dynamic>>.from(responseData['response']);
+        List<Map<String, dynamic>> profiles =
+            List<Map<String, dynamic>>.from(responseData['response']);
         // Assigning the profiles to profileData
         profileData.assignAll(profiles);
       }
@@ -76,7 +78,7 @@ class FeesScreen extends StatelessWidget {
         child: Column(
           children: [
             Obx(
-                  () {
+              () {
                 if (feesController.profileData.isEmpty ||
                     feesController.data.isEmpty ||
                     feesController.summary.isEmpty) {
@@ -86,7 +88,7 @@ class FeesScreen extends StatelessWidget {
                     child: Column(
                       children: List.generate(
                         6,
-                            (index) => ShimmerItem(),
+                        (index) => ShimmerItem(),
                       ),
                     ),
                   );
@@ -95,7 +97,6 @@ class FeesScreen extends StatelessWidget {
                   return Column(
                     children: [
                       ProfileDetail(profileData: profileData),
-
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 18),
                         child: Divider(),
@@ -104,7 +105,6 @@ class FeesScreen extends StatelessWidget {
                       ...feesController.data.map((data) {
                         return SemesterDetailsCard(data: data);
                       }).toList(),
-
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 18),
                         child: Divider(),
@@ -137,7 +137,8 @@ class ProfileDetail extends StatelessWidget {
     return ListTile(
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(100),
-        child: Image.network(profileData['Profile_photo'] ?? '',
+        child: Image.network(
+          profileData['Profile_photo'] ?? '',
           fit: BoxFit.fill,
           width: 60,
           height: 60,
@@ -146,25 +147,28 @@ class ProfileDetail extends StatelessWidget {
       // leading: Image.network(profileData['Profile_photo'] ?? ''),
       title: Row(
         children: [
-          const Text('Hello, ',
-          style: TextStyle(
-             fontSize: 16,
-            fontFamily: 'Inter',
-            color: Colors.black45,
+          const Text(
+            'Hello, ',
+            style: TextStyle(
+              fontSize: 16,
+              fontFamily: 'Inter',
+              color: Colors.black45,
+            ),
           ),
-          ),
-          Text('${profileData['student_name']}',
+          Text(
+            '${profileData['student_name']}',
             style: const TextStyle(
               fontSize: 16,
               fontFamily: 'Inter',
-               fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w500,
               //style: Theme.of(context).textTheme.labelSmall!.apply(color: EColors.textColorPrimary1, fontFamily: 'Inter', ),
               color: EColors.textColorPrimary1,
-          ),
+            ),
           ),
         ],
       ),
-      subtitle: Text('GNo: ${profileData['GNo']}',
+      subtitle: Text(
+        'GNo: ${profileData['GNo']}',
         style: const TextStyle(
           fontSize: 14,
           fontFamily: 'Inter',
@@ -189,8 +193,7 @@ class HeaderText extends StatelessWidget {
         decoration: const BoxDecoration(
             color: EColors.circleAvatar,
             borderRadius: BorderRadius.all(Radius.circular(12))),
-        child:
-        const Padding(
+        child: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 2),
           child: Text(
             'Breakdown of Student Fees by Semester',
@@ -200,8 +203,7 @@ class HeaderText extends StatelessWidget {
                 fontSize: 10,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
-                overflow:TextOverflow.ellipsis
-            ),
+                overflow: TextOverflow.ellipsis),
           ),
         ),
       ),
@@ -221,7 +223,7 @@ class SemesterDetailsCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-          color:  darkMode ? EColors.black : const Color(0xFFFFE0E5),
+        color: darkMode ? EColors.black : const Color(0xFFFFE0E5),
         // color: const Color(0xFFFFE0E5),
         // color: EColors.backgroundColor,
         borderRadius: BorderRadius.circular(20),
@@ -325,68 +327,36 @@ class SemesterDetailsCard extends StatelessWidget {
           InkWell(
             onTap: () {
               if (data["viewmore"] is List && (data["viewmore"] as List).isNotEmpty) {
-                showModalBottomSheet(
+                showBottomSheet(
                   context: context,
+                  backgroundColor: Colors.transparent,
                   builder: (BuildContext context) {
-                    return Container(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Fees Summary',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.bold,
-                              color: EColors.textColorPrimary1,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          for (var fee in data['viewmore']['fees'])
-                            _buildInfoCard(
-                              fee['fees_type'],
-                              fee['totalamt'],
-                              fee['mode'],
-                              fee['slips'],
-                              fee['cash_entrydt'],
-                            ),
-                        ],
-                      ),
+                    return DraggableScrollableSheet(
+                      initialChildSize: 0.5,
+                      minChildSize: 0.2,
+                      maxChildSize: 0.9,
+                      expand: false,
+                      builder: (context, scrollController) {
+                        return _buildBottomSheetContent(scrollController, data);
+                      },
                     );
                   },
                 );
               } else if (data["viewmore"] is List && (data["viewmore"] as List).isEmpty) {
                 Get.snackbar('Empty Fees', 'Sem data is empty.');
               } else if (data["viewmore"] is Map && (data["viewmore"] as Map).isNotEmpty) {
-                showModalBottomSheet(
+                showBottomSheet(
                   context: context,
+                  backgroundColor: Colors.transparent,
                   builder: (BuildContext context) {
-                    return Container(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Fees Summary',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.bold,
-                              color: EColors.textColorPrimary1,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          for (var fee in data['viewmore']['fees'])
-                            _buildInfoCard(
-                              fee['fees_type'],
-                              fee['totalamt'],
-                              fee['mode'],
-                              fee['slips'],
-                              fee['cash_entrydt'],
-                            ),
-                        ],
-                      ),
+                    return DraggableScrollableSheet(
+                      initialChildSize: 0.5,
+                      minChildSize: 0.2,
+                      maxChildSize: 0.9,
+                      expand: false,
+                      builder: (context, scrollController) {
+                        return _buildBottomSheetContent(scrollController, data);
+                      },
                     );
                   },
                 );
@@ -395,6 +365,88 @@ class SemesterDetailsCard extends StatelessWidget {
               }
             },
 
+            /*
+            onTap: () {
+              if (data["viewmore"] is List &&
+                  (data["viewmore"] as List).isNotEmpty) {
+                showModalBottomSheet(
+                  showDragHandle: true,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Fees Summary',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.bold,
+                              color: EColors.textColorPrimary1,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          for (var fee in data['viewmore']['fees'])
+                            _buildInfoCard(
+                              fee['fees_type'],
+                              fee['totalamt'],
+                              fee['mode'],
+                              fee['slips'],
+                              fee['cash_entrydt'],
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              } else if (data["viewmore"] is List &&
+                  (data["viewmore"] as List).isEmpty) {
+                Get.snackbar('Empty Fees', 'Sem data is empty.');
+              } else if (data["viewmore"] is Map &&
+                  (data["viewmore"] as Map).isNotEmpty) {
+                showModalBottomSheet(
+                  showDragHandle: true,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      padding: const EdgeInsets.all(20),
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Fees Summary',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.bold,
+                                color: EColors.textColorPrimary1,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            for (var fee in data['viewmore']['fees'])
+                              _buildInfoCard(
+                                fee['fees_type'],
+                                fee['totalamt'],
+                                fee['mode'],
+                                fee['slips'],
+                                fee['cash_entrydt'],
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else {
+                Get.snackbar('Error', 'Unable to process ViewMore data.');
+              }
+            },
+             */  /// With Bottom Sheet ---
+            /// --------- Old Code for navigation to screen
             /*
             onTap: () {
               if (data["viewmore"] is List &&
@@ -425,24 +477,7 @@ class SemesterDetailsCard extends StatelessWidget {
              */
             child: Container(
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.redAccent.shade400,
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0xFFFFC1C5),
-                    offset: Offset(2, 2),
-                    blurRadius: 5,
-                    spreadRadius: 1,
-                  ),
-                  BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(-3, -3),
-                    blurRadius: 5,
-                    spreadRadius: 1,
-                  ),
-                ],
-              ),
+              decoration: CustomDeco.neoDecoIconRectangle(),
               child: const Icon(
                 Icons.arrow_forward_ios,
                 color: EColors.backgroundColor,
@@ -455,8 +490,49 @@ class SemesterDetailsCard extends StatelessWidget {
     );
   }
 }
+Widget _buildBottomSheetContent(ScrollController scrollController, Map<String, dynamic> data) {
+  return Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(20),
+        topRight: Radius.circular(20),
+      ),
+    ),
+    child: SingleChildScrollView(
+      controller: scrollController,
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Fees Summary',
+            style: TextStyle(
+              fontSize: 20,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.bold,
+              color: EColors.textColorPrimary1,
+            ),
+          ),
+          const SizedBox(height: 10),
+          for (var fee in data['viewmore']['fees'])
+            _buildInfoCard(
+              fee['fees_type'],
+              fee['totalamt'],
+              fee['mode'],
+              fee['slips'],
+              fee['cash_entrydt'],
+            ),
+        ],
+      ),
+    ),
+  );
+}
 
-Widget _buildInfoCard(String feesType, String totalAmt, String mode, String slipNo, String entryDate) {
+
+Widget _buildInfoCard(String feesType, String totalAmt, String mode,
+    String slipNo, String entryDate) {
   return Padding(
     padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
     child: Column(
@@ -477,16 +553,27 @@ Widget _buildInfoCard(String feesType, String totalAmt, String mode, String slip
           ],
         ),
         const SizedBox(height: 4),
-        Text('Total: ₹$totalAmt,',style: TextStyleClass.feesText,),
-        Text('Mode: $mode,',style: TextStyleClass.feesText,),
-        Text('Slip No: $slipNo,',style: TextStyleClass.feesText,),
-        Text('Date: $entryDate',style: TextStyleClass.feesText,),
+        Text(
+          'Total: ₹$totalAmt,',
+          style: TextStyleClass.feesText,
+        ),
+        Text(
+          'Mode: $mode,',
+          style: TextStyleClass.feesText,
+        ),
+        Text(
+          'Slip No: $slipNo,',
+          style: TextStyleClass.feesText,
+        ),
+        Text(
+          'Date: $entryDate',
+          style: TextStyleClass.feesText,
+        ),
         const Divider()
       ],
     ),
   );
 }
-
 
 class SummaryCard extends StatelessWidget {
   final Map<String, dynamic> summaryData;
@@ -497,7 +584,7 @@ class SummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      padding: const EdgeInsets.only(left: 15, right: 10, top: 8,bottom: 5),
+      padding: const EdgeInsets.only(left: 15, right: 10, top: 8, bottom: 5),
       decoration: BoxDecoration(
         color: EColors.backgroundColor,
         borderRadius: BorderRadius.circular(20),
@@ -620,8 +707,6 @@ class ShimmerItem extends StatelessWidget {
     );
   }
 }
-
-
 
 /// Correctly Fetch the API
 
