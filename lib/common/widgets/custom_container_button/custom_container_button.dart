@@ -53,7 +53,7 @@ class _CustomContainerButtonState extends State<CustomContainerButton>
           );
         },
         child: Container(
-          width: 125,
+          width: 108,
           height: 50,
           decoration: BoxDecoration(
             // color: Colors.white,
