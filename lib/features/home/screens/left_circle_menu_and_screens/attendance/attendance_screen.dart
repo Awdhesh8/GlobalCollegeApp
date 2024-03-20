@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -47,30 +48,27 @@ class AttendanceScreen extends StatelessWidget {
               // CalendarWidget added here
               // CalendarWidget(),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 child: Container(
-                  // height: 300,
-                  // width: 300,
+                    // height: 300,
+                    // width: 300,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: const [
-                          BoxShadow(
-                              blurRadius: 8,
-                              color: Colors.black12
-                          )
-                        ]
-                    ),
+                          BoxShadow(blurRadius: 8, color: Colors.black12)
+                        ]),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       // child: MyCalendar(),
                       child: CalendarPage(),
                     )),
               ),
-
+              const SizedBox(height: 15),
               const ColorIndicationBoxExample(),
               const SizedBox(height: 15),
-
+/*
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
@@ -82,7 +80,11 @@ class AttendanceScreen extends StatelessWidget {
                     SizedBox(width: 5),
                     Text(
                       "22/15",
-                      style: TextStyle(fontSize: 14, fontFamily: 'Inter', color: EColors.primary, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                          color: EColors.primary,
+                          fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
@@ -101,11 +103,17 @@ class AttendanceScreen extends StatelessWidget {
                     SizedBox(width: 5),
                     Text(
                       "98.99 %",
-                      style: TextStyle(fontSize: 14, fontFamily: 'Inter', color: EColors.primary, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                          color: EColors.primary,
+                          fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
               ),
+
+ */
             ],
           ),
         ),
@@ -132,7 +140,8 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> {
   bool _isLoading = true;
   late DateTime _currentMonth;
-  final PageController _pageController = PageController(initialPage: DateTime.now().month - 1);
+  final PageController _pageController =
+      PageController(initialPage: DateTime.now().month - 1);
 
   List<CalendarEvent> _events = [];
 
@@ -164,13 +173,15 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Color getCellColor(DateTime date) {
     List<CalendarEvent> eventsOnDate = _events
-        .where((event) => event.eventDate.year == date.year &&
-        event.eventDate.month == date.month &&
-        event.eventDate.day == date.day)
+        .where((event) =>
+            event.eventDate.year == date.year &&
+            event.eventDate.month == date.month &&
+            event.eventDate.day == date.day)
         .toList();
 
     if (eventsOnDate.isNotEmpty) {
-      print('Date: $date, EventName: ${eventsOnDate.first.eventName}, Color: ${getEventBackgroundColor(eventsOnDate.first.eventName)}');
+      print(
+          'Date: $date, EventName: ${eventsOnDate.first.eventName}, Color: ${getEventBackgroundColor(eventsOnDate.first.eventName)}');
       return getEventBackgroundColor(eventsOnDate.first.eventName);
     }
 
@@ -183,38 +194,38 @@ class _CalendarPageState extends State<CalendarPage> {
     return _isLoading
         ? _buildShimmerCell()
         : Padding(
-      padding: const EdgeInsets.all(6.0),
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(8),
-          color: cellColor,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              date.day.toString(),
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 12,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
+            padding: const EdgeInsets.all(6.0),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(8),
+                color: cellColor,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    date.day.toString(),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    DateFormat('EEE').format(date),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 8,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
+                ],
               ),
             ),
-            Text(
-              DateFormat('EEE').format(date),
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 8,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w200,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   Widget _buildShimmerCell() {
@@ -236,8 +247,10 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Widget buildMonth(DateTime firstDayOfMonth) {
     List<Widget> dayWidgets = [];
-    DateTime currentDate = DateTime(firstDayOfMonth.year, firstDayOfMonth.month, 1);
-    int daysInMonth = DateTime(firstDayOfMonth.year, firstDayOfMonth.month + 1, 0).day;
+    DateTime currentDate =
+        DateTime(firstDayOfMonth.year, firstDayOfMonth.month, 1);
+    int daysInMonth =
+        DateTime(firstDayOfMonth.year, firstDayOfMonth.month + 1, 0).day;
 
     while (currentDate.month == firstDayOfMonth.month) {
       dayWidgets.add(buildCell(currentDate));
@@ -273,8 +286,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 color: Colors.black45,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                letterSpacing: 5
-            ),
+                letterSpacing: 5),
           ),
         ),
       ),
@@ -283,17 +295,24 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _loadEventsForCurrentMonth() async {
     try {
-      print('_events before setState: $_events');
+      if (kDebugMode) {
+        print('_events before setState: $_events');
+      }
 
-      Map<String, dynamic> jsonData = await ApiService.getAttendanceData(_currentMonth.year, _currentMonth.month);
+      Map<String, dynamic> jsonData = await ApiService.getAttendanceData(
+          _currentMonth.year, _currentMonth.month);
 
       if (jsonData.containsKey('response')) {
         _loadEventsFromApi(_currentMonth, jsonData);
       } else {
-        print('Response does not contain key "response"');
+        if (kDebugMode) {
+          print('Response does not contain key "response"');
+        }
       }
     } catch (e) {
-      print('Error fetching attendance data: $e');
+      if (kDebugMode) {
+        print('Error fetching attendance data: $e');
+      }
     }
   }
 
@@ -322,15 +341,22 @@ class _CalendarPageState extends State<CalendarPage> {
                   curve: Curves.easeInOut,
                 );
                 setState(() {
-                  _currentMonth = DateTime(_currentMonth.year, _currentMonth.month - 1, 1);
+                  _currentMonth =
+                      DateTime(_currentMonth.year, _currentMonth.month - 1, 1);
                 });
                 _loadEventsForCurrentMonth(); // Load events for the new month
               },
-              icon: Icon(Icons.arrow_back, color: Colors.black54,),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.black54,
+              ),
             ),
             Text(
               DateFormat('MMMM yyyy').format(_currentMonth),
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, fontFamily: 'Inter'),
+              style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Inter'),
             ),
             IconButton(
               onPressed: () {
@@ -339,11 +365,12 @@ class _CalendarPageState extends State<CalendarPage> {
                   curve: Curves.easeInOut,
                 );
                 setState(() {
-                  _currentMonth = DateTime(_currentMonth.year, _currentMonth.month + 1, 1);
+                  _currentMonth =
+                      DateTime(_currentMonth.year, _currentMonth.month + 1, 1);
                 });
                 _loadEventsForCurrentMonth(); // Load events for the new month
               },
-              icon: Icon(Icons.arrow_forward, color: Colors.black54),
+              icon: const Icon(Icons.arrow_forward, color: Colors.black54),
             ),
           ],
         ),
@@ -351,10 +378,9 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
-  Future<void> _loadEventsFromApi(DateTime month, Map<String, dynamic> jsonData) async {
-
+  Future<void> _loadEventsFromApi(
+      DateTime month, Map<String, dynamic> jsonData) async {
     try {
-
       /*
       print('Initial API Response: $jsonData');
       print('Initial Processed Events: $_events');
@@ -378,28 +404,28 @@ class _CalendarPageState extends State<CalendarPage> {
       setState(() {
         _events = eventsData
             .map((data) {
-          final eventName = data['eventName'];
-          final eventDateStr = data['eventDate'];
-          // print('API Response for 2024-02-10: ${jsonData['response']}');
-          // print('Processed Events: $_events');
-          print('API Response: $jsonData');
-          print('Processed Events: $_events');
+              final eventName = data['eventName'];
+              final eventDateStr = data['eventDate'];
+              // print('API Response for 2024-02-10: ${jsonData['response']}');
+              // print('Processed Events: $_events');
+              print('API Response: $jsonData');
+              print('Processed Events: $_events');
 
-          if (eventName is String && eventDateStr is String) {
-            try {
-              final eventDateTime = DateTime.parse(eventDateStr);
-              return CalendarEvent(
-                eventName: eventName,
-                eventDate: eventDateTime,
-              );
-            } catch (e) {
-              print('Error parsing date: $e');
-              print('Problematic data: $data');
-            }
-          }
+              if (eventName is String && eventDateStr is String) {
+                try {
+                  final eventDateTime = DateTime.parse(eventDateStr);
+                  return CalendarEvent(
+                    eventName: eventName,
+                    eventDate: eventDateTime,
+                  );
+                } catch (e) {
+                  print('Error parsing date: $e');
+                  print('Problematic data: $data');
+                }
+              }
 
-          return null;
-        })
+              return null;
+            })
             .whereType<CalendarEvent>()
             .toList();
       });
@@ -414,8 +440,10 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      height: MediaQuery.of(context).size.height * 0.4,
+       height: screenHeight * 0.4,
+      // height: MediaQuery.of(context).size.height * 0.44,
       child: Column(
         children: [
           buildNavigationButtons(),
@@ -426,11 +454,13 @@ class _CalendarPageState extends State<CalendarPage> {
               itemCount: 12,
               onPageChanged: (int monthIndex) {
                 setState(() {
-                  _currentMonth = DateTime(_currentMonth.year, monthIndex + 1, 1);
+                  _currentMonth =
+                      DateTime(_currentMonth.year, monthIndex + 1, 1);
                 });
               },
               itemBuilder: (BuildContext context, int monthIndex) {
-                final DateTime firstDayOfMonth = DateTime(_currentMonth.year, monthIndex + 1, 1);
+                final DateTime firstDayOfMonth =
+                    DateTime(_currentMonth.year, monthIndex + 1, 1);
 
                 return Container(
                   margin: const EdgeInsets.all(6),
@@ -449,7 +479,6 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 }
-
 
 /*
 import 'dart:convert';
@@ -911,7 +940,6 @@ class _CalendarPageState extends State<CalendarPage> {
 }
 
 */
-
 
 /// API is fetching the Data but the only this color is showing absent and present
 /*
@@ -1465,8 +1493,6 @@ class _CalendarPageState extends State<CalendarPage> {
 }
 
 */
-
-
 
 ///
 /*
@@ -2025,8 +2051,6 @@ class _CalendarPageState extends State<CalendarPage> {
 }
 */
 
-
-
 /// Correct UI code
 /*
 import 'dart:convert';
@@ -2388,8 +2412,6 @@ class _CalendarPageState extends State<CalendarPage> {
 
  */
 
-
-
 /*
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -2732,8 +2754,6 @@ class _CalendarPageState extends State<CalendarPage> {
 }
 */
 
-
-
 ///
 /*
 import 'dart:convert';
@@ -3034,5 +3054,3 @@ class _CalendarPageState extends State<CalendarPage> {
 
 
  */
-
-

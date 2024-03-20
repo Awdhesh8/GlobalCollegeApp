@@ -111,12 +111,6 @@ class _TimeTableState extends State<TimeTable> {
                         dividerColor: Colors.transparent,
                         tabs: timetableData
                             .map((dayData) {
-                              //x
-                              //Tab(~),Tab(~),
-                              //print(DateTime.now().weekday);
-                              //print(dayData.keys);
-
-
                               String day = dayData.keys.first;
                               return Padding(
                                 padding:

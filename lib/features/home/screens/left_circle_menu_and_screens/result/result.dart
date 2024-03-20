@@ -1,22 +1,21 @@
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
-import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/sem_details.dart';
-import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animated_button.dart';
-import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animation.dart';
-import 'package:globalcollegeapp/utils/constants/colors.dart';
-import 'package:globalcollegeapp/utils/constants/sizes.dart';
-import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
-import '../../../../../common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
-import '../../../../../common/widgets/stack_containers/stack_containers.dart';
 import 'controller/controller.dart';
+import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/utils/constants/sizes.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
+import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
+import '../../../../../common/widgets/stack_containers/stack_containers.dart';
+import '../../../../../common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/sem_details.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animation.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animated_button.dart';
 
 class Result extends StatelessWidget {
   final ResultController resultController = Get.put(ResultController());
   final CustomAnimationController animationController =
       Get.put(CustomAnimationController());
-
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +90,7 @@ class Result extends StatelessWidget {
                                 color: Colors.black, // Icon color
                                 size: 20, // Icon size
                               ),
-                              const SizedBox(
-                                  width:
-                                      8), // Add some spacing between icon and text
+                              const SizedBox(width: 8),
                               Text(
                                 'Current Semester: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester"] ?? "NA" : "NA"}',
                                 style: TextStyleClass.heading24.copyWith(
@@ -192,7 +189,7 @@ class Result extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Column(
+                      const Column(
                         children: [
                           SizedBox(
                             height: 50,
@@ -306,8 +303,8 @@ class Result extends StatelessWidget {
               ),
             ),
              */
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Divider(),
             ),
 
@@ -360,8 +357,7 @@ class Result extends StatelessWidget {
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: 'Inter',
-                                    color: EColors.black
-                                  ),
+                                      color: EColors.black),
                                 ),
                                 const SizedBox(height: 15.0),
                                 Row(
@@ -401,8 +397,7 @@ class Result extends StatelessWidget {
                                 Row(
                                   children: [
                                     Expanded(
-                                      child:
-                                      BouncyButton(
+                                      child: BouncyButton(
                                         label: 'Mid-Sem   ',
                                         // iconPath: 'assets/icons/navigation.svg',
                                         onPressed: () {
@@ -417,8 +412,6 @@ class Result extends StatelessWidget {
                                       //   },
                                       //   child: const Text('Mid-Term Exam'),
                                       // ),
-
-
                                     ),
                                   ],
                                 ),
