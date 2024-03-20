@@ -53,15 +53,15 @@ class _CustomContainerButtonState extends State<CustomContainerButton>
           );
         },
         child: Container(
-          width: 104,
-          height: 48,
+          width: 125,
+          height: 50,
           decoration: BoxDecoration(
             // color: Colors.white,
-              color: Color(0xFF4E2927),
+              //color: Color(0xFF4E2120),
               // color: Color(0xFF6e3b39),
               // color: Color(0xFF4E2928),
              // color: Colors.brown,
-             // color: Colors.brown.shade700,
+              color: Colors.brown.shade700,
            // color: EColors.primarySecond,
             borderRadius: BorderRadius.circular(22),
              border: Border.all(color: Colors.white, width: .1),
@@ -73,13 +73,19 @@ class _CustomContainerButtonState extends State<CustomContainerButton>
                 blurRadius: 0,
                 offset: const Offset(0, 1.4),
               ),
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  spreadRadius: 2,
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+              ),
             ],
-            //   // BoxShadow(
-            //   //   color: Colors.black.withOpacity(0.1),
-            //   //   spreadRadius: 2,
-            //   //   blurRadius: 4,
-            //   //   offset: const Offset(0, 2),
-            //   // ),
+              // BoxShadow(
+              //   color: Colors.black.withOpacity(0.1),
+              //   spreadRadius: 2,
+              //   blurRadius: 4,
+              //   offset: const Offset(0, 2),
+              // ),
             // ],
           ),
           child: Align(
@@ -89,7 +95,7 @@ class _CustomContainerButtonState extends State<CustomContainerButton>
               style: const TextStyle(
                  color: EColors.white,
                 //color: EColors.textColorPrimary1,
-                fontSize: 14,
+                fontSize: 13,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w500,
               ),

@@ -110,9 +110,9 @@ class _BookContainerState extends State<BookContainer> {
                             widget.onTapLockButton(newLockStatus);
                           },
                           style: ElevatedButton.styleFrom(
-                            minimumSize: Size(80, 25),
+                            minimumSize: Size(80, 26),
                             backgroundColor:
-                            widget.lockStatus == 'True' ? Colors.redAccent.shade100 : Colors.grey.shade200,
+                            widget.lockStatus == 'True' ? Colors.red.shade400 : Colors.grey.shade400,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),
@@ -125,6 +125,8 @@ class _BookContainerState extends State<BookContainer> {
                               fontFamily: 'Inter',
                               fontSize: 12,
                               color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                                letterSpacing: .5
                             ),
                           ),
                         ),
