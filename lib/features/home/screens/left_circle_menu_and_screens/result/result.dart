@@ -68,7 +68,7 @@ class Result extends StatelessWidget {
                 ],
               ),
             ),
-            BouncyAnimation(
+            CustomBouncyAnimation(
               child: StackContainer(
                 child: Container(
                   decoration: CustomDeco.decoRectangle6(),
@@ -341,7 +341,7 @@ class Result extends StatelessWidget {
                   itemCount: apiResponse['semesters'].length,
                   itemBuilder: (context, index) {
                     var semester = apiResponse['semesters'][index];
-                    return BouncyAnimation(
+                    return CustomBouncyAnimation(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Container(

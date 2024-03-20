@@ -19,7 +19,7 @@ class CustomAnimationController extends GetxController with SingleGetTickerProvi
       duration: const Duration(milliseconds: 1800),
     );
 
-    fadeAnimation = Tween<double>(begin: 0, end: 1).animate(controller);
+    fadeAnimation = Tween<double>(begin: 3, end: 1).animate(controller);
     bouncyAnimation = Tween<double>(begin: -100, end: 0).animate(
       CurvedAnimation(parent: controller, curve: Curves.elasticOut),
     );
@@ -30,10 +30,6 @@ class CustomAnimationController extends GetxController with SingleGetTickerProvi
     controller.forward();
   }
 
-  void reverseAnimation() {
-    controller.reverse();
-  }
-
   @override
   void onClose() {
     controller.dispose();
@@ -41,10 +37,10 @@ class CustomAnimationController extends GetxController with SingleGetTickerProvi
   }
 }
 
-class BouncyAnimation extends GetWidget<CustomAnimationController> {
+class CustomBouncyAnimation extends GetWidget<CustomAnimationController> {
   final Widget child;
 
-  const BouncyAnimation({Key? key, required this.child}) : super(key: key);
+  const CustomBouncyAnimation({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:globalcollegeapp/common/widgets/custom_shapes/containers/search_container.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../../../common/widgets/animations/common_animation.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/custom_container_button/custom_container_button.dart';
 import '../../../../../common/widgets/texts/top_first_heading.dart';
@@ -159,78 +160,81 @@ class _LibraryScreenState extends State<LibraryScreen> {
       backgroundColor: EColors.backgroundColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(210.0),
-        child: GAppBar(
-          showBackArrow: true,
-          surfaceTintColor: Colors.transparent,
-          backgroundColor: Colors.transparent,
-          // centerTitle: true,
-          title: const Text(
-            'Library',
-            style: TextStyle(
-              color: EColors.textColorPrimary1,
-              fontWeight: FontWeight.bold,
-              fontSize: 28,
+        child: AnimationWidget(
+          animationType: 'fade',
+          child: GAppBar(
+            showBackArrow: true,
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
+            // centerTitle: true,
+            title: const Text(
+              'Library',
+              style: TextStyle(
+                color: EColors.textColorPrimary1,
+                fontWeight: FontWeight.bold,
+                fontSize: 28,
+              ),
             ),
-          ),
-          flexibleSpace: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CustomSearchContainer(
-                showBackground: true,
-                dark: false,
-                showBorder: true,
-                onChanged: (value) {
-                  // Call bookSearch function whenever the search text changes
-                  bookSearch(value);
-                },
-                controller: searchController,
-              ),
-              const SizedBox(
-                height: ESizes.spaceBtwItems,
-              ),
-
-              /// Three Buttons eLibrary | Issued Book | History
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomContainerButton(
-                      buttonText: 'eLibrary',
-                      onTap: () {
-                        Get.to(() => const ELibraryScreen(),
-                            curve: Curves.easeInOut,
-                            transition: Transition.cupertino);
-                      },
-                    ),
-                    CustomContainerButton(
-                      buttonText: 'Issued Books',
-                      onTap: () {
-                        Get.to(() => IssuedBooksScreen(),
-                            curve: Curves.easeInOut,
-                            transition: Transition.cupertino);
-                      },
-                    ),
-                    CustomContainerButton(
-                      buttonText: 'History',
-                      onTap: () {
-                        Get.to(() => const BookHistoryScreen(),
-                            curve: Curves.easeInOut,
-                            transition: Transition.cupertino);
-                      },
-                    ),
-                  ],
+            flexibleSpace: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomSearchContainer(
+                  showBackground: true,
+                  dark: false,
+                  showBorder: true,
+                  onChanged: (value) {
+                    // Call bookSearch function whenever the search text changes
+                    bookSearch(value);
+                  },
+                  controller: searchController,
                 ),
-              ),
+                const SizedBox(
+                  height: ESizes.spaceBtwItems,
+                ),
 
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Divider(),
-              ),
-              const SizedBox(
-                height: ESizes.spaceBtwItems1,
-              ),
-            ],
+                /// Three Buttons eLibrary | Issued Book | History
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      CustomContainerButton(
+                        buttonText: 'eLibrary',
+                        onTap: () {
+                          Get.to(() => const ELibraryScreen(),
+                              curve: Curves.easeInOut,
+                              transition: Transition.cupertino);
+                        },
+                      ),
+                      CustomContainerButton(
+                        buttonText: 'Issued Books',
+                        onTap: () {
+                          Get.to(() => IssuedBooksScreen(),
+                              curve: Curves.easeInOut,
+                              transition: Transition.cupertino);
+                        },
+                      ),
+                      CustomContainerButton(
+                        buttonText: 'History',
+                        onTap: () {
+                          Get.to(() => const BookHistoryScreen(),
+                              curve: Curves.easeInOut,
+                              transition: Transition.cupertino);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Divider(),
+                ),
+                const SizedBox(
+                  height: ESizes.spaceBtwItems1,
+                ),
+              ],
+            ),
           ),
         ),
       ),
