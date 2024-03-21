@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
@@ -20,7 +21,7 @@ class BookTitleWidget extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
@@ -319,32 +320,116 @@ class DownloadPDFButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      // mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        const Text(
-          'Download: Read Anytime',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 8,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        // const Text(
+        //   'Download: Read Anytime',
+        //   style: TextStyle(
+        //     color: Colors.black,
+        //     fontSize: 8,
+        //     fontFamily: 'Inter',
+        //     fontWeight: FontWeight.w400,
+        //   ),
+        // ),
+        DownloadButton(onPressed: () async {await launch(downloadLink);},),
         // const SizedBox(width: 10),
-        IconButton(
-          onPressed: () async {
-            // Open the link in the default web browser
-            await launch(downloadLink);
-          },
-          icon: const Icon(Iconsax.document_download),
-        ),
+        //ElevatedButton(onPressed: () async {await launch(downloadLink);}, child: Icon(FontAwesomeIcons.download))
+        // IconButton(
+        //   onPressed: () async {
+        //     // Open the link in the default web browser
+        //     await launch(downloadLink);
+        //   },
+        //   icon: const Icon(Iconsax.document_download),
+        // ),
       ],
     );
   }
 }
+
+
+class DownloadButton extends StatefulWidget {
+  final Function() onPressed;
+
+  DownloadButton({required this.onPressed});
+
+  @override
+  _DownloadButtonState createState() => _DownloadButtonState();
+}
+
+class _DownloadButtonState extends State<DownloadButton> with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.8).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        // Trigger the onPressed function when animation is completed
+        widget.onPressed();
+        // Reset the animation
+        _animationController.reverse();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _animationController.forward();
+      },
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.deepPurple.shade500,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                FontAwesomeIcons.download,size: 15,
+                color: Colors.white,
+              ),
+              SizedBox(width: 10.0),
+              Text(
+                'Download',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /*
-
-
 class DownloadPDFButtonWidget extends StatelessWidget {
   final String downloadLink;
 
@@ -418,5 +503,4 @@ class DownloadPDFButtonWidget extends StatelessWidget {
     );
   }
 }
-
  */

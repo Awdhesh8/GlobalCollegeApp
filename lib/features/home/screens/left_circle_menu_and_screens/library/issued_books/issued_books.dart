@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../../../../common/widgets/animations/common_animation.dart';
 import '../../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../../data/api/api_services.dart';
@@ -74,12 +75,17 @@ class _IssuedBooksScreenState extends State<IssuedBooksScreen> {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            const Row(
+            Row(
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 22),
-                  child: TopHeading(
-                    text: 'Your Borrowed\nTitles',
+                  child: AnimationWidget(
+                    animationType: 'fade',
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                    child: TopHeading(
+                      text: 'Your Borrowed\nTitles',
+                    ),
                   ),
                 ),
               ],
@@ -91,24 +97,29 @@ class _IssuedBooksScreenState extends State<IssuedBooksScreen> {
                 ? Center(
                     child: ShimmerLoadingWidget(),
                   )
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: issuedBook.length,
-                      itemBuilder: (context, index) {
-                        var book = issuedBook[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: IssuedBookDetailsContainer(
-                            imageUrl: book['cover_image'] ?? '',
-                            title: book['book_title'] ?? 'NA',
-                            author: book['author'] ?? '',
-                            issueDateTime: book['issued_date'] ?? '',
-                          ),
-                        );
-                      },
+                : AnimationWidget(
+                    animationType: 'translate',
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOutCubicEmphasized,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: issuedBook.length,
+                        itemBuilder: (context, index) {
+                          var book = issuedBook[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: IssuedBookDetailsContainer(
+                              imageUrl: book['cover_image'] ?? '',
+                              title: book['book_title'] ?? 'NA',
+                              author: book['author'] ?? '',
+                              issueDateTime: book['issued_date'] ?? '',
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
           ],

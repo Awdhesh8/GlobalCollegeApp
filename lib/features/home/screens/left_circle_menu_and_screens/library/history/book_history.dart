@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/common/widgets/animations/common_animation.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../../common/widgets/texts/top_first_heading.dart';
@@ -79,12 +80,17 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
             // ),
 
             /// Title Heading for Books History
-            const Row(
+            Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 22),
-                  child: TopHeading(
-                    text: 'A Historical View of\nYour Checked-Out\nCollection',
+                  padding: const EdgeInsets.symmetric(horizontal: 22),
+                  child: AnimationWidget(
+                    duration: const Duration(milliseconds: 600),
+                    curve: Curves.easeInOut,
+                    animationType: 'fade',
+                    child: const TopHeading(
+                      text: 'A Historical View of\nYour Checked-Out\nCollection',
+                    ),
                   ),
                 ),
               ],
@@ -99,27 +105,32 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
                 ? Center(
                     child: ShimmerLoadingWidget(),
                   )
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: historyBook.length,
-                      itemBuilder: (context, index) {
-                        var book = historyBook[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: BookHistoryContainer(
-                            imageUrl: book['cover_image'] ?? '',
-                            title: book['book_title'] ?? 'NA',
-                            author: book['author'] ?? '',
-                            issueDateTime: book['issued_date'] ?? '',
-                            returnDateTime: book['return_date'] ?? '',
-                          ),
-                        );
-                      },
+                : AnimationWidget(
+              duration: const Duration(milliseconds: 300),
+                  curve: Easing.legacy,
+                  animationType: 'translate',
+                  child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: historyBook.length,
+                        itemBuilder: (context, index) {
+                          var book = historyBook[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: BookHistoryContainer(
+                              imageUrl: book['cover_image'] ?? '',
+                              title: book['book_title'] ?? 'NA',
+                              author: book['author'] ?? '',
+                              issueDateTime: book['issued_date'] ?? '',
+                              returnDateTime: book['return_date'] ?? '',
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
+                ),
           ],
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../../../../common/widgets/animations/common_animation.dart';
 import '../../../../../../common/widgets/custom_shapes/containers/search_container.dart';
 import '../../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../../data/api/api_services.dart';
@@ -78,12 +79,17 @@ class _ELibraryScreenState extends State<ELibraryScreen> {
             ),
 
             /// Title Heading for Books
-            const Row(
+            Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 22),
-                  child: TopHeading(
-                    text: 'Digital Bookshelf:\nBrowse & Enjoy',
+                  padding: const EdgeInsets.symmetric(horizontal: 22),
+                  child: AnimationWidget(
+                    animationType: 'fade',
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeInOut,
+                    child: const TopHeading(
+                      text: 'Digital Bookshelf:\nBrowse & Enjoy',
+                    ),
                   ),
                 ),
               ],
@@ -98,25 +104,30 @@ class _ELibraryScreenState extends State<ELibraryScreen> {
                 ? Center(
                     child: ShimmerLoadingWidget(),
                   )
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      shrinkWrap: true, // Set shrinkWrap to true
-                      physics:
-                          const NeverScrollableScrollPhysics(), // Disable scrolling
-                      itemCount: eBooks.length,
-                      itemBuilder: (context, index) {
-                        var book = eBooks[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: EBookDetailsContainer(
-                            imageUrl: book['cover_image'] ?? '',
-                            title: book['book_title'] ?? 'NA',
-                            author: book['aublisher'] ?? '',
-                            downloadEBook: book['ebook'] ?? '',
-                          ),
-                        );
-                      },
+                : AnimationWidget(
+                    animationType: 'translate',
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOutCubicEmphasized,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.builder(
+                        shrinkWrap: true, // Set shrinkWrap to true
+                        physics:
+                            const NeverScrollableScrollPhysics(), // Disable scrolling
+                        itemCount: eBooks.length,
+                        itemBuilder: (context, index) {
+                          var book = eBooks[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: EBookDetailsContainer(
+                              imageUrl: book['cover_image'] ?? '',
+                              title: book['book_title'] ?? 'NA',
+                              author: book['aublisher'] ?? '',
+                              downloadEBook: book['ebook'] ?? '',
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
             const SizedBox(
@@ -128,15 +139,20 @@ class _ELibraryScreenState extends State<ELibraryScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(top: 66),
-        child: CustomSearchContainer(
-          showBackground: true,
-          dark: false,
-          showBorder: true,
-          onChanged: (value) {
-            // Call bookSearch function whenever the search text changes
-            getEBooks(value);
-          },
-          controller: searchController,
+        child: AnimationWidget(
+          animationType: 'fade',
+          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 600),
+          child: CustomSearchContainer(
+            showBackground: true,
+            dark: false,
+            showBorder: true,
+            onChanged: (value) {
+              // Call bookSearch function whenever the search text changes
+              getEBooks(value);
+            },
+            controller: searchController,
+          ),
         ),
       ),
     );

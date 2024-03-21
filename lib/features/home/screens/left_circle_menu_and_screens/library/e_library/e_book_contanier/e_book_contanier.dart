@@ -120,7 +120,7 @@ class _EBookDetailsContainerState extends State<EBookDetailsContainer> {
                         // const SizedBox(height: 4),
                         AuthorNameWidget(author: widget.author),
                         const SizedBox(
-                          height: ESizes.spaceBtwItemsHeadings,
+                          height: ESizes.spaceBtwItems1,
                         ),
                          DownloadPDFButtonWidget(downloadLink: widget.downloadEBook),
                       ],

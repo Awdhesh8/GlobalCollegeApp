@@ -7,13 +7,13 @@ import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import 'package:iconsax/iconsax.dart';
 
 class BouncyButton extends StatefulWidget {
-  final String label;
+  final String? label;
   // final String iconPath;
   final Function onPressed;
 
   const BouncyButton({
     Key? key,
-    required this.label,
+    this.label,
     // required this.iconPath,
     required this.onPressed,
   }) : super(key: key);
@@ -83,7 +83,7 @@ class _BouncyButtonState extends State<BouncyButton>
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  widget.label,
+                  widget.label!,
                   style: TextStyleClass.buttonStyle1
                 ),
               ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:globalcollegeapp/common/widgets/custom_shapes/containers/search_container.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../common/widgets/animations/common_animation.dart';
@@ -162,6 +161,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
         preferredSize: const Size.fromHeight(210.0),
         child: AnimationWidget(
           animationType: 'fade',
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeInOut,
           child: GAppBar(
             showBackArrow: true,
             surfaceTintColor: Colors.transparent,
@@ -259,50 +260,55 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 ? Center(
                     child: ShimmerLoadingWidget(),
                   )
-                : Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      shrinkWrap: true, // Set shrinkWrap to true
-                      physics:
-                          NeverScrollableScrollPhysics(), // Disable scrolling
-                      itemCount: books.length,
-                      itemBuilder: (context, index) {
-                        var book = books[index];
-                        return Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: BookContainer(
-                            imageUrl: book['covor_image'],
-                            title: book['book_title'],
-                            author: book['author'],
-                            availableQty: book['available_qty'],
-                            lockStatus: book['lock_status'],
-                            bookId: book['title_id'],
-                            onTapLockButton: (bool newLockStatus) async {
-                              // Handle lock or unlock the book Button
-                              // Call the updateLockStatus function using an instance of ApiService
-                              var apiService = ApiService();
-                              await apiService.updateLockStatus(book['title_id'], newLockStatus, context);
+                : AnimationWidget(
+                  animationType: 'translate',
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeInOutCubicEmphasized,
+                  child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.builder(
+                        shrinkWrap: true, // Set shrinkWrap to true
+                        physics:
+                            const NeverScrollableScrollPhysics(), // Disable scrolling
+                        itemCount: books.length,
+                        itemBuilder: (context, index) {
+                          var book = books[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: BookContainer(
+                              imageUrl: book['covor_image'],
+                              title: book['book_title'],
+                              author: book['author'],
+                              availableQty: book['available_qty'],
+                              lockStatus: book['lock_status'],
+                              bookId: book['title_id'],
+                              onTapLockButton: (bool newLockStatus) async {
+                                // Handle lock or unlock the book Button
+                                // Call the updateLockStatus function using an instance of ApiService
+                                var apiService = ApiService();
+                                await apiService.updateLockStatus(book['title_id'], newLockStatus, context);
 
-                              // After updating the lock status, refresh the UI if needed
-                              setState(() {
-                                book['lock_status'] = newLockStatus ? 'True' : 'False';
-                              });
-                            },
-                            // onTapLockButton: (bool newLockStatus) async {
-                            //   // Handle lock or unlock the book Button
-                            //   // Call the updateLockStatus function
-                            //   await updateLockStatus(book['title_id'], newLockStatus, context);
-                            //
-                            //   // After updating the lock status, refresh the UI if needed
-                            //   setState(() {
-                            //     book['lock_status'] = newLockStatus ? 'True' : 'False';
-                            //   });
-                            // },
-                          ),
-                        );
-                      },
+                                // After updating the lock status, refresh the UI if needed
+                                setState(() {
+                                  book['lock_status'] = newLockStatus ? 'True' : 'False';
+                                });
+                              },
+                              // onTapLockButton: (bool newLockStatus) async {
+                              //   // Handle lock or unlock the book Button
+                              //   // Call the updateLockStatus function
+                              //   await updateLockStatus(book['title_id'], newLockStatus, context);
+                              //
+                              //   // After updating the lock status, refresh the UI if needed
+                              //   setState(() {
+                              //     book['lock_status'] = newLockStatus ? 'True' : 'False';
+                              //   });
+                              // },
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
+                ),
             const SizedBox(
               height: ESizes.spaceBtwItems1,
             ),
@@ -369,7 +375,7 @@ class BookContainerShimmer extends StatelessWidget {
                     color: Colors.grey.withOpacity(0.3),
                     spreadRadius: 2,
                     blurRadius: 5,
-                    offset: Offset(0, 3),
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),

@@ -3,8 +3,15 @@ import 'package:flutter/material.dart';
 class AnimationWidget extends StatefulWidget {
   final Widget child;
   final String animationType;
+  final Duration duration;
+  final Curve curve;
 
-  AnimationWidget({required this.child, required this.animationType});
+  AnimationWidget({
+    required this.child,
+    required this.animationType,
+    required this.duration,
+    required this.curve,
+  });
 
   @override
   _AnimationWidgetState createState() => _AnimationWidgetState();
@@ -20,17 +27,29 @@ class _AnimationWidgetState extends State<AnimationWidget>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 400),
+      duration: widget.duration,
     );
 
     switch (widget.animationType) {
       case 'fade':
-        _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+        _animation = CurvedAnimation(parent: _controller, curve: widget.curve);
         break;
       case 'slide':
-        _animation = Tween<double>(begin: -1, end: 0).animate(_controller);
+        _animation = Tween<double>(begin: -1, end: 0).animate(
+          CurvedAnimation(parent: _controller, curve: widget.curve),
+        );
         break;
-    // Add cases for other animation types like scale, translate, etc.
+      case 'scale':
+        _animation = Tween<double>(begin: 0.90, end: 1).animate(
+          CurvedAnimation(parent: _controller, curve: widget.curve),
+        );
+        break;
+      case 'translate':
+        _animation = Tween<double>(begin: 1, end: 0).animate(
+          CurvedAnimation(parent: _controller, curve: widget.curve),
+        );
+        break;
+    // Add cases for other animation types
       default:
         _animation = null;
     }
@@ -58,6 +77,16 @@ class _AnimationWidgetState extends State<AnimationWidget>
           case 'slide':
             return Transform.translate(
               offset: Offset(_animation!.value * MediaQuery.of(context).size.width, 0),
+              child: widget.child,
+            );
+          case 'scale':
+            return Transform.scale(
+              scale: _animation!.value,
+              child: widget.child,
+            );
+          case 'translate':
+            return Transform.translate(
+              offset: Offset(0, _animation!.value * MediaQuery.of(context).size.height),
               child: widget.child,
             );
         // Add cases for other animation types
