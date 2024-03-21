@@ -64,7 +64,7 @@ class VTLetterFormController extends GetxController {
       items.clear();
       for (var i in listArray) {
         items.add(Item(i.id, "${i.name}"));
-        print('vtp_id: ${i.id}, locat: ${i.name}');
+        //print('vtp_id: ${i.id}, locat: ${i.name}');
       }
   }
 }

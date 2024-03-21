@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:globalcollegeapp/common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
@@ -129,7 +130,7 @@ class VTLetterForm extends StatelessWidget {
                     minHeight: 50.0,
                   ),
                   child: TextFormField(
-                    // readOnly: true,
+                     readOnly: true,
                     controller: TextEditingController(
                         text: controller.fromController.value),
                     // text: 'Text here',
@@ -173,6 +174,7 @@ class VTLetterForm extends StatelessWidget {
                         minHeight: 50.0,
                       ),
                       child: TextFormField(
+                        readOnly: true,
                         controller: TextEditingController(
                             text: controller.toController.value),
                         style: TextStyleClass.inputText1,
@@ -225,13 +227,15 @@ class VTLetterForm extends StatelessWidget {
                 ),
               ),
               onChanged: (value) {
-                controller.totalDayController = 12.obs as RxString;
-                print('days :${controller.totalDayController}');
+
               },
               style: TextStyleClass.inputText1,
               decoration: const InputDecoration(
                 labelText: 'Duration (Days)',
                 labelStyle: TextStyleClass.labelText1,
+                // errorText: controller.totalDayError.value
+                //     ? 'Please Select to date'
+                //     : null,
               ),
             ),
           ),
@@ -262,10 +266,10 @@ class VTLetterForm extends StatelessWidget {
       isDense: true,
       value: initialValue, // Set initial value here
       decoration: InputDecoration(
-        //labelText: 'Gate Pass Reasons',
+        //labelText: 'VT Letter Subject',
         labelStyle: const TextStyle(color: EColors.textColorPrimary1),
         errorText: controller.subjectError.value
-            ? 'Please Select Gate Pass Reason'
+            ? 'Select VT Letter Subject'
             : '',
         // : gatePassReasons.firstWhere((group) => group.id == null,
       ),
@@ -364,8 +368,12 @@ class VTLetterForm extends StatelessWidget {
             //print('Confirmed Selected Items: ${controller.selectedItems.map((item) => item.name).join(", ")}');
             //print('Confirmed Selected ID: ${controller.selectedItems.map((item) => item.id).join(", ")}');
             controller.vtLocationIds = controller.selectedItems.map((item) => item.id).join(",");
-            print(controller.vtLocationIds);
-            print('day ${controller.totalDayController.obs}');
+               if (kDebugMode) {
+                  print('From: ${controller.fromController}');
+                  print('To  : ${controller.toController}');
+                  print('day : ${controller.totalDayController}');
+                  print('IDs : ${controller.vtLocationIds}');
+               }
             },
           maxChildSize: 1,
         ),
