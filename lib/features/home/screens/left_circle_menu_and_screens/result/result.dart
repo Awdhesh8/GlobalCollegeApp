@@ -1,3 +1,375 @@
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
+import 'controller/controller.dart';
+import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/utils/constants/sizes.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
+import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
+import '../../../../../common/widgets/stack_containers/stack_containers.dart';
+import '../../../../../common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/sem_details.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animation.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animated_button.dart';
+
+class Result extends StatelessWidget {
+  final ResultController resultController = Get.put(ResultController());
+  final CustomAnimationController animationController =
+      Get.put(CustomAnimationController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: EColors.backgroundColor,
+      appBar: const GAppBar(
+        showBackArrow: true,
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: EColors.backgroundColor,
+        title: Text(
+          'Result',
+          style: TextStyleClass.appBarTextStyle,
+        ),
+      ),
+      body: Obx(() {
+        if (resultController.apiResponse.value == null) {
+          return ShimmerLoading();
+        }
+
+        var apiResponse = resultController.apiResponse.value!;
+        // print(apiResponse);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            /// Top heading
+            Padding(
+              padding: const EdgeInsets.only(left: 18),
+              child: Row(
+                children: [
+                  RichText(
+                    text: const TextSpan(
+                      text: 'Academic Achievements',
+                      style: TextStyleClass.heading22,
+                      children: [
+                        TextSpan(
+                          text: '\nExplore Your Grades',
+                          style: TextStyleClass.subtleTextStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            CustomBouncyAnimation(
+              child: StackContainer(
+                child: Container(
+                  decoration: CustomDeco.decoRectangle6(),
+                  padding: const EdgeInsets.all(16.0),
+                  margin: const EdgeInsets.only(
+                      top: 6, right: 4, bottom: 4, left: 4),
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons
+                                    .graduationCap, // Use Font Awesome icon for graduation cap
+                                color: Colors.black, // Icon color
+                                size: 20, // Icon size
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Current Semester: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester"] ?? "NA" : "NA"}',
+                                style: TextStyleClass.heading24.copyWith(
+                                    color: EColors.textSecondaryTitle,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          RichText(
+                            text: TextSpan(
+                              text: 'CGPA: ',
+                              style: TextStyleClass.bodyText3
+                                  .copyWith(fontWeight: FontWeight.bold),
+                              children: [
+                                TextSpan(
+                                  text:
+                                      '${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                                  style: TextStyleClass.bodyText3
+                                      .copyWith(color: Colors.blue),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons
+                                    .infoCircle, // Use Font Awesome icon for info circle
+                                color: Colors.grey, // Icon color
+                                size: 16, // Icon size
+                              ),
+                              const SizedBox(
+                                  width:
+                                      8), // Add some spacing between icon and text
+                              Text(
+                                'Current CGPA: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_cgpa"] ?? "NA" : "NA"}',
+                                style: TextStyleClass.bodyText3,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons
+                                    .circleCheck, // Use Font Awesome icon for check circle
+                                color: Colors.green, // Icon color
+                                size: 16, // Icon size
+                              ),
+                              const SizedBox(
+                                  width:
+                                      8), // Add some spacing between icon and text
+                              Text(
+                                'Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["current_semester_status"] ?? "NA" : "NA"}',
+                                style: TextStyleClass.bodyText3,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons
+                                    .solidBookmark, // Use Font Awesome icon for bookmark
+                                color: Colors.yellow, // Icon color
+                                size: 16, // Icon size
+                              ),
+                              const SizedBox(
+                                  width:
+                                      8), // Add some spacing between icon and text
+                              Text(
+                                'Mid-Term Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["mid_term_status"] ?? "NA" : "NA"}',
+                                style: TextStyleClass.bodyText3,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons
+                                    .flagCheckered, // Use Font Awesome icon for flag checkered
+                                color: Colors.blue, // Icon color
+                                size: 16, // Icon size
+                              ),
+                              const SizedBox(
+                                  width:
+                                      8), // Add some spacing between icon and text
+                              Text(
+                                'Final Status: ${apiResponse['overallStatus'].isNotEmpty ? apiResponse['overallStatus'][0]["final_status"] ?? "NA" : "NA"}',
+                                style: TextStyleClass.bodyText3,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Column(
+                        children: [
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Icon(
+                            FontAwesomeIcons.fileInvoice,
+                            color: Colors.black38,
+                            // color: Colors.grey.shade200,
+                            size: 80,
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Divider(),
+            ),
+
+            /// Sem heading
+            Padding(
+              padding: const EdgeInsets.only(right: 18),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  RichText(
+                    text: const TextSpan(
+                      text: "Semester's",
+                      style: TextStyleClass.heading24,
+                      children: [
+                        TextSpan(
+                          text: "\nCheck your Grades",
+                          style: TextStyleClass.subtleTextStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 4.0,
+                    mainAxisSpacing: 8.0,
+                  ),
+                  itemCount: apiResponse['semesters'].length,
+                  itemBuilder: (context, index) {
+                    var semester = apiResponse['semesters'][index];
+                    return CustomBouncyAnimation(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Container(
+                          decoration: CustomDeco.decoRectangle5(),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Semester ${semester["semester_number"] ?? "NA"}',
+                                  style: const TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Inter',
+                                      color: EColors.black),
+                                ),
+                                const SizedBox(height: 15.0),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: BouncyButton(
+                                        label: 'Final Exam',
+                                        onPressed: () {
+                                          navigateToExamDetailsScreen(
+                                              semester, 'Final Exam');
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: ESizes.spaceBtwItems,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: BouncyButton(
+                                        label: 'Mid-Sem   ',
+                                        onPressed: () {
+                                          navigateToExamDetailsScreen(
+                                              semester, 'Mid-Sem   ');
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  void navigateToExamDetailsScreen(
+      Map<String, dynamic> semester, String examType) {
+    Get.to(() => ExamDetailsScreen(semester, examType));
+  }
+}
+
+class ShimmerLoading extends StatelessWidget {
+  const ShimmerLoading({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                width: double.infinity,
+                height: 200,
+               decoration: BoxDecoration(
+                 color: Colors.white,
+                 borderRadius: BorderRadius.circular(20),
+
+               ),
+              ),
+            ),
+            SizedBox(
+              height: 100,
+            ),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+                childAspectRatio: 1,
+              ),
+              itemCount: 4,
+              itemBuilder: (BuildContext context, int index) {
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// This Below code is working fine but too many comments in between the codes --->>>
+/*
 import 'package:get/get.dart';
 import 'controller/controller.dart';
 import 'package:flutter/material.dart';
@@ -436,6 +808,7 @@ class Result extends StatelessWidget {
     Get.to(() => ExamDetailsScreen(semester, examType));
   }
 }
+*/
 
 /// Correct Code ----- for Exam details screen
 /*

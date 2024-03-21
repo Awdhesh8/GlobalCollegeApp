@@ -59,7 +59,26 @@ class _AnimationWidgetState extends State<AnimationWidget>
           CurvedAnimation(parent: _controller, curve: widget.curve),
         );
         break;
-    // Add cases for other animation types
+      case 'shake':
+        _animation = TweenSequence<double>([
+          TweenSequenceItem<double>(
+            tween: Tween(begin: 0, end: 10),
+            weight: 1,
+          ),
+          TweenSequenceItem<double>(
+            tween: Tween(begin: 10, end: -10),
+            weight: 1,
+          ),
+          TweenSequenceItem<double>(
+            tween: Tween(begin: -10, end: 10),
+            weight: 1,
+          ),
+          TweenSequenceItem<double>(
+            tween: Tween(begin: 10, end: 0),
+            weight: 1,
+          ),
+        ]).animate(_controller);
+        break;
       default:
         _animation = null;
     }
@@ -106,15 +125,19 @@ class _AnimationWidgetState extends State<AnimationWidget>
             );
           case 'fade_slide':
             return Opacity(
-              opacity: 1 - (_animation!.value.abs() / 30),
+              opacity: 1 - (_animation!.value.abs() / 1),
               child: Transform.translate(
                 offset: Offset(_animation!.value * MediaQuery.of(context).size.width, 0),
                 child: widget.child,
               ),
             );
-        // Add cases for other animation types
+          case 'shake':
+            return Transform.translate(
+              offset: Offset(_animation!.value, 0),
+              child: widget.child,
+            );
           default:
-            return const SizedBox(); // Return empty widget by default
+            return SizedBox(); // Return empty widget by default
         }
       },
     );

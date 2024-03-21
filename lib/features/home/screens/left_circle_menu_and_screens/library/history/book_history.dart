@@ -106,32 +106,33 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
                 ? Center(
                     child: ShimmerLoadingWidget(),
                   )
-                : AnimationWidget(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    animationType: 'translate',
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: historyBook.length,
-                        itemBuilder: (context, index) {
-                          var book = historyBook[index];
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: BookHistoryContainer(
-                              imageUrl: book['cover_image'] ?? '',
-                              title: book['book_title'] ?? 'NA',
-                              author: book['author'] ?? '',
-                              issueDateTime: book['issued_date'] ?? '',
-                              returnDateTime: book['return_date'] ?? '',
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: historyBook.length,
+                    itemBuilder: (context, index) {
+                      var book = historyBook[index];
+                      final duration = 170 * (index + 1);
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: AnimationWidget(
+                          duration: Duration(milliseconds: duration),
+                          curve: Curves.easeInOut,
+                          animationType: 'translate',
+                          child: BookHistoryContainer(
+                            imageUrl: book['cover_image'] ?? '',
+                            title: book['book_title'] ?? 'NA',
+                            author: book['author'] ?? '',
+                            issueDateTime: book['issued_date'] ?? '',
+                            returnDateTime: book['return_date'] ?? '',
+                          ),
+                        ),
+                      );
+                    },
                   ),
+                ),
           ],
         ),
       ),

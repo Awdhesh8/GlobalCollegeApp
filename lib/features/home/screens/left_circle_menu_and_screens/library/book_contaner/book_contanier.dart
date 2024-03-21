@@ -51,9 +51,9 @@ class _BookContainerState extends State<BookContainer> {
               borderRadius: BorderRadius.circular(4),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
+                  color: Colors.grey.withOpacity(0.2),
                   spreadRadius: 1,
-                  blurRadius: 5,
+                  blurRadius: 2,
                   offset: Offset(0, 3),
                 ),
               ],

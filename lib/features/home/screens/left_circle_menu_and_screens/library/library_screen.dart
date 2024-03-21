@@ -260,21 +260,23 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 ? Center(
                     child: ShimmerLoadingWidget(),
                   )
-                : AnimationWidget(
-                  animationType: 'translate',
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.easeInOutCubicEmphasized,
-                  child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListView.builder(
-                        shrinkWrap: true, // Set shrinkWrap to true
-                        physics:
-                            const NeverScrollableScrollPhysics(), // Disable scrolling
-                        itemCount: books.length,
-                        itemBuilder: (context, index) {
-                          var book = books[index];
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                      shrinkWrap: true, // Set shrinkWrap to true
+                      physics:
+                          const NeverScrollableScrollPhysics(), // Disable scrolling
+                      itemCount: books.length,
+                      itemBuilder: (context, index) {
+                        var book = books[index];
+                        final duration = 170 * (index + 1);
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AnimationWidget(
+                            animationType: 'translate',
+                            duration: Duration(milliseconds: duration),
+                            // duration: const Duration(milliseconds: 400),
+                            curve: Curves.easeInOutCubicEmphasized,
                             child: BookContainer(
                               imageUrl: book['covor_image'],
                               title: book['book_title'],
@@ -304,11 +306,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
                               //   });
                               // },
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                ),
+                  ),
             const SizedBox(
               height: ESizes.spaceBtwItems1,
             ),

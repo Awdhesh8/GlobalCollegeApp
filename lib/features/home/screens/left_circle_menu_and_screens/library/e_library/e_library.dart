@@ -104,32 +104,33 @@ class _ELibraryScreenState extends State<ELibraryScreen> {
                 ? Center(
                     child: ShimmerLoadingWidget(),
                   )
-                : AnimationWidget(
-                    animationType: 'translate',
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeInOutCubicEmphasized,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListView.builder(
-                        shrinkWrap: true, // Set shrinkWrap to true
-                        physics:
-                            const NeverScrollableScrollPhysics(), // Disable scrolling
-                        itemCount: eBooks.length,
-                        itemBuilder: (context, index) {
-                          var book = eBooks[index];
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: EBookDetailsContainer(
-                              imageUrl: book['cover_image'] ?? '',
-                              title: book['book_title'] ?? 'NA',
-                              author: book['aublisher'] ?? '',
-                              downloadEBook: book['ebook'] ?? '',
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    shrinkWrap: true, // Set shrinkWrap to true
+                    physics:
+                        const NeverScrollableScrollPhysics(), // Disable scrolling
+                    itemCount: eBooks.length,
+                    itemBuilder: (context, index) {
+                      var book = eBooks[index];
+                      final duration = 170 * (index + 1);
+                      return Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: AnimationWidget(
+                          duration:  Duration(milliseconds: duration),
+                          curve: Curves.easeInOutCubicEmphasized,
+                          animationType: 'translate',
+                          child: EBookDetailsContainer(
+                            imageUrl: book['cover_image'] ?? '',
+                            title: book['book_title'] ?? 'NA',
+                            author: book['aublisher'] ?? '',
+                            downloadEBook: book['ebook'] ?? '',
+                          ),
+                        ),
+                      );
+                    },
                   ),
+                ),
             const SizedBox(
               height: ESizes.spaceBtwItems1,
             ),
