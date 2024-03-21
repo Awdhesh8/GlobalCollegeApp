@@ -107,7 +107,7 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
                   )
                 : AnimationWidget(
               duration: const Duration(milliseconds: 300),
-                  curve: Easing.legacy,
+                  curve: Curves.easeInOut,
                   animationType: 'translate',
                   child: Padding(
                       padding: const EdgeInsets.all(8.0),

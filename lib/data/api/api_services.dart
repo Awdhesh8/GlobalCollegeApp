@@ -1135,8 +1135,8 @@ class ApiService {
         headers: APIConstants.headers,
         body: {
           'APIKEY': 'GNCS0225',
-          // 'USER_ID': userId,
-          'USER_ID': '567'
+          'USER_ID': userId,
+         // 'USER_ID': '567'
         },
       );
 
@@ -1153,10 +1153,10 @@ class ApiService {
         }
       } else {
         throw Exception(
-            'Failed to load Gate Pass Reasons: ${response.reasonPhrase}');
+            'Failed to load Vt Letter Subject: ${response.reasonPhrase}');
       }
     } catch (e) {
-      throw Exception('Exception while fetching Gate Pass Reasons: $e');
+      throw Exception('Exception while fetching Vt Letter Subject: $e');
     }
   }
 
@@ -1165,13 +1165,12 @@ class ApiService {
       String vtp_subjid) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var userId = prefs.getString('user_id') ?? '';
+      //var userId = prefs.getString('user_id') ?? '';
       final response = await http.post(
         Uri.parse(APIConstants.getFullUrl(APIConstants.getVtLetterLocation)),
         headers: APIConstants.headers,
         body: {
           'APIKEY': 'GNCS0225',
-          // 'USER_ID': userId,
           'vtp_subjid': vtp_subjid
         },
       );
@@ -1181,46 +1180,64 @@ class ApiService {
           return data;
         } else {
           //throw Exception(data['message']);
-          throw Exception('Failed to login. Status Code: ${response.statusCode}');
+          throw Exception('Failed to load  Vt Letter Location: ${response.statusCode}');
         }
 
     } catch (e) {
-      throw Exception('Exception while fetching Gate Pass Reasons: $e');
+      throw Exception('Exception while fetching Vt Letter Location: $e');
     }
   }
 
-  ///alok
-  static Future<Map<String, dynamic>> alokapi(
-      String username, String password) async {
+
+  /// Apply VT Letter
+  static Future<String> applyVtLetter({
+    required String applyFrom,
+    required String applyTo,
+    required String totalDay,
+    required String locationIds,
+  }) async {
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('user_id') ?? '';
+
       var headers = {
-        'Cookie':
-        'ci_session=trb1cdm1k01ka4jrt6t55nrstv6frt8p; remember_code=529f1face76aad1813e947055101a76386950be0.e599f6271f11ddc484b1e8288df76ed79742de7399f1cd73f46f29113b68db349035fc15cdae996a5df0a4faec0d53c40d3b666f6336fc9ea236da0428f702c6'
+        'Cookie': 'ci_session=9918717oip21ucg7572uevf8cn0e3f5u',
       };
 
-      var request = http.MultipartRequest('POST',
-          Uri.parse(APIConstants.getFullUrl(APIConstants.loginEndpoint)));
-      request.fields.addAll({
-        'APIKEY': 'GNCS0225',
-        'USERNAME': username,
-        'PASSWORD': password,
-      });
-
-      request.headers.addAll(headers);
-
-      http.StreamedResponse response = await request.send();
-
+      final response = await http.post(
+        Uri.parse(APIConstants.getFullUrl(APIConstants.applyVtLetter)),
+        headers: APIConstants.headers,
+        body: {
+          'APIKEY': 'GNCS0225',
+          'USER_ID': userId,
+          'vt_fromdate': applyFrom,
+          'vt_todate': applyTo,
+          'vt_totalday': totalDay,
+          'vt_locationids': locationIds,
+        },
+      );
+      //bytesToString();
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data =
-        json.decode(await response.stream.bytesToString());
-        return data;
+        // Parse the JSON response
+        Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+        String message = jsonResponse['message'] ?? 'Unknown response';
+
+        return message;
       } else {
-        throw Exception('Failed to login. Status Code: ${response.statusCode}');
+        if (kDebugMode) {
+          print(response.reasonPhrase);
+        }
+        return 'Error occurred: ${response.reasonPhrase}';
       }
     } catch (e) {
-      throw Exception('An error occurred: $e');
+      if (kDebugMode) {
+        print('Error applying Vt Letter: $e');
+      }
+      return 'Error occurred: $e';
     }
   }
+
 
   /// Activity
   static const String baseUrl = 'http://myglobalapp.in/global/API005/';

@@ -34,9 +34,9 @@ class FormUtils {
   static bool isValidForm(VTLetterFormController controller) {
     if (controller.fromController.value.isEmpty ||
         controller.toController.value.isEmpty ||
-        controller.subjectsController.value.isEmpty) {
-      controller.reasonError.value =
-          controller.subjectsController.value.isEmpty;
+        controller.totalDayController.value.isEmpty) {
+      controller.totalDayError.value =
+          controller.totalDayController.value.isEmpty;
       controller.toError.value = controller.toController.value.isEmpty;
       controller.fromError.value = controller.fromController.value.isEmpty;
 

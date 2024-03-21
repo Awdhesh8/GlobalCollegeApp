@@ -22,6 +22,7 @@ class APIConstants {
   static const String getResult = 'get_all_result';
   static const String getVtLetterSubject = 'get_vtsubject';
   static const String getVtLetterLocation = 'get_vtlocation';
+  static const String applyVtLetter = 'apply_vtletter';
   static const String getActivity = 'get_activity';
   static const String gatePassHistory = 'gatepass_history';
 

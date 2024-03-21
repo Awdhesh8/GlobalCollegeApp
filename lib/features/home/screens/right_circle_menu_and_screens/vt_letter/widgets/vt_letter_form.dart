@@ -144,6 +144,7 @@ class VTLetterForm extends StatelessWidget {
                         onPressed: () {
                           FormUtils.selectDates(
                               context, controller.fromController);
+
                           // _selectDates(
                           //     context, false, controller.fromController);
                         },
@@ -189,6 +190,7 @@ class VTLetterForm extends StatelessWidget {
                             onPressed: () {
                               FormUtils.selectDates(
                                   context, controller.toController);
+
                               // _selectDates(
                               //     context, false, controller.toController);
                             },
@@ -215,12 +217,17 @@ class VTLetterForm extends StatelessWidget {
           Obx(
             () => TextFormField(
               readOnly: true,
+
               controller: TextEditingController(
                 text: FormUtils.calculateDays(
                   controller.fromController.value,
                   controller.toController.value,
                 ),
               ),
+              onChanged: (value) {
+                controller.totalDayController = 12.obs as RxString;
+                print('days :${controller.totalDayController}');
+              },
               style: TextStyleClass.inputText1,
               decoration: const InputDecoration(
                 labelText: 'Duration (Days)',
@@ -267,7 +274,7 @@ class VTLetterForm extends StatelessWidget {
             vtLetterSubject.firstWhere((group) => group.id == newValue);
             String selectedSubject = controller.subjectController.value?.id ?? '';
             controller.vtSubjectId = selectedSubject.obs;
-            print("ID ${controller.vtSubjectId}");
+            //print("ID ${controller.vtSubjectId}");
             controller.getCompany();
       },
 
@@ -288,6 +295,7 @@ class VTLetterForm extends StatelessWidget {
     );
   }
 
+  /*
   Obx _showReasonBottomSheet(BuildContext context){
 
     return Obx(() => DropdownButtonFormField<String>(
@@ -340,6 +348,7 @@ class VTLetterForm extends StatelessWidget {
 
   }
 
+   */
 
   void _showMultiSelect(BuildContext context) {
     Get.bottomSheet(
@@ -352,9 +361,12 @@ class VTLetterForm extends StatelessWidget {
           initialValue: controller.selectedItems,
           onConfirm: (values) {
             controller.selectedItems.assignAll(values);
-            print('Confirmed Selected Items: ${controller.selectedItems.map((item) => item.name).join(", ")}');
-            print('Confirmed Selected ID: ${controller.selectedItems.map((item) => item.id).join(", ")}');
-          },
+            //print('Confirmed Selected Items: ${controller.selectedItems.map((item) => item.name).join(", ")}');
+            //print('Confirmed Selected ID: ${controller.selectedItems.map((item) => item.id).join(", ")}');
+            controller.vtLocationIds = controller.selectedItems.map((item) => item.id).join(",");
+            print(controller.vtLocationIds);
+            print('day ${controller.totalDayController.obs}');
+            },
           maxChildSize: 1,
         ),
       ),

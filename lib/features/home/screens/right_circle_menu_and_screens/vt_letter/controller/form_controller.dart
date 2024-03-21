@@ -11,24 +11,26 @@ import '../widgets/vt_letter_form.dart';
 class VTLetterFormController extends GetxController {
   RxString fromController = ''.obs;
   RxString toController = ''.obs;
-  RxString subjectsController = ''.obs;//
-  RxBool reasonError = false.obs;
   RxBool toError = false.obs;
   RxBool fromError = false.obs;
 
+  RxString totalDayController = ''.obs;//
+  RxBool totalDayError = false.obs;
+
   Rx<VtLetterSubject?> subjectController = Rx<VtLetterSubject?>(null);
   RxBool subjectError = false.obs;
+  RxString vtSubjectId   = ''.obs;
+  String vtLocationIds = '';
+  RxBool vtLocationIdsError = false.obs;
 
-  RxString vtSubjectId = ''.obs;
-  var selectedCompany = "0".obs;
-  var selectedCompanyww = "0".obs;
+  final items = <Item>[].obs;
+  final selectedItems = <Item>[].obs;
+
   // RxList to store the history of leave applications
   RxList<String> vtLetterHistory = <String>[].obs;
 
+/*
   Rx<List<DropdownMenuItem<String>>> listCompanyDropDown = Rx<List<DropdownMenuItem<String>>>([]);
-
-  final items = <Item>[].obs;
-
   void getCompany_old()async{
     //listCompanyDropDown.value.clear();
     print(vtSubjectId);
@@ -38,9 +40,7 @@ class VTLetterFormController extends GetxController {
     //items.add(Item(22, "Item 22"));
     print(vtSubjectId);
   }
-
-
-  final selectedItems = <Item>[].obs;
+*/
 
   void toggleSelection(Item item) {
     if (selectedItems.contains(item)) {
@@ -48,8 +48,8 @@ class VTLetterFormController extends GetxController {
     } else {
       selectedItems.add(item);
     }
-    print('Selected Items: ${selectedItems.map((item) => item.name).join(", ")}');
-    print('Selected Items: ${selectedItems.map((item) => item.id).join(", ")}');
+    //print('Selected Items: ${selectedItems.map((item) => item.name).join(", ")}');
+    //print('Selected Items: ${selectedItems.map((item) => item.id).join(", ")}');
   }
 
   Future<void> getCompany() async {
