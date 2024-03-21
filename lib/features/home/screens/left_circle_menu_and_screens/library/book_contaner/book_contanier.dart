@@ -1,5 +1,159 @@
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
+class BookContainer extends StatefulWidget {
+  final String imageUrl;
+  final String title;
+  final String author;
+  final String availableQty;
+  final String lockStatus;
+  final String bookId;
+  final Function(bool newLockStatus) onTapLockButton;
+
+  const BookContainer({
+    Key? key,
+    required this.imageUrl,
+    required this.title,
+    required this.author,
+    required this.availableQty,
+    required this.lockStatus,
+    required this.bookId,
+    required this.onTapLockButton,
+  }) : super(key: key);
+
+  @override
+  State<BookContainer> createState() => _BookContainerState();
+}
+
+class _BookContainerState extends State<BookContainer> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Book Image with shadow
+          Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: FadeInImage.assetNetwork(
+                placeholder: 'assets/Backgrounds/book_loading.gif', // Placeholder image until the actual one loads
+                image: widget.imageUrl,
+                fit: BoxFit.contain,
+                width: 80,
+                height: 80,
+              ),
+            ),
+          ),
+
+          // Book Details
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: EColors.textColorPrimary1,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    'By: ${widget.author}',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 11,
+                      color: Colors.black38,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    'Available: ${widget.availableQty}',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      color: EColors.textColorPrimary1,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Toggle the lock status
+                            bool newLockStatus = widget.lockStatus == 'True' ? false : true;
+
+                            // Call the onTapLockButton function with the new lock status
+                            widget.onTapLockButton(newLockStatus);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(80, 26),
+                            backgroundColor: widget.lockStatus == 'True'
+                                ? Colors.red.shade400
+                                : Colors.grey.shade400,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                          child: Text(
+                            widget.lockStatus == 'True' ? 'Locked' : 'Unlocked',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 12,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: .5,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// code is fully correct
+/*
+import 'package:flutter/material.dart';
+import 'package:globalcollegeapp/utils/constants/colors.dart';
 
 class BookContainer extends StatefulWidget {
   final String imageUrl;
@@ -143,6 +297,8 @@ class _BookContainerState extends State<BookContainer> {
   }
 }
 
+
+ */
 
 
 /*

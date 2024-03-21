@@ -4,6 +4,7 @@ import 'package:globalcollegeapp/common/widgets/continue_border_Deco_rectangle/c
 import 'package:globalcollegeapp/data/api/api_services.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/fees/semister_fees/semister_fees_screen.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../../../common/widgets/animations/common_animation.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/helpers/helper_functions.dart';
@@ -51,7 +52,6 @@ class FeesController extends GetxController {
     }
   }
 }
-
 class FeesScreen extends StatelessWidget {
   final FeesController feesController = Get.put(FeesController());
 
@@ -63,6 +63,91 @@ class FeesScreen extends StatelessWidget {
       appBar: const GAppBar(
         backgroundColor: Colors.transparent,
         showBackArrow: true,
+        centerTitle: false,
+        title: Text(
+          'Sem Fees',
+          style: TextStyle(
+            color: EColors.textColorPrimary1,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            Obx(
+                  () {
+                if (feesController.profileData.isEmpty ||
+                    feesController.data.isEmpty ||
+                    feesController.summary.isEmpty) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Column(
+                      children: List.generate(
+                        6,
+                            (index) => ShimmerItem(),
+                      ),
+                    ),
+                  );
+                } else {
+                  final profileData = feesController.profileData.first;
+                  return Column(
+                    children: [
+                      AnimationWidget(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          animationType: 'fade',
+                          child: ProfileDetail(profileData: profileData)),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 18),
+                        child: Divider(),
+                      ),
+                      const HeaderText(),
+                      ...feesController.data.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final data = entry.value;
+                        final duration = 170 * (index + 1);
+                        return AnimationWidget(
+                          duration: Duration(milliseconds: duration),
+                          curve: Curves.easeInOut,
+                          animationType: 'fade_slide',
+                          child: SemesterDetailsCard(data: data),
+                        );
+                      }).toList(),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 18),
+                        child: Divider(),
+                      ),
+                      SummaryCard(
+                        summaryData: feesController.summary.first,
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/*
+class FeesScreen extends StatelessWidget {
+  final FeesController feesController = Get.put(FeesController());
+
+  @override
+  Widget build(BuildContext context) {
+    final darkMode = EHelperFunctions.isDarkMode(context);
+    return Scaffold(
+      backgroundColor: darkMode ? EColors.black : EColors.backgroundColor,
+      appBar: const GAppBar(
+        backgroundColor: Colors.transparent,
+        showBackArrow: true,
+        centerTitle: false,
         title: Text(
           'Sem Fees',
           style: TextStyle(
@@ -94,14 +179,22 @@ class FeesScreen extends StatelessWidget {
                   final profileData = feesController.profileData.first;
                   return Column(
                     children: [
-                      ProfileDetail(profileData: profileData),
+                      AnimationWidget(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          animationType: 'fade',
+                          child: ProfileDetail(profileData: profileData)),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 18),
                         child: Divider(),
                       ),
                       const HeaderText(),
                       ...feesController.data.map((data) {
-                        return SemesterDetailsCard(data: data);
+                        return AnimationWidget(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            animationType: 'slide',
+                            child: SemesterDetailsCard(data: data));
                       }).toList(),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 18),
@@ -121,7 +214,7 @@ class FeesScreen extends StatelessWidget {
     );
   }
 }
-
+*/
 class ProfileDetail extends StatelessWidget {
   const ProfileDetail({
     super.key,

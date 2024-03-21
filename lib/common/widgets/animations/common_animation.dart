@@ -49,6 +49,16 @@ class _AnimationWidgetState extends State<AnimationWidget>
           CurvedAnimation(parent: _controller, curve: widget.curve),
         );
         break;
+      case 'bubbly':
+        _animation = Tween<double>(begin: -1, end: 1).animate(
+          CurvedAnimation(parent: _controller, curve: widget.curve),
+        );
+        break;
+      case 'fade_slide':
+        _animation = Tween<double>(begin: -1, end: 0).animate(
+          CurvedAnimation(parent: _controller, curve: widget.curve),
+        );
+        break;
     // Add cases for other animation types
       default:
         _animation = null;
@@ -89,15 +99,27 @@ class _AnimationWidgetState extends State<AnimationWidget>
               offset: Offset(0, _animation!.value * MediaQuery.of(context).size.height),
               child: widget.child,
             );
+          case 'bubbly':
+            return Transform.scale(
+              scale: _animation!.value,
+              child: widget.child,
+            );
+          case 'fade_slide':
+            return Opacity(
+              opacity: 1 - (_animation!.value.abs() / 30),
+              child: Transform.translate(
+                offset: Offset(_animation!.value * MediaQuery.of(context).size.width, 0),
+                child: widget.child,
+              ),
+            );
         // Add cases for other animation types
           default:
-            return SizedBox(); // Return empty widget by default
+            return const SizedBox(); // Return empty widget by default
         }
       },
     );
   }
 }
-
 
 
 // import 'package:flutter/material.dart';

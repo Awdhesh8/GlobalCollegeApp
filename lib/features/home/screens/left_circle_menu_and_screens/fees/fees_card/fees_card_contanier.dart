@@ -5,6 +5,7 @@ import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_scre
 import 'package:globalcollegeapp/utils/constants/sizes.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../../../../common/widgets/animations/common_animation.dart';
 import '../../../../../../common/widgets/feesContanier/position_contanier.dart';
 import '../../../../../../data/api/api_services.dart';
 import '../../../../../../utils/constants/colors.dart';
@@ -51,188 +52,193 @@ class _FeesCardState extends State<FeesCard> {
       summaryData.isEmpty
           ? ShimmerFeesCard()
           :
-      Column(
-        children: [
-        Column(
+      AnimationWidget(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+        animationType: 'scale',
+        child: Column(
           children: [
-            Container(
-              width: double.infinity,
-                decoration: ShapeDecoration(
-                  shape: ContinuousRectangleBorder(
-                    borderRadius: BorderRadius.circular(70.0),
+          Column(
+            children: [
+              Container(
+                width: double.infinity,
+                  decoration: ShapeDecoration(
+                    shape: ContinuousRectangleBorder(
+                      borderRadius: BorderRadius.circular(70.0),
+                    ),
+                    color: EColors.backgroundColor,
+                    // borderRadius: BorderRadius.circular(15),
+                    shadows: [
+                      BoxShadow(
+                        color: Colors.red.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 4,
+                        offset: const Offset(2, 2),
+                      ),
+                      const BoxShadow(
+                        color: Colors.white,
+                        spreadRadius: 2,
+                        blurRadius: 2,
+                        offset: Offset(-3, -3),
+                      ),
+                    ],
                   ),
-                  color: EColors.backgroundColor,
-                  // borderRadius: BorderRadius.circular(15),
-                  shadows: [
-                    BoxShadow(
-                      color: Colors.red.withOpacity(0.2),
-                      spreadRadius: 2,
-                      blurRadius: 4,
-                      offset: const Offset(2, 2),
-                    ),
-                    const BoxShadow(
-                      color: Colors.white,
-                      spreadRadius: 2,
-                      blurRadius: 2,
-                      offset: Offset(-3, -3),
-                    ),
-                  ],
-                ),
-              // decoration: ShapeDecoration(
-              //   color: EColors.white,
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.circular(21),
-              //   ),
-              //   shadows: const [
-              //     BoxShadow(
-              //       color: Color(0x26000000),
-              //       blurRadius: 10.90,
-              //       offset: Offset(0, 0),
-              //       spreadRadius: 0,
-              //     )
-              //   ],
-              // ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            // decoration: const BoxDecoration(
-                            //     borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(0), topLeft: Radius.circular(12))
-                            // ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Icon(FontAwesomeIcons.moneyCheck, color: Colors.pinkAccent, size: 40,),
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: ShapeDecoration(
-                                        shape: ContinuousRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30.0),
-                                        ),
-                                        color: EColors.backgroundColor,
-                                        // borderRadius: BorderRadius.circular(15),
-                                        shadows: [
-                                          BoxShadow(
-                                            color: Colors.red.withOpacity(0.2),
-                                            spreadRadius: 2,
-                                            blurRadius: 4,
-                                            offset: const Offset(2, 2),
-                                          ),
-                                          const BoxShadow(
-                                            color: Colors.white,
-                                            spreadRadius: 2,
-                                            blurRadius: 2,
-                                            offset: Offset(-3, -3),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Shimmer.fromColors(
-                                        baseColor: EColors.primary,
-                                        highlightColor: EColors.primarySecond,
-                                        child: IconButton( onPressed: () =>
-                                            Get.to(() =>
-                                                FeesScreen(),
-                                              transition: Transition.cupertino,
-                                              duration: const Duration(milliseconds: 500),
-                                            ), icon: const Icon(Iconsax.element_equal),
-                                          highlightColor: EColors.primarySecond,
-                                        ),
-                                        // child: const Icon(FontAwesomeIcons.ellipsisVertical, size: 20,),
-                                        // child: const Icon(FontAwesomeIcons.arrowRight, size: 20,),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10,),
-                    /// Balance Fees & Text
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 0),
-                      child: Row(
+                // decoration: ShapeDecoration(
+                //   color: EColors.white,
+                //   shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(21),
+                //   ),
+                //   shadows: const [
+                //     BoxShadow(
+                //       color: Color(0x26000000),
+                //       blurRadius: 10.90,
+                //       offset: Offset(0, 0),
+                //       spreadRadius: 0,
+                //     )
+                //   ],
+                // ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            'Current Sem: ${summaryData["currentsem"]}',
-                            style: const TextStyle(
-                              overflow: TextOverflow.ellipsis,
-                              color: EColors.textColorPrimary1,
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w600,
+                          Expanded(
+                            child: Container(
+                              // decoration: const BoxDecoration(
+                              //     borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(0), topLeft: Radius.circular(12))
+                              // ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Icon(FontAwesomeIcons.moneyCheck, color: Colors.pinkAccent, size: 40,),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        decoration: ShapeDecoration(
+                                          shape: ContinuousRectangleBorder(
+                                            borderRadius: BorderRadius.circular(30.0),
+                                          ),
+                                          color: EColors.backgroundColor,
+                                          // borderRadius: BorderRadius.circular(15),
+                                          shadows: [
+                                            BoxShadow(
+                                              color: Colors.red.withOpacity(0.2),
+                                              spreadRadius: 2,
+                                              blurRadius: 4,
+                                              offset: const Offset(2, 2),
+                                            ),
+                                            const BoxShadow(
+                                              color: Colors.white,
+                                              spreadRadius: 2,
+                                              blurRadius: 2,
+                                              offset: Offset(-3, -3),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Shimmer.fromColors(
+                                          baseColor: EColors.primary,
+                                          highlightColor: EColors.primarySecond,
+                                          child: IconButton( onPressed: () =>
+                                              Get.to(() =>
+                                                  FeesScreen(),
+                                                transition: Transition.cupertino,
+                                                duration: const Duration(milliseconds: 500),
+                                              ), icon: const Icon(Iconsax.element_equal),
+                                            highlightColor: EColors.primarySecond,
+                                          ),
+                                          // child: const Icon(FontAwesomeIcons.ellipsisVertical, size: 20,),
+                                          // child: const Icon(FontAwesomeIcons.arrowRight, size: 20,),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
                           ),
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 00),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${summaryData["tbal"].toString()}.00",
-                                // textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: EColors.textColorPrimary1,
-                                  fontSize: 32,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w600,
-                                ),
+                      SizedBox(height: 10,),
+                      /// Balance Fees & Text
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Current Sem: ${summaryData["currentsem"]}',
+                              style: const TextStyle(
+                                overflow: TextOverflow.ellipsis,
+                                color: EColors.textColorPrimary1,
+                                fontSize: 12,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w600,
                               ),
-                              const Icon(FontAwesomeIcons.indianRupeeSign, color: Colors.black12, size: 50,),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                                  child: Shimmer.fromColors(
-                                    baseColor: EColors.primary,
-                                    highlightColor: EColors.primarySecond,
-                                    child: Text(
-                                      '${summaryData["comit_remark"]}',
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: EColors.primary,
-                                          fontSize: 12,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w600,
-                                          overflow:TextOverflow.ellipsis
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 00),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${summaryData["tbal"].toString()}.00",
+                                  // textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: EColors.textColorPrimary1,
+                                    fontSize: 32,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const Icon(FontAwesomeIcons.indianRupeeSign, color: Colors.black12, size: 50,),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                                    child: Shimmer.fromColors(
+                                      baseColor: EColors.primary,
+                                      highlightColor: EColors.primarySecond,
+                                      child: Text(
+                                        '${summaryData["comit_remark"]}',
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: EColors.primary,
+                                            fontSize: 12,
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.w600,
+                                            overflow:TextOverflow.ellipsis
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
 
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            ),
+                    ],
+                  ),
+                )
+              ),
+            ],
+          ),
           ],
         ),
-        ],
       ),
     );
   }

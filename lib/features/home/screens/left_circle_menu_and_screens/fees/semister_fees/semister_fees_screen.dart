@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
+import '../../../../../../common/widgets/animations/common_animation.dart';
 import '../../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../../utils/constants/colors.dart';
 
@@ -49,25 +50,35 @@ class ViewMoreScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _topFeesContainer(
-                'Per Semester',
-                '₹$perSemFees' ?? '',
+              AnimationWidget(
+                duration: const Duration(milliseconds: 600),
+                curve: Curves.easeInOut,
+                animationType: 'fade',
+                child: _topFeesContainer(
+                  'Per Semester',
+                  '₹$perSemFees' ?? '',
+                ),
               ),
               // _topFeesContainer(
               //   'Balance Amt',
               //   '₹$balanceAmount' ?? '',
               // ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 10, bottom: 10, top: 8),
-                    child: Text(
-                      'Fees Summary',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: EColors.textColorPrimary1,
+                    padding: const EdgeInsets.only(left: 10, bottom: 10, top: 8),
+                    child: AnimationWidget(
+                      duration: const Duration(milliseconds: 800),
+                      curve: Curves.easeInOut,
+                      animationType: 'fade',
+                      child: const Text(
+                        'Fees Summary',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: EColors.textColorPrimary1,
+                        ),
                       ),
                     ),
                   ),
@@ -81,21 +92,36 @@ class ViewMoreScreen extends StatelessWidget {
               //       'Total: ₹${fee['totalamt']}, \nMode: ${fee['mode']}, \nSlip No: ${fee['slips']}, \nEntry Date: ${fee['cash_entrydt']}'
               //   ),
               for (var fee in viewMoreData['fees'])
-                _buildInfoCard(
-                  fee['fees_type'],
-                  fee['totalamt'],
-                  fee['mode'],
-                  fee['slips'],
-                  fee['cash_entrydt'],
+                AnimationWidget(
+                  duration: const Duration(milliseconds: 800),
+                  curve: Curves.easeInOut,
+                  animationType: 'fade',
+                  child: _buildInfoCard(
+                    fee['fees_type'],
+                    fee['totalamt'],
+                    fee['mode'],
+                    fee['slips'],
+                    fee['cash_entrydt'],
+                  ),
                 ),
-              _topFeesContainer(
-                'Balance Amt',
-                '₹$balanceAmount' ?? '',
+              AnimationWidget(
+                duration: const Duration(milliseconds: 1000),
+                curve: Curves.easeInOut,
+                animationType: 'fade',
+                child: _topFeesContainer(
+                  'Balance Amt',
+                  '₹$balanceAmount' ?? '',
+                ),
               ),
-              _topFeesContainer(
-                'Total Paid',
-                '₹$paidAmount' ?? '',
+              AnimationWidget(
+                duration: const Duration(milliseconds: 1200),
+                curve: Curves.easeInOut,
+                animationType: 'fade',
+                child: _topFeesContainer(
+                  'Total Paid',
+                  '₹$paidAmount' ?? '',
 
+                ),
               ),
             ],
           ),

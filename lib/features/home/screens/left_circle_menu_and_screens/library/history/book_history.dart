@@ -89,7 +89,8 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
                     curve: Curves.easeInOut,
                     animationType: 'fade',
                     child: const TopHeading(
-                      text: 'A Historical View of\nYour Checked-Out\nCollection',
+                      text:
+                          'A Historical View of\nYour Checked-Out\nCollection',
                     ),
                   ),
                 ),
@@ -106,10 +107,10 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
                     child: ShimmerLoadingWidget(),
                   )
                 : AnimationWidget(
-              duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  animationType: 'translate',
-                  child: Padding(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    animationType: 'translate',
+                    child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -130,7 +131,7 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
                         },
                       ),
                     ),
-                ),
+                  ),
           ],
         ),
       ),
