@@ -1019,8 +1019,8 @@ class ApiService {
       if (response.statusCode == 200) {
         String responseBody = await response.stream.bytesToString();
         Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-        print(responseBody);
-        print(response.request);
+        //print(responseBody);
+        //print(response.request);
         if (jsonResponse['status'] == '1') {
           // Successful API response
           List<dynamic> GatePassHistoryData = jsonResponse['response'];
@@ -1188,6 +1188,48 @@ class ApiService {
     }
   }
 
+  ///Get VT Letter History
+  static Future<List<Map<String, dynamic>>>fetchVtLetterHistory() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('user_id') ?? '';
+      final response = await http.post(
+        Uri.parse(APIConstants.getFullUrl(APIConstants.getVtLetterHistory)),
+        headers: APIConstants.headers,
+        body: {
+          'APIKEY': 'GNCS0225',
+          'USER_ID': userId
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        //print(responseBody);
+        //print(response.request);
+        if (jsonResponse['status'] == '1') {
+          // Successful API response
+          List<dynamic> HistoryData = jsonResponse['response'];
+          List<Map<String, dynamic>> HistoryList = [];
+          for (var i in HistoryData) {
+            HistoryList.add(Map<String, dynamic>.from(i));
+          }
+          return HistoryList;
+        } else {
+          // Error in API response
+          if (kDebugMode) {
+            print('Error in API response: ${jsonResponse['message']}');
+          }
+          return [];
+        }
+      } else {
+        //throw Exception(data['message']);
+        throw Exception('Failed to load  Vt Letter Location: ${response.statusCode}');
+      }
+
+    } catch (e) {
+      throw Exception('Exception while fetching Vt Letter Location: $e');
+    }
+  }
 
   /// Apply VT Letter
   static Future<String> applyVtLetter({

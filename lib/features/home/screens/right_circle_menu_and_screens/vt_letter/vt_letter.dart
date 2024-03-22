@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/features/home/screens/right_circle_menu_and_screens/vt_letter/widgets/vt_letter_form.dart';
+import 'package:globalcollegeapp/features/home/screens/right_circle_menu_and_screens/vt_letter/widgets/vt_letter_history.dart';
 import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
@@ -67,7 +68,7 @@ class VTLetter extends StatelessWidget {
               const Divider(),
 
               /// history heading
-              Row(
+              /*Row(
                 children: [
                   RichText(
                     text: const TextSpan(
@@ -85,6 +86,17 @@ class VTLetter extends StatelessWidget {
 
 
                 ],
+              ),
+
+               */
+
+              SingleChildScrollView(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: EColors.backgroundColor,
+                  ),
+                  child: VtletterHistory(),
+                ),
               ),
 
               ///

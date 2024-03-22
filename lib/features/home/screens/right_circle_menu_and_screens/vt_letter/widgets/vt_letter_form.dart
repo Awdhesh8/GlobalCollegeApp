@@ -74,7 +74,7 @@ class VTLetterForm extends StatelessWidget {
                 // child:
                 InkWell(
                   onTap:() {
-                    _showMultiSelect(context);
+                    _showMultiSelect();
                   },
                   child: Obx(() => AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
@@ -280,6 +280,10 @@ class VTLetterForm extends StatelessWidget {
             controller.vtSubjectId = selectedSubject.obs;
             //print("ID ${controller.vtSubjectId}");
             controller.getCompany();
+            Future.delayed(const Duration(seconds: 2), () {
+              _showMultiSelect();
+            });
+
       },
 
       items: [
@@ -354,17 +358,18 @@ class VTLetterForm extends StatelessWidget {
 
    */
 
-  void _showMultiSelect(BuildContext context) {
-    Get.bottomSheet(
+  void _showMultiSelect() async{
+     Get.bottomSheet(
       Container(
         color: Colors.white,
         child: MultiSelectBottomSheet(
+          title: const Text("Please Select VT Company"),
           items: controller.items
               .map((item) => MultiSelectItem<Item>(item, item.name))
               .toList(),
           initialValue: controller.selectedItems,
-          onConfirm: (values) {
-            controller.selectedItems.assignAll(values);
+           onConfirm: (values) {
+             controller.selectedItems.assignAll(values);
             //print('Confirmed Selected Items: ${controller.selectedItems.map((item) => item.name).join(", ")}');
             //print('Confirmed Selected ID: ${controller.selectedItems.map((item) => item.id).join(", ")}');
             controller.vtLocationIds = controller.selectedItems.map((item) => item.id).join(",");

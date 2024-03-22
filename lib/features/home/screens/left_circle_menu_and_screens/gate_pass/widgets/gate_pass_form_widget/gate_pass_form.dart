@@ -288,7 +288,7 @@ class GatePassForm extends StatelessWidget {
                 },
                 decoration: InputDecoration(
                   isDense: true,
-                  suffixIcon: const Icon(Iconsax.document_text_1),
+                   suffixIcon: const Icon(Iconsax.document_text_1),
                   labelText: 'Gate Pass Remark',
                   labelStyle: const TextStyle(
                     color: Colors.black54,
