@@ -58,6 +58,16 @@ class _AnimationWidgetState extends State<AnimationWidget>
         _animation = Tween<double>(begin: -1, end: 0).animate(
           CurvedAnimation(parent: _controller, curve: widget.curve),
         );
+
+          break;
+      case 'bouncy':
+        _animation = Tween<double>(begin: -1, end: 0).animate(
+          CurvedAnimation(parent: _controller, curve: widget.curve),
+        );
+        // Transform.scale(
+        //   scale: 1 - (_controller.value * 0.3),
+        // );
+
         break;
       case 'shake':
         _animation = TweenSequence<double>([

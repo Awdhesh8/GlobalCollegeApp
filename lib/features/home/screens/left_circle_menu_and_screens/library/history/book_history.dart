@@ -78,7 +78,6 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
             // SizedBox(
             //   height: ESizes.spaceBtwSections + 44,
             // ),
-
             /// Title Heading for Books History
             Row(
               children: [

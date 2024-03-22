@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import '../features/home/screens/home_page.dart';
+import '../features/home/screens/left_circle_menu_and_screens/attendance/attendance_screen.dart';
 import '../features/notice/notice.dart';
 import '../features/personalization/screens/settings/settings.dart';
 import '../features/time_table/time_table.dart';
@@ -42,8 +43,11 @@ class NavigationMenu extends StatelessWidget {
                 animationDuration: const Duration(milliseconds: 500),
                 items: [
                   Icon(Iconsax.home, color: getIconColor(0)),
-                  Icon(Iconsax.calendar_add, color: getIconColor(1)),
-                  Icon(Iconsax.notification_favorite, color: getIconColor(2)),
+                  Icon(Icons.calendar_view_month_outlined, color: getIconColor(1)),
+                  // Image.asset('assets/icons/attendance.png', width: 20),
+                  // ImageIcon(AssetImage('assets/icons/attendance.png' ), ),
+                   Icon(Iconsax.calendar_add, color: getIconColor(2)),
+                  // Icon(Iconsax.notification_favorite, color: getIconColor(2)),
                   Icon(Iconsax.user, color: getIconColor(3)),
                 ],
               ),
@@ -87,7 +91,8 @@ class NavigationController extends GetxController {
   final screens = [
     const MyHomePage(),
     TimeTable(),
-    const Notice(),
+    AttendanceScreen(),
+    // const Notice(),
     SettingsScreen(),
   ];
 }

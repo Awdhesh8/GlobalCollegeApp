@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:globalcollegeapp/common/widgets/animations/common_animation.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../device/device_utility.dart';
+import '../../../features/home/screens/left_circle_menu_and_screens/library/e_library/book_widget/e_book_widget.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/helpers/helper_functions.dart';
 
@@ -31,8 +33,6 @@ class GAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? flexibleSpace;
   final Color? surfaceTintColor;
 
-
-
   @override
   Widget build(BuildContext context) {
     final dark = EHelperFunctions.isDarkMode(context);
@@ -41,15 +41,39 @@ class GAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       automaticallyImplyLeading: false,
       leading: showBackArrow
-          ? IconButton(onPressed: () => Get.back(), icon: const Icon(Iconsax.arrow_left), color: dark ?
-      EColors.primary : EColors.primary,) : leadingIcon != null
-              ? IconButton(onPressed: leadingOnPressed, icon: Icon(leadingIcon)) : null,
+          ? AnimationWidget(
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.easeInOutCubicEmphasized,
+              animationType: 'bubbly',
+              child: AnimationWidget(
+                duration: const Duration(milliseconds: 800),
+                curve: Curves.easeInOutCubicEmphasized,
+                animationType: 'bubbly',
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DownloadButton(
+                    onPressed: () => Get.back(),
+                    child: IconButton(
+                      style: const ButtonStyle(shape: MaterialStatePropertyAll(CircleBorder(side: BorderSide(color: EColors.primary)))),
+                      highlightColor: EColors.primarySecond,
+                      onPressed: () => Get.back(),
+                      icon: DownloadButton(onPressed: () => Get.back(),
+                      child: const Icon(Iconsax.arrow_left)),
+                      color: dark ? EColors.primary : EColors.primary,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          : leadingIcon != null
+              ? IconButton(onPressed: leadingOnPressed, icon: Icon(leadingIcon))
+              : null,
       title: title,
       backgroundColor: backgroundColor,
       centerTitle: centerTitle,
       actions: actions,
-        flexibleSpace: flexibleSpace,
-        surfaceTintColor: surfaceTintColor,
+      flexibleSpace: flexibleSpace,
+      surfaceTintColor: surfaceTintColor,
     );
   }
 

@@ -78,12 +78,12 @@ class _IssuedBooksScreenState extends State<IssuedBooksScreen> {
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 22),
+                  padding: const EdgeInsets.symmetric(horizontal: 22),
                   child: AnimationWidget(
                     animationType: 'fade',
                     duration: const Duration(milliseconds: 400),
                     curve: Curves.easeInOut,
-                    child: TopHeading(
+                    child: const TopHeading(
                       text: 'Your Borrowed\nTitles',
                     ),
                   ),

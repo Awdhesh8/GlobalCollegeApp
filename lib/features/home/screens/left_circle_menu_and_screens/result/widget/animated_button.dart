@@ -31,7 +31,7 @@ class _BouncyButtonState extends State<BouncyButton>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 100),
+      duration: Duration(milliseconds: 130),
     );
   }
 
@@ -55,7 +55,7 @@ class _BouncyButtonState extends State<BouncyButton>
         animation: _controller,
         builder: (context, child) {
           return Transform.scale(
-            scale: 1 - (_controller.value * 0.08),
+            scale: 1 - (_controller.value * 0.3),
             child: child,
           );
         },

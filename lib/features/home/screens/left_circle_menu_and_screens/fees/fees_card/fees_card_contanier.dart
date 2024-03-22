@@ -9,6 +9,7 @@ import '../../../../../../common/widgets/animations/common_animation.dart';
 import '../../../../../../common/widgets/feesContanier/position_contanier.dart';
 import '../../../../../../data/api/api_services.dart';
 import '../../../../../../utils/constants/colors.dart';
+import '../../library/e_library/book_widget/e_book_widget.dart';
 
 class FeesCard extends StatefulWidget {
   const FeesCard({
@@ -115,41 +116,44 @@ class _FeesCardState extends State<FeesCard> {
                                   const Icon(FontAwesomeIcons.moneyCheck, color: Colors.pinkAccent, size: 40,),
                                   Row(
                                     children: [
-                                      Container(
-                                        decoration: ShapeDecoration(
-                                          shape: ContinuousRectangleBorder(
-                                            borderRadius: BorderRadius.circular(30.0),
+                                      DownloadButton(
+                                        onPressed: () {},
+                                        child: Container(
+                                          decoration: ShapeDecoration(
+                                            shape: ContinuousRectangleBorder(
+                                              borderRadius: BorderRadius.circular(30.0),
+                                            ),
+                                            color: EColors.backgroundColor,
+                                            // borderRadius: BorderRadius.circular(15),
+                                            shadows: [
+                                              BoxShadow(
+                                                color: Colors.red.withOpacity(0.2),
+                                                spreadRadius: 2,
+                                                blurRadius: 4,
+                                                offset: const Offset(2, 2),
+                                              ),
+                                              const BoxShadow(
+                                                color: Colors.white,
+                                                spreadRadius: 2,
+                                                blurRadius: 2,
+                                                offset: Offset(-3, -3),
+                                              ),
+                                            ],
                                           ),
-                                          color: EColors.backgroundColor,
-                                          // borderRadius: BorderRadius.circular(15),
-                                          shadows: [
-                                            BoxShadow(
-                                              color: Colors.red.withOpacity(0.2),
-                                              spreadRadius: 2,
-                                              blurRadius: 4,
-                                              offset: const Offset(2, 2),
-                                            ),
-                                            const BoxShadow(
-                                              color: Colors.white,
-                                              spreadRadius: 2,
-                                              blurRadius: 2,
-                                              offset: Offset(-3, -3),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Shimmer.fromColors(
-                                          baseColor: EColors.primary,
-                                          highlightColor: EColors.primarySecond,
-                                          child: IconButton( onPressed: () =>
-                                              Get.to(() =>
-                                                  FeesScreen(),
-                                                transition: Transition.cupertino,
-                                                duration: const Duration(milliseconds: 500),
-                                              ), icon: const Icon(Iconsax.element_equal),
+                                          child: Shimmer.fromColors(
+                                            baseColor: EColors.primary,
                                             highlightColor: EColors.primarySecond,
+                                            child: IconButton( onPressed: () =>
+                                                Get.to(() =>
+                                                    FeesScreen(),
+                                                  transition: Transition.cupertino,
+                                                  duration: const Duration(milliseconds: 500),
+                                                ), icon: const Icon(Iconsax.element_equal),
+                                              highlightColor: EColors.primarySecond,
+                                            ),
+                                            // child: const Icon(FontAwesomeIcons.ellipsisVertical, size: 20,),
+                                            // child: const Icon(FontAwesomeIcons.arrowRight, size: 20,),
                                           ),
-                                          // child: const Icon(FontAwesomeIcons.ellipsisVertical, size: 20,),
-                                          // child: const Icon(FontAwesomeIcons.arrowRight, size: 20,),
                                         ),
                                       ),
                                     ],

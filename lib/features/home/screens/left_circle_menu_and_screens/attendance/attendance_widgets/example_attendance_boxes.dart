@@ -91,7 +91,7 @@ class ColorIndicationBoxExample extends StatelessWidget {
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                    color: Colors.green.shade200,
+                    color: Colors.green.shade300,
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: const [
                       BoxShadow(

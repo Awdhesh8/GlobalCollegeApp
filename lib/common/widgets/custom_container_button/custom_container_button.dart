@@ -24,7 +24,7 @@ class _CustomContainerButtonState extends State<CustomContainerButton>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 130),
+      duration: const Duration(milliseconds: 150),
     );
   }
 
@@ -48,7 +48,7 @@ class _CustomContainerButtonState extends State<CustomContainerButton>
         animation: _controller,
         builder: (context, child) {
           return Transform.scale(
-            scale: 1 - (_controller.value * 0.08),
+            scale: 1 - (_controller.value * 0.22),
             child: child,
           );
         },

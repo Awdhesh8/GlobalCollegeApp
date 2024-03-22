@@ -256,6 +256,7 @@ class _SignInFormState extends State<SignInForm> {
 */
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rive/rive.dart';
@@ -286,6 +287,8 @@ class _SignInFormState extends State<SignInForm> {
   late SMITrigger reset;
 
   late SMITrigger confetti;
+
+  bool _obscureText = true;
 
   late UserController userController; // Declare UserController
 
@@ -368,7 +371,9 @@ class _SignInFormState extends State<SignInForm> {
         });
       } else {
         // Login failed
-        print('Login failed: ${apiResponse['message']}');
+        if (kDebugMode) {
+          print('Login failed: ${apiResponse['message']}');
+        }
         error.fire();
         Future.delayed(const Duration(seconds: 2), () {
           setState(() {
@@ -379,7 +384,9 @@ class _SignInFormState extends State<SignInForm> {
       }
     } catch (e) {
       // Handle exceptions
-      print('Exception during login: $e');
+      if (kDebugMode) {
+        print('Exception during login: $e');
+      }
     }
   }
 
@@ -429,7 +436,37 @@ class _SignInFormState extends State<SignInForm> {
                 padding: const EdgeInsets.only(top: 8, bottom: 16),
                 child: TextFormField(
                   controller: passwordController,
+                  obscureText: _obscureText, // Toggle visibility based on this flag
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Password cannot be empty";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: SvgPicture.asset("assets/icons/password.svg"),
+                    ),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _obscureText = !_obscureText; // Toggle visibility
+                        });
+                      },
+                      child: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+
+                /*
+                TextFormField(
+                  controller: passwordController,
                   obscureText: true,
+
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Password cannot be empty";
@@ -443,6 +480,7 @@ class _SignInFormState extends State<SignInForm> {
                     ),
                   ),
                 ),
+                */
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8, bottom: 24),

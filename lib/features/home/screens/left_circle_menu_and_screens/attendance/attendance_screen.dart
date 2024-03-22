@@ -1,19 +1,14 @@
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:globalcollegeapp/common/widgets/appbar/appbar.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../common/widgets/texts/top_first_heading.dart';
 import '../../../../../data/api/api_services.dart';
 import 'attendance_controller/attendance_controller.dart';
 import 'attendance_widgets/example_attendance_boxes.dart';
-import 'package:http/http.dart' as http;
 
 class AttendanceScreen extends StatelessWidget {
   final AttendanceController controller = Get.put(AttendanceController());
@@ -23,14 +18,15 @@ class AttendanceScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: EColors.backgroundColor,
       appBar: const GAppBar(
-        centerTitle: true,
-        showBackArrow: true,
+        centerTitle: false,
+        // showBackArrow: true,
         backgroundColor: Colors.transparent,
         title: Text(
           'Attendance',
           style: TextStyle(
             color: EColors.textColorPrimary1,
             fontWeight: FontWeight.bold,
+            fontFamily: 'Inter',
           ),
         ),
       ),
@@ -158,7 +154,7 @@ class _CalendarPageState extends State<CalendarPage> {
         return Colors.red.shade200;
       case 'L':
         // print('Returning color: Colors.green.shade500');
-        return Colors.green.shade500;
+        return Colors.green.shade400;
       case 'H':
         // print('Returning color: Colors.orange.shade300');
         return Colors.orange.shade300;
@@ -442,7 +438,7 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return Container(
-       height: screenHeight * 0.4,
+       height: screenHeight * 0.44,
       // height: MediaQuery.of(context).size.height * 0.44,
       child: Column(
         children: [

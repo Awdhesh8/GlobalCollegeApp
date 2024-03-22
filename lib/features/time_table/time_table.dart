@@ -35,9 +35,9 @@ class _TimeTableState extends State<TimeTable> {
         title: Text(
           'Time Table',
           style: TextStyle(
-            fontSize: ESizes.appTitle,
-            color: EColors.textPrimaryHeading,
-            fontWeight: FontWeight.w200,
+            color: EColors.textColorPrimary1,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Inter',
           ),
         ),
         backgroundColor: Colors.transparent,

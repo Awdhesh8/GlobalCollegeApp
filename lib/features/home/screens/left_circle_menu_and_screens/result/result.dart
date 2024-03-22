@@ -1,7 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:shimmer/shimmer.dart';
 import 'controller/controller.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:globalcollegeapp/utils/constants/sizes.dart';
 import 'package:globalcollegeapp/utils/constants/colors.dart';
@@ -325,11 +324,10 @@ class ShimmerLoading extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 height: 200,
-               decoration: BoxDecoration(
-                 color: Colors.white,
-                 borderRadius: BorderRadius.circular(20),
-
-               ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
             ),
             SizedBox(
@@ -355,7 +353,6 @@ class ShimmerLoading extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
-
                     ),
                   ),
                 );

@@ -331,7 +331,31 @@ class DownloadPDFButtonWidget extends StatelessWidget {
         //     fontWeight: FontWeight.w400,
         //   ),
         // ),
-        DownloadButton(onPressed: () async {await launch(downloadLink);},),
+        DownloadButton(onPressed: () async {await launch(downloadLink);}, child: Container(
+          decoration: BoxDecoration(
+            color: Colors.deepPurple.shade500,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                FontAwesomeIcons.download,size: 15,
+                color: Colors.white,
+              ),
+              SizedBox(width: 10.0),
+              Text(
+                'Download',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13.0,
+                ),
+              ),
+            ],
+          ),
+        ),),
         // const SizedBox(width: 10),
         //ElevatedButton(onPressed: () async {await launch(downloadLink);}, child: Icon(FontAwesomeIcons.download))
         // IconButton(
@@ -349,8 +373,9 @@ class DownloadPDFButtonWidget extends StatelessWidget {
 
 class DownloadButton extends StatefulWidget {
   final Function() onPressed;
+  final Widget? child;
 
-  DownloadButton({required this.onPressed});
+  DownloadButton({required this.onPressed, this.child});
 
   @override
   _DownloadButtonState createState() => _DownloadButtonState();
@@ -365,7 +390,7 @@ class _DownloadButtonState extends State<DownloadButton> with TickerProviderStat
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 150),
     );
 
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.8).animate(
@@ -399,31 +424,7 @@ class _DownloadButtonState extends State<DownloadButton> with TickerProviderStat
       },
       child: ScaleTransition(
         scale: _scaleAnimation,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.deepPurple.shade500,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                FontAwesomeIcons.download,size: 15,
-                color: Colors.white,
-              ),
-              SizedBox(width: 10.0),
-              Text(
-                'Download',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13.0,
-                ),
-              ),
-            ],
-          ),
-        ),
+        child: widget.child,
       ),
     );
   }

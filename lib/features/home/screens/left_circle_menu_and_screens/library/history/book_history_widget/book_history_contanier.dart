@@ -27,7 +27,7 @@ class _BookHistoryContainerState extends State<BookHistoryContainer> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 0),
       child: Container(
         decoration: ShapeDecoration(
           color: Colors.white,

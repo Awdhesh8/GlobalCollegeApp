@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:globalcollegeapp/utils/constants/colors.dart';
-import '../../../../../../../common/widgets/book_contanier/book_contanier.dart';
 import '../../../../../../../utils/constants/sizes.dart';
 import '../book_widget/e_book_widget.dart';
 
@@ -27,7 +25,7 @@ class _EBookDetailsContainerState extends State<EBookDetailsContainer> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 0),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,

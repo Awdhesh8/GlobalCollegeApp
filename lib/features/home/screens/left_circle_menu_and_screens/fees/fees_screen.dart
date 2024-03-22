@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:globalcollegeapp/common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
 import 'package:globalcollegeapp/data/api/api_services.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/fees/semister_fees/semister_fees_screen.dart';
+import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/result/widget/animated_button.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../common/widgets/animations/common_animation.dart';
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/helpers/helper_functions.dart';
+import '../library/e_library/book_widget/e_book_widget.dart';
 
 class FeesController extends GetxController {
   RxList<Map<String, dynamic>> data = <Map<String, dynamic>>[].obs;
@@ -108,7 +110,7 @@ class FeesScreen extends StatelessWidget {
                       ...feesController.data.asMap().entries.map((entry) {
                         final index = entry.key;
                         final data = entry.value;
-                        final duration = 170 * (index + 1);
+                        final duration = 180 * (index + 1);
                         return AnimationWidget(
                           duration: Duration(milliseconds: duration),
                           curve: Curves.easeInOut,
@@ -310,141 +312,139 @@ class SemesterDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final darkMode = EHelperFunctions.isDarkMode(context);
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: darkMode ? EColors.black : const Color(0xFFFFE0E5),
-        // color: const Color(0xFFFFE0E5),
-        // color: EColors.backgroundColor,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0xFFFFC1C5),
-            offset: Offset(2, 2),
-            blurRadius: 2,
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: Colors.white,
-            offset: Offset(-2, -2),
-            blurRadius: 5,
-            spreadRadius: 1,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Semester ${data["sem"]}',
-                  // 'Semester ${details['Semester']}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: EColors.textColorPrimary1,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.payment,
-                      color: Colors.pinkAccent,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        'Sem Fees: ₹${data["commit"]}',
-                        // 'Per Semester: ₹${details['Per Semester']}',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: EColors.textColorPrimary1,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.attach_money,
-                      color: Colors.pinkAccent,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        'Paid Fees: ₹${data["paid"]}',
-                        // 'Per Semester: ₹${details['Per Semester']}',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: EColors.textColorPrimary1,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.account_balance_wallet,
-                      color: Colors.pinkAccent,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        'Rest Amount: ₹${data["balance"]}',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: EColors.textColorPrimary1,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+    return DownloadButton(
+      onPressed: () {
+        if (data["viewmore"] is List &&
+            (data["viewmore"] as List).isNotEmpty) {
+          Get.to(
+                () => ViewMoreScreen(data["viewmore"], data['sem'], data['commit'], data['paid'],data['balance']),
+            transition: Transition.cupertino,
+            duration: const Duration(
+                milliseconds: 500), // Adjust the duration as needed
+            curve: Curves.easeInOut, // Use a different curve if desired
+          );
+        } else if (data["viewmore"] is List &&
+            (data["viewmore"] as List).isEmpty) {
+          Get.snackbar('Empty Fees', 'Sem data is empty.');
+        } else if (data["viewmore"] is Map &&
+            (data["viewmore"] as Map).isNotEmpty) {
+          Get.to(
+                () => ViewMoreScreen(data["viewmore"], data['sem'], data['commit'], data['paid'],data['balance']),
+            transition: Transition.cupertino,
+            duration: const Duration(
+                milliseconds: 500), // Adjust the duration as needed
+            curve: Curves.easeInOut, // Use a different curve if desired
+          );
+        } else {
+          Get.snackbar('Error', 'Unable to process ViewMore data.');
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: darkMode ? EColors.black : const Color(0xFFFFE0E5),
+          // color: const Color(0xFFFFE0E5),
+          // color: EColors.backgroundColor,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0xFFFFC1C5),
+              offset: Offset(2, 2),
+              blurRadius: 2,
+              spreadRadius: 0,
             ),
-          ),
-          InkWell(
-
-            onTap: () {
-              if (data["viewmore"] is List &&
-                  (data["viewmore"] as List).isNotEmpty) {
-                Get.to(
-                  () => ViewMoreScreen(data["viewmore"], data['sem'], data['commit'], data['paid'],data['balance']),
-                  transition: Transition.cupertino,
-                  duration: const Duration(
-                      milliseconds: 500), // Adjust the duration as needed
-                  curve: Curves.easeInOut, // Use a different curve if desired
-                );
-              } else if (data["viewmore"] is List &&
-                  (data["viewmore"] as List).isEmpty) {
-                Get.snackbar('Empty Fees', 'Sem data is empty.');
-              } else if (data["viewmore"] is Map &&
-                  (data["viewmore"] as Map).isNotEmpty) {
-                Get.to(
-                  () => ViewMoreScreen(data["viewmore"], data['sem'], data['commit'], data['paid'],data['balance']),
-                  transition: Transition.cupertino,
-                  duration: const Duration(
-                      milliseconds: 500), // Adjust the duration as needed
-                  curve: Curves.easeInOut, // Use a different curve if desired
-                );
-              } else {
-                Get.snackbar('Error', 'Unable to process ViewMore data.');
-              }
-            },
-
-            child: Container(
+            BoxShadow(
+              color: Colors.white,
+              offset: Offset(-2, -2),
+              blurRadius: 5,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Semester ${data["sem"]}',
+                    // 'Semester ${details['Semester']}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: EColors.textColorPrimary1,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.payment,
+                        color: Colors.pinkAccent,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: Text(
+                          'Sem Fees: ₹${data["commit"]}',
+                          // 'Per Semester: ₹${details['Per Semester']}',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: EColors.textColorPrimary1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.attach_money,
+                        color: Colors.pinkAccent,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: Text(
+                          'Paid Fees: ₹${data["paid"]}',
+                          // 'Per Semester: ₹${details['Per Semester']}',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: EColors.textColorPrimary1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.account_balance_wallet,
+                        color: Colors.pinkAccent,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: Text(
+                          'Rest Amount: ₹${data["balance"]}',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: EColors.textColorPrimary1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
               padding: const EdgeInsets.all(10),
               decoration: CustomDeco.neoDecoIconRectangle(),
               child: const Icon(
@@ -453,8 +453,8 @@ class SemesterDetailsCard extends StatelessWidget {
                 size: 18,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
