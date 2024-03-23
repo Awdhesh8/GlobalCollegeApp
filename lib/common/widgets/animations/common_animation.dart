@@ -58,7 +58,7 @@ class _AnimationWidgetState extends State<AnimationWidget>
         _animation = Tween<double>(begin: -1, end: 0).animate(
           CurvedAnimation(parent: _controller, curve: widget.curve),
         );
-// com.example.globalcollegeapp
+        // com.example.globalcollegeapp
         //baderia.collegeapp.com
           break;
       case 'bouncy':
