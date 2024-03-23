@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:globalcollegeapp/features/home/screens/left_circle_menu_and_screens/gate_pass/gate_pass_controller/gate_pass_from_controller.dart';
 import '../../../../../../../data/api/api_services.dart';
 import '../../../../../../../utils/constants/sizes.dart';

@@ -187,4 +187,51 @@ class CustomDeco {
   }
 
 
+/// Neomorphic Icon container
+  static BoxDecoration neoDecoIconRectangle2() {
+    return BoxDecoration(
+      shape: BoxShape.rectangle,
+      borderRadius: BorderRadius.circular(12),
+      color: Colors.red.shade50,
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0xFFFFC1C5),
+          offset: Offset(2, 2),
+          blurRadius: 5,
+          spreadRadius: 1,
+        ),
+        BoxShadow(
+          color: Colors.white,
+          offset: Offset(-3, -3),
+          blurRadius: 5,
+          spreadRadius: 1,
+        ),
+      ],
+    );
+  }
+
+  /// Neomorphic Icon container
+  static BoxDecoration neoDecoIconRectangle3() {
+    return BoxDecoration(
+      shape: BoxShape.rectangle,
+      borderRadius: BorderRadius.circular(12),
+      // border: Border.all(color: Colors.black12),
+      color: Colors.red.shade50,
+      boxShadow: [
+        BoxShadow(
+          color: Color(0xFFFFC1C5).withOpacity(.5),
+          offset: Offset(0, 2),
+          blurRadius: 0,
+          spreadRadius: 1,
+        ),
+        BoxShadow(
+          color: Colors.white,
+          offset: Offset(-3, -3),
+          blurRadius: 5,
+          spreadRadius: 1,
+        ),
+      ],
+    );
+  }
+
 }

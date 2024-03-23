@@ -24,7 +24,7 @@ class Notice extends StatelessWidget {
           style: TextStyle(
             fontSize: ESizes.appTitle,
             fontFamily: 'Inter',
-            color: EColors.primary,
+            color: EColors.textSecondaryTitle,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -42,7 +42,7 @@ class Notice extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Image.asset(
                     'assets/Backgrounds/sammy-remote-work.gif',
-                    width: 300,
+                    width: 220,
                   ),
                 ),
                 AnimatedTextKit(
@@ -52,7 +52,7 @@ class Notice extends StatelessWidget {
                       textStyle: const TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        color: EColors.textSecondaryTitle,
                       ),
                     ),
                     TyperAnimatedText(
@@ -60,7 +60,7 @@ class Notice extends StatelessWidget {
                       textStyle: const TextStyle(
                         fontSize: 18.0,
                         fontStyle: FontStyle.normal,
-                        color: Colors.red,
+                        color: EColors.textSecondaryTitle,
                       ),
                     ),
                     TyperAnimatedText(

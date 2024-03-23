@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:globalcollegeapp/utils/constants/teext_styles.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../features/personalization/screens/settings/edit_profile/edit_Profile.dart';
 import '../../../utils/constants/colors.dart';
+import '../custom_shapes/containers/primary_header_container.dart';
 
 class UserProfile extends StatelessWidget {
   final String userText;
@@ -13,7 +15,6 @@ class UserProfile extends StatelessWidget {
   final double? height;
   final bool showEditButton;
   final VoidCallback onPressed; // Define onPressed here
-
 
   const UserProfile({
     Key? key,
@@ -28,72 +29,219 @@ class UserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, top: 10, right: 20),
-      child: Column(
-        children: [
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: imagePath.startsWith('http')
-                            ? Image.network(
-                          imagePath,
-                          fit: BoxFit.fill,
-                          width: width,
-                          height: height,
-                        )
-                            : Image.asset(
-                          imagePath,
-                          fit: BoxFit.fill,
-                          width: width,
-                          height: height,
-                        ),
+    return EPrimaryHeaderContainer(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 25, top: 13, right: 20),
+        child: Column(
+          children: [
+            // SizedBox(
+            //   height: 40,
+            // ),
+
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 13),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.end,
+            //     children: [
+            //       Text(
+            //         'User Profile',
+            //         style: TextStyle(
+            //           fontSize: 24.0,
+            //           fontFamily: 'Inter',
+            //           color: EColors.textColorPrimary1,
+            //           // color: EColors.white,
+            //           fontWeight: FontWeight.w500,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+
+
+            // SizedBox(
+            //   height: 10,
+            // ),
+            Padding(
+              padding: const EdgeInsets.only(right: 15),
+              child: SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text(
+                      'Hello, ',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w300,
+                        // color: EColors.white,
+                        color: EColors.textColorPrimary1,
                       ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        userText2 ?? '',
-                        style: const TextStyle(
-                          fontFamily: 'Inter',
-                            fontSize: 16,
-                        ),
+                      overflow: TextOverflow.fade,
+                    ),
+                    Text(
+                      userText,
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        // color: EColors.white,
+                        color: EColors.textColorPrimary1,
                       ),
-                      Text(
-                        userText,
-                        style:
-                          const TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: EColors.textColorPrimary1,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Column(
+
+              children: [
+                SizedBox(
+                  height: 40,
+                ),
+                Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color:
+                                  Colors.white, // Set the color of the border
+                              width: 3, // Set the width of the border
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color:
+                                  Colors.black12, // Set the color of the border
+                                  width: 1, // Set the width of the border
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: imagePath.startsWith('http')
+                                    ? Image.network(
+                                        imagePath,
+                                        fit: BoxFit.fill,
+                                        width: width,
+                                        height: height,
+                                      )
+                                    : Image.asset(
+                                        imagePath,
+                                        fit: BoxFit.fill,
+                                        width: width,
+                                        height: height,
+                                      ),
+                              ),
+                            ),
                           ),
                         ),
-                      if (showEditButton) const SizedBox(height: 8),
-                      if (showEditButton) EditButton(onPressed: onPressed,),
-                    ],
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          userText2 ?? '',
+                          style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 16,
+                          ),
+                        ),
+                        // SizedBox(
+                        //   child: Row(
+                        //     children: [
+                        //       const Text(
+                        //         'Hello, ',
+                        //         style: TextStyle(
+                        //           fontFamily: 'Inter',
+                        //           fontSize: 16,
+                        //           fontWeight: FontWeight.w300,
+                        //           // color: EColors.white,
+                        //           color: EColors.textColorPrimary1,
+                        //         ),
+                        //         overflow: TextOverflow.fade,
+                        //       ),
+                        //       Text(
+                        //         userText,
+                        //         style: const TextStyle(
+                        //           fontFamily: 'Inter',
+                        //           fontSize: 16,
+                        //           fontWeight: FontWeight.w500,
+                        //           // color: EColors.white,
+                        //           color: EColors.textColorPrimary1,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // if (showEditButton) const SizedBox(height: 8),
+                        // if (showEditButton) EditButton(onPressed: onPressed,),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            // SizedBox(height: 45,)
+            // Padding(
+            //   padding: const EdgeInsets.only(right: 15),
+            //   child: SizedBox(
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.end,
+            //       children: [
+            //         const Text(
+            //           'Hello, ',
+            //           style: TextStyle(
+            //             fontFamily: 'Inter',
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.w300,
+            //             // color: EColors.white,
+            //             color: EColors.textColorPrimary1,
+            //           ),
+            //           overflow: TextOverflow.fade,
+            //         ),
+            //         Text(
+            //           userText,
+            //           style: const TextStyle(
+            //             fontFamily: 'Inter',
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.w500,
+            //             // color: EColors.white,
+            //             color: EColors.textColorPrimary1,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (showEditButton) const SizedBox(height: 8),
+                if (showEditButton)
+                  EditButton(
+                    onPressed: onPressed,
                   ),
-                ],
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-
 class EditButton extends StatelessWidget {
-
   final VoidCallback onPressed;
   const EditButton({super.key, required this.onPressed});
 
@@ -101,20 +249,26 @@ class EditButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
-    // () {
+      // () {
 
-        // Get.to(
-        //       () => EditProfile(),
-        //   transition: Transition.rightToLeftWithFade,
-        //   duration: const Duration(milliseconds: 300),
-        // );
+      // Get.to(
+      //       () => EditProfile(),
+      //   transition: Transition.rightToLeftWithFade,
+      //   duration: const Duration(milliseconds: 300),
+      // );
       // },
       child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text('Edit Profile'),
+          Text(
+            'Edit Profile',
+            style: TextStyleClass.buttonStyle1,
+          ),
           SizedBox(width: 4),
-          Icon(Iconsax.edit),
+          Icon(
+            Iconsax.edit,
+            size: 15,
+          ),
         ],
       ),
     );
@@ -127,10 +281,10 @@ class NameText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Text('Edit Profile'),
-        ],
-      );
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Text('Edit Profile'),
+      ],
+    );
   }
 }

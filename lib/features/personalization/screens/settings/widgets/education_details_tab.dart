@@ -201,6 +201,7 @@ class ShimmerEducationDetails extends StatelessWidget {
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../../../common/widgets/continue_border_Deco_rectangle/continue_border_rectangle.dart';
 import '../../../../../data/api/api_services.dart';
 import '../../../../../utils/constants/colors.dart';
 
@@ -244,7 +245,7 @@ class _EducationDetailsPanelState extends State<EducationDetailsPanel> {
               child: Container(
                 // height: containerHeight,
                 decoration: ShapeDecoration(
-                  color: EColors.lightContainer1,
+                  color: EColors.white,
                   // color: EColors.lightContainer1,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
@@ -256,22 +257,29 @@ class _EducationDetailsPanelState extends State<EducationDetailsPanel> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                       child: Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 0,
-                              offset: Offset(-2, -2),
-                              color: Colors.white
-                            )
-                          ],
-                            color: EColors.lightContainer1,
-                          borderRadius: BorderRadius.circular(14)
-                        ),
+                        decoration: CustomDeco.neoDecoIconRectangle3(),
+                        // decoration: BoxDecoration(
+                        //   boxShadow: [
+                        //     BoxShadow(
+                        //       blurRadius: 0,
+                        //       offset: Offset(-2, -2),
+                        //       color: Colors.white
+                        //     )
+                        //   ],
+                        //     color: EColors.lightContainer1,
+                        //   borderRadius: BorderRadius.circular(14)
+                        // ),
                         child: ListTile(
                           dense: true,
-                          trailing: const Icon(
-                            Iconsax.folder_open4,
-                            color: EColors.primary,
+                          trailing: Container(
+                               decoration: CustomDeco.neoDecoIconRectangle2(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: const Icon(
+                                Iconsax.folder_open4, size: 18,
+                                color: EColors.primary,
+                              ),
+                            ),
                           ),
                           // trailing: const Icon(
                           //   Iconsax.folder_open4,
@@ -307,6 +315,7 @@ class _EducationDetailsPanelState extends State<EducationDetailsPanel> {
                 borderRadius: BorderRadius.circular(16.0),
               ),
               elevation: 0,
+              
               backgroundColor: Colors.transparent,
               child: Container(
                 padding: const EdgeInsets.all(16),

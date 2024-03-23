@@ -54,8 +54,8 @@ class GAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: DownloadButton(
                     onPressed: () => Get.back(),
                     child: IconButton(
-                      style: const ButtonStyle(shape: MaterialStatePropertyAll(CircleBorder(side: BorderSide(color: EColors.primary)))),
-                      highlightColor: EColors.primarySecond,
+                      style: const ButtonStyle(shape: MaterialStatePropertyAll(CircleBorder(side: BorderSide(color: EColors.textSecondaryTitle)))),
+                      highlightColor: EColors.grey.withOpacity(.5),
                       onPressed: () => Get.back(),
                       icon: DownloadButton(onPressed: () => Get.back(),
                       child: const Icon(Iconsax.arrow_left)),

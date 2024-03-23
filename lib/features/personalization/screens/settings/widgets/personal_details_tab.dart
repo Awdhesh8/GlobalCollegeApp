@@ -88,11 +88,11 @@ class UserDetails extends StatelessWidget {
         .toList();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
       child: Container(
-        height: containerHeight,
+        // height: containerHeight,
         decoration: BoxDecoration(
-          color: EColors.lightContainer1,
+          // color: EColors.lightContainer1,
           borderRadius: BorderRadius.circular(14),
           // boxShadow: const [
           //   BoxShadow(
@@ -117,7 +117,8 @@ class UserDetails extends StatelessWidget {
               child: Scrollbar(
                   child: ListView(
                     shrinkWrap: true,
-                    physics: const BouncingScrollPhysics(),
+                    // physics: const BouncingScrollPhysics(),
+                    physics: NeverScrollableScrollPhysics(),
                     children: filteredEntries.map((entry) {
                       return ESettingsMenuTile(
                         title: entry.key,
